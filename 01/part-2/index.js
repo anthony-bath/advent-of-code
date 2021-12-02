@@ -1,7 +1,7 @@
 const fs = require("fs");
 
 const data = fs
-  .readFileSync("./01-2/input.txt")
+  .readFileSync("./01/input.txt")
   .toString()
   .split("\n")
   .map((x) => parseInt(x, 10));
@@ -23,7 +23,7 @@ for (let i = 1; i < data.length; i++) {
   }
 }
 
-fs.writeFileSync("./01-2/output.txt", windowIncreaseCount.toString());
+fs.writeFileSync("./01/part-2/output.txt", windowIncreaseCount.toString());
 
 function sum(array) {
   return array.reduce((result, current) => result + current, 0);
