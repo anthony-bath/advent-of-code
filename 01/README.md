@@ -84,7 +84,8 @@ E: 647 (increased)
 F: 716 (increased)
 G: 769 (increased)
 H: 792 (increased)
-In this example, there are 5 sums that are larger than the previous sum.
 ```
+
+In this example, there are 5 sums that are larger than the previous sum.
 
 **Consider sums of a three-measurement sliding window. How many sums are larger than the previous sum?**
