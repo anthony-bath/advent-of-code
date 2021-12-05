@@ -40,11 +40,7 @@ export function evaluateBoard(target, board) {
     }
   });
 
-  if (checkRows(board) || checkCols(board)) {
-    return true;
-  }
-
-  return false;
+  return checkRows(board) || checkCols(board);
 }
 
 export function sumBoard(board) {
@@ -69,4 +65,6 @@ function checkCols(board) {
       return true;
     }
   }
+
+  return false;
 }
