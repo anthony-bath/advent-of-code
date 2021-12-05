@@ -1,0 +1,17 @@
+{
+  "name": "advent-of-code-2021",
+  "version": "1.0.0",
+  "description": "Advent of Code 2021",
+  "main": "index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthony-bath/advent-of-code-2021.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anthony-bath/advent-of-code-2021/issues"
+  },
+  "homepage": "https://github.com/anthony-bath/advent-of-code-2021#readme"
+}

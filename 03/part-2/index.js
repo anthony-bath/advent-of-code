@@ -1,4 +1,4 @@
-const fs = require("fs");
+import fs from "fs";
 
 const data = fs
   .readFileSync("./03/input.txt")
@@ -31,8 +31,6 @@ function getResultData(inputData, valueFunc) {
 function getMostCommonValue(bitData) {
   if (bitData[0] > bitData[1]) {
     return "0";
-  } else if (bitData[1] > bitData[0]) {
-    return "1";
   } else {
     return "1";
   }
@@ -41,8 +39,6 @@ function getMostCommonValue(bitData) {
 function getLeastCommonValue(bitData) {
   if (bitData[0] > bitData[1]) {
     return "1";
-  } else if (bitData[1] > bitData[0]) {
-    return "0";
   } else {
     return "0";
   }
