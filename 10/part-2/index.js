@@ -6,8 +6,13 @@ const lines = fs
   .split("\n")
   .map((l) => l.trim().split(""));
 
-const OPEN = ["(", "[", "<", "{"];
-const CLOSE = [")", "]", ">", "}"];
+const BRACKETS = new Map([
+  ["(", ")"],
+  ["[", "]"],
+  ["<", ">"],
+  ["{", "}"],
+]);
+
 const SCORE_MAP = { ")": 1, "]": 2, "}": 3, ">": 4 };
 
 let scores = [];
@@ -17,10 +22,10 @@ for (const line of lines) {
   let invalid = false;
 
   for (const char of line) {
-    if (OPEN.includes(char)) {
+    if (BRACKETS.has(char)) {
       stack.push(char);
     } else {
-      const expected = CLOSE[OPEN.indexOf(stack.pop())];
+      const expected = BRACKETS.get(stack.pop());
 
       if (char !== expected) {
         invalid = true;
@@ -34,7 +39,7 @@ for (const line of lines) {
 
     while (stack.length) {
       score *= 5;
-      score += SCORE_MAP[CLOSE[OPEN.indexOf(stack.pop())]];
+      score += SCORE_MAP[BRACKETS.get(stack.pop())];
     }
 
     scores.push(score);
