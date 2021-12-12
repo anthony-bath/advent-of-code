@@ -10,6 +10,42 @@ class Cave {
   }
 }
 
+export class Path {
+  constructor(path) {
+    this.caves = path ? [...path.caves] : [];
+    this.smallCaveVisitsByKey = path ? { ...path.smallCaveVisitsByKey } : {};
+    this.visitedASmallCaveTwice = path ? path.visitedASmallCaveTwice : false;
+    this.hasStarted = this.caves.length > 0;
+  }
+
+  addCave(cave) {
+    this.caves.push(cave);
+
+    if (!cave.isLarge) {
+      if (!this.smallCaveVisitsByKey[cave.key]) {
+        this.smallCaveVisitsByKey[cave.key] = 0;
+      }
+
+      this.smallCaveVisitsByKey[cave.key]++;
+
+      if (this.smallCaveVisitsByKey[cave.key] === 2) {
+        this.visitedASmallCaveTwice = true;
+      }
+    }
+  }
+
+  canVisitCave(key) {
+    if (key === "start") {
+      return !this.hasStarted;
+    }
+
+    return !(
+      this.smallCaveVisitsByKey[key] === 2 ||
+      (this.smallCaveVisitsByKey[key] === 1 && this.visitedASmallCaveTwice)
+    );
+  }
+}
+
 export const getCavesMap = (data) => {
   const cavesByKey = new Map();
 
