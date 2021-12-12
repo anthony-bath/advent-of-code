@@ -27,40 +27,12 @@ data.forEach(([c1Key, c2Key]) => {
   const c1 = cavesByKey.get(c1Key) || new Cave(c1Key);
   const c2 = cavesByKey.get(c2Key) || new Cave(c2Key);
 
-  // only want connections one way from start/end
-  if (c1Key === "start") {
-    if (!c1.connections.includes(c2)) {
-      c1.addConnection(c2);
-    }
-  } else if (c1Key === "end") {
-    if (!c2.connections.includes(c1)) {
-      c2.addConnection(c1);
-    }
+  if (!c1.connections.includes(c2)) {
+    c1.addConnection(c2);
   }
 
-  if (c2Key === "start") {
-    if (!c2.connections.includes(c1)) {
-      c2.addConnection(c1);
-    }
-  } else if (c2Key === "end") {
-    if (!c1.connections.includes(c2)) {
-      c1.addConnection(c2);
-    }
-  }
-
-  if (
-    c1Key !== "start" &&
-    c2Key !== "start" &&
-    c1Key !== "end" &&
-    c2Key !== "end"
-  ) {
-    if (!c1.connections.includes(c2)) {
-      c1.addConnection(c2);
-    }
-
-    if (!c2.connections.includes(c1)) {
-      c2.addConnection(c1);
-    }
+  if (!c2.connections.includes(c1)) {
+    c2.addConnection(c1);
   }
 
   cavesByKey.set(c1Key, c1);
