@@ -9,13 +9,10 @@ for (let step = 0; step < STEPS; step++) {
   while (current.next) {
     const next = current.next;
     const pair = `${current.element}${next.element}`;
+    const insert = new Node(rules.get(pair));
 
-    if (rules.has(pair)) {
-      const insert = new Node(rules.get(pair));
-      current.setNext(insert);
-      insert.setNext(next);
-    }
-
+    current.setNext(insert);
+    insert.setNext(next);
     current = next;
   }
 

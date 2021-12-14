@@ -8,23 +8,21 @@ for (let step = 0; step < STEPS; step++) {
   const nextPairs = new Map(pairs);
 
   for (const [pair, count] of pairs.entries()) {
-    if (rules.has(pair)) {
-      const insert = rules.get(pair);
-      const newPairs = [`${pair[0]}${insert}`, `${insert}${pair[1]}`];
+    const insert = rules.get(pair);
+    const newPairs = [`${pair[0]}${insert}`, `${insert}${pair[1]}`];
 
-      newPairs.forEach((newPair) => {
-        if (!nextPairs.has(newPair)) {
-          nextPairs.set(newPair, count);
-        } else {
-          nextPairs.set(newPair, nextPairs.get(newPair) + count);
-        }
-      });
-
-      if (nextPairs.get(pair) === count) {
-        nextPairs.delete(pair);
+    newPairs.forEach((newPair) => {
+      if (!nextPairs.has(newPair)) {
+        nextPairs.set(newPair, count);
       } else {
-        nextPairs.set(pair, nextPairs.get(pair) - count);
+        nextPairs.set(newPair, nextPairs.get(newPair) + count);
       }
+    });
+
+    if (nextPairs.get(pair) === count) {
+      nextPairs.delete(pair);
+    } else {
+      nextPairs.set(pair, nextPairs.get(pair) - count);
     }
   }
 
