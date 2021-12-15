@@ -54,6 +54,23 @@ export const loadData = (part) => {
   return { grid, visited, risk, queue };
 };
 
+function insertIntoSortedQueue(queue, node) {
+  let low = 0;
+  let high = queue.length;
+
+  while (low < high) {
+    let mid = (low + high) >>> 1;
+
+    if (queue[mid].risk > node.risk) {
+      low = mid + 1;
+    } else {
+      high = mid;
+    }
+  }
+
+  queue.splice(low, 0, node);
+}
+
 export const evaluate = (yNext, xNext, args) => {
   const { y, x, risk, grid, queue } = args;
 
@@ -61,5 +78,10 @@ export const evaluate = (yNext, xNext, args) => {
     risk[yNext][xNext],
     risk[y][x] + grid[yNext][xNext]
   );
-  queue.push({ y: yNext, x: xNext, risk: risk[yNext][xNext] });
+
+  insertIntoSortedQueue(queue, {
+    y: yNext,
+    x: xNext,
+    risk: risk[yNext][xNext],
+  });
 };

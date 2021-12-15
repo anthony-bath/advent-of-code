@@ -20,8 +20,6 @@ while (queue.length) {
   x < cols - 1 && !visited[y][x + 1] && evaluate(y, x + 1, args);
   y < rows - 1 && !visited[y + 1][x] && evaluate(y + 1, x, args);
   y > 0 && !visited[y - 1][x] && evaluate(y - 1, x, args);
-
-  queue.sort((a, b) => b.risk - a.risk);
 }
 
 fs.writeFileSync("./15/part-1/output.txt", risk[rows - 1][cols - 1].toString());
