@@ -11,19 +11,21 @@ const data = fs
 
 let horizontal = 0;
 let depth = 0;
+let aim = 0;
 
 for (const [direction, amount] of data) {
   switch (direction) {
     case "forward":
       horizontal += amount;
+      depth += aim * amount;
       break;
     case "up":
-      depth -= amount;
+      aim -= amount;
       break;
     case "down":
-      depth += amount;
+      aim += amount;
       break;
   }
 }
 
-fs.writeFileSync("./02/part-1/output.txt", (horizontal * depth).toString());
+fs.writeFileSync("./02/output-2.txt", (horizontal * depth).toString());

@@ -23,7 +23,7 @@ for (let i = 1; i < data.length; i++) {
   }
 }
 
-fs.writeFileSync("./01/part-2/output.txt", windowIncreaseCount.toString());
+fs.writeFileSync("./01/output-2.txt", windowIncreaseCount.toString());
 
 function sum(array) {
   return array.reduce((result, current) => result + current, 0);

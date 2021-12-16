@@ -15,4 +15,4 @@ node 01/part-1
 node 02/part-2
 ```
 
-Output will be generated in an `output.txt` file in the directory of the executed `index.js`. Input for each day is included in `input.txt` files in the respective days directory, but is specific to my AoC login.
+Output will be generated in an `output-n.txt` file in the days directory. Input for each day is included in `input*.txt` files in the respective days directory, but is specific to my AoC login.

@@ -7,7 +7,7 @@ const data = fs
   .map((x) => parseInt(x, 10));
 
 fs.writeFileSync(
-  "./01/part-1/output.txt",
+  "./01/output-1.txt",
   data
     .reduce((depthIncreaseCount, depth, i) => {
       return i === 0
