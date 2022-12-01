@@ -1,0 +1,17 @@
+{
+  "name": "advent-of-code-2022",
+  "version": "1.0.0",
+  "description": "Advent of Code 2022 Solutions",
+  "main": "index.js",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/anthony-bath/advent-of-code-2022.git"
+  },
+  "author": "Anthony Bath",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/anthony-bath/advent-of-code-2022/issues"
+  },
+  "homepage": "https://github.com/anthony-bath/advent-of-code-2022#readme"
+}
