@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-let top3Carriers = [];
+let top3Carriers = [-Infinity, -Infinity, -Infinity];
 let currentElfTotal = 0;
 
 fs.readFileSync('./01/input.txt')
@@ -8,10 +8,12 @@ fs.readFileSync('./01/input.txt')
   .split('\n')
   .forEach((carryValue) => {
     if (!carryValue) {
-      if (top3Carriers.length < 3) {
-        top3Carriers.push(currentElfTotal);
-      } else {
-        top3Carriers = [...top3Carriers, currentElfTotal].sort((a, b) => b - a).slice(0, 3);
+      if (currentElfTotal > top3Carriers[0]) {
+        top3Carriers = [currentElfTotal, top3Carriers[0], top3Carriers[1]];
+      } else if (currentElfTotal > top3Carriers[1]) {
+        top3Carriers = [top3Carriers[0], currentElfTotal, top3Carriers[1]];
+      } else if (currentElfTotal > top3Carriers[2]) {
+        top3Carriers[2] = currentElfTotal;
       }
 
       currentElfTotal = 0;
