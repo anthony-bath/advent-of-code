@@ -9,12 +9,7 @@ const overlappingPairCount = fs
     const [r1Start, r1End] = r1.split('-').map((n) => parseInt(n));
     const [r2Start, r2End] = r2.split('-').map((n) => parseInt(n));
 
-    if (
-      (r2Start >= r1Start && r2Start <= r1End) ||
-      (r1Start >= r2Start && r1Start <= r2End) ||
-      (r2End >= r1Start && r2End <= r1End) ||
-      (r1End >= r2Start && r1End <= r2End)
-    ) {
+    if ((r2Start >= r1Start && r2Start <= r1End) || (r1Start >= r2Start && r1Start <= r2End)) {
       return ++count;
     }
 
