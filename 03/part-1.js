@@ -4,8 +4,7 @@ import { generatePriorityMap } from './common';
 const priorityMap = generatePriorityMap();
 
 const prioritySum = fs
-  .readFileSync('./03/input.txt')
-  .toString()
+  .readFileSync('./03/input.txt', 'utf-8')
   .split('\n')
   .reduce((sum, rucksack) => {
     const items = rucksack.split('');

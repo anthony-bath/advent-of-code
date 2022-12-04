@@ -17,8 +17,7 @@ const scoreByPlays = new Map([
 ]);
 
 const strategyScore = fs
-  .readFileSync('./02/input.txt')
-  .toString()
+  .readFileSync('./02/input.txt', 'utf-8')
   .split('\n')
   .reduce((score, plays) => (score += scoreByPlays.get(plays)), 0);
 

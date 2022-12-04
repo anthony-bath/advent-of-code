@@ -3,8 +3,7 @@ import fs from 'fs';
 let currentElfTotal = 0;
 let currentMax = -Infinity;
 
-fs.readFileSync('./01/input.txt')
-  .toString()
+fs.readFileSync('./01/input.txt', 'utf-8')
   .split('\n')
   .forEach((carryValue) => {
     if (!carryValue) {

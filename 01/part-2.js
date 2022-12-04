@@ -3,8 +3,7 @@ import fs from 'fs';
 let top3Carriers = [-Infinity, -Infinity, -Infinity];
 let currentElfTotal = 0;
 
-fs.readFileSync('./01/input.txt')
-  .toString()
+fs.readFileSync('./01/input.txt', 'utf-8')
   .split('\n')
   .forEach((carryValue) => {
     if (!carryValue) {

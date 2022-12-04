@@ -1,8 +1,7 @@
 import fs from 'fs';
 
 const overlappingPairCount = fs
-  .readFileSync('./04/input.txt')
-  .toString()
+  .readFileSync('./04/input.txt', 'utf-8')
   .split('\n')
   .reduce((count, ranges) => {
     const [r1, r2] = ranges.split(',');

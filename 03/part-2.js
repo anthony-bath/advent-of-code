@@ -5,8 +5,7 @@ const priorityMap = generatePriorityMap();
 const groups = [];
 let currentGroup = [];
 
-fs.readFileSync('./03/input.txt')
-  .toString()
+fs.readFileSync('./03/input.txt', 'utf-8')
   .split('\n')
   .forEach((rucksack) => {
     currentGroup.push(rucksack);
