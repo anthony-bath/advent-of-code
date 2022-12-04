@@ -1,4 +1,5 @@
 import fs from 'fs';
+import { generatePriorityMap } from './common';
 
 const priorityMap = generatePriorityMap();
 const groups = [];
@@ -25,14 +26,3 @@ const prioritySum = groups.reduce((sum, [r1, r2, r3]) => {
 }, 0);
 
 fs.writeFileSync('./03/output-2.txt', `${prioritySum}`);
-
-function generatePriorityMap() {
-  const priorityMap = new Map();
-
-  for (let l = 97, u = 65; l < 123, u < 91; l++, u++) {
-    priorityMap.set(String.fromCharCode(l), l - 96);
-    priorityMap.set(String.fromCharCode(u), u - 38);
-  }
-
-  return priorityMap;
-}
