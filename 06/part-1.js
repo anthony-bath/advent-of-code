@@ -5,7 +5,7 @@ const MARKER_SIZE = 4;
 let markerStart;
 
 for (let i = 0; i < data.length; i++) {
-  if (new Set([...data.slice(i, i + MARKER_SIZE)]).size === MARKER_SIZE) {
+  if (new Set(data.slice(i, i + MARKER_SIZE)).size === MARKER_SIZE) {
     markerStart = i + MARKER_SIZE;
     break;
   }
