@@ -1,6 +1,6 @@
 import fs from 'fs';
 
-export const movements = fs
+export const directions = fs
   .readFileSync('./09/input.txt', 'utf-8')
   .split('\n')
   .map((line) => {
@@ -9,21 +9,22 @@ export const movements = fs
   })
   .flat();
 
-export class Point {
-  constructor(x, y, child) {
+export class Knot {
+  constructor(x, y, link) {
     this.x = x;
     this.y = y;
-    this.child = child;
+    this.link = link;
     this.positions = new Set([`${this.x},${this.y}`]);
   }
 
-  isAdjacentToPoint(point) {
-    return Math.abs(this.x - point.x) <= 1 && Math.abs(this.y - point.y) <= 1;
+  isTouchingLinkedKnot() {
+    const { x, y } = this.link;
+    return Math.abs(this.x - x) <= 1 && Math.abs(this.y - y) <= 1;
   }
 
-  applyMovement(direction) {
-    for (const dir of direction.split('')) {
-      switch (dir) {
+  pull(directions) {
+    for (const direction of directions.split('')) {
+      switch (direction) {
         case 'R':
           this.x += 1;
           break;
@@ -41,48 +42,23 @@ export class Point {
 
     this.positions.add(`${this.x},${this.y}`);
 
-    if (this.child) {
-      if (!this.isAdjacentToPoint(this.child)) {
-        const childMovements = this.child.getMovementsToPoint(this);
-
-        for (const movement of childMovements) {
-          this.child.applyMovement(movement);
-        }
+    if (this.link) {
+      if (!this.isTouchingLinkedKnot()) {
+        const directions = this.link.getDirectionsToKnot(this);
+        directions.forEach((direction) => this.link.pull(direction));
       }
     }
   }
 
-  getMovementsToPoint(point) {
-    if (point.x > this.x && point.y > this.y) {
-      return ['RU'];
-    }
+  getDirectionsToKnot(knot) {
+    const directions = [];
+    const { x, y } = knot;
 
-    if (point.x > this.x && point.y < this.y) {
-      return ['RD'];
-    }
+    if (x > this.x) directions.push('R');
+    if (x < this.x) directions.push('L');
+    if (y > this.y) directions.push('U');
+    if (y < this.y) directions.push('D');
 
-    if (point.x > this.x && point.y === this.y) {
-      return ['R'];
-    }
-
-    if (point.x < this.x && point.y === this.y) {
-      return ['L'];
-    }
-
-    if (point.x < this.x && point.y > this.y) {
-      return ['LU'];
-    }
-
-    if (point.x < this.x && point.y < this.y) {
-      return ['LD'];
-    }
-
-    if (point.x === this.x && point.y > this.y) {
-      return ['U'];
-    }
-
-    if (point.x === this.x && point.y < this.y) {
-      return ['D'];
-    }
+    return [directions.join('')];
   }
 }
