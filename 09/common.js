@@ -22,9 +22,9 @@ export class Knot {
     return Math.abs(this.x - x) <= 1 && Math.abs(this.y - y) <= 1;
   }
 
-  pull(directions) {
-    for (const direction of directions.split('')) {
-      switch (direction) {
+  pull(direction) {
+    for (const dirPart of direction.split('')) {
+      switch (dirPart) {
         case 'R':
           this.x += 1;
           break;
@@ -42,15 +42,13 @@ export class Knot {
 
     this.positions.add(`${this.x},${this.y}`);
 
-    if (this.link) {
-      if (!this.isTouchingLinkedKnot()) {
-        const directions = this.link.getDirectionsToKnot(this);
-        directions.forEach((direction) => this.link.pull(direction));
-      }
+    if (this.link && !this.isTouchingLinkedKnot()) {
+      const direction = this.link.getDirectionToKnot(this);
+      this.link.pull(direction);
     }
   }
 
-  getDirectionsToKnot(knot) {
+  getDirectionToKnot(knot) {
     const directions = [];
     const { x, y } = knot;
 
@@ -59,6 +57,6 @@ export class Knot {
     if (y > this.y) directions.push('U');
     if (y < this.y) directions.push('D');
 
-    return [directions.join('')];
+    return directions.join('');
   }
 }
