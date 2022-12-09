@@ -43,7 +43,7 @@ for (let row = 0; row < grid.length; row++) {
         continue;
       }
 
-      // Check south
+      // Check South
       if (evaluate('col', row + 1, col, treeHeight, grid.length)) {
         visibleTreeCount++;
         continue;
