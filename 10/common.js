@@ -1,6 +1,6 @@
-import fs from 'fs';
+import { read } from '../utility.js';
 
-const instructions = fs.readFileSync('./10/input.txt', 'utf-8').split('\n');
+const instructions = read(10);
 const cycles = [];
 
 for (const instruction of instructions) {

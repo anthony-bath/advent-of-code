@@ -1,20 +1,18 @@
-import fs from 'fs';
+import { read, write } from '../utility.js';
 
 let currentElfTotal = 0;
 let currentMax = -Infinity;
 
-fs.readFileSync('./01/input.txt', 'utf-8')
-  .split('\n')
-  .forEach((carryValue) => {
-    if (!carryValue) {
-      if (currentElfTotal > currentMax) {
-        currentMax = currentElfTotal;
-      }
-
-      currentElfTotal = 0;
-    } else {
-      currentElfTotal += parseInt(carryValue, 10);
+read(1).forEach((carryValue) => {
+  if (!carryValue) {
+    if (currentElfTotal > currentMax) {
+      currentMax = currentElfTotal;
     }
-  });
 
-fs.writeFileSync('./01/output-1.txt', `${currentMax}`);
+    currentElfTotal = 0;
+  } else {
+    currentElfTotal += parseInt(carryValue, 10);
+  }
+});
+
+write(1, 1, `${currentMax}`);

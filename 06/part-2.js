@@ -1,6 +1,6 @@
-import fs from 'fs';
+import { read, write } from '../utility.js';
 
-const data = fs.readFileSync('./06/input.txt', 'utf-8').split('');
+const data = read(6, '');
 
 const marker = new Map();
 const TARGET_SIZE = 14;
@@ -26,7 +26,7 @@ for (let i = 0; i < data.length; i++) {
   }
 }
 
-fs.writeFileSync('./06/output-2.txt', `${markerStart}`);
+write(6, 2, `${markerStart}`);
 
 /*
 Original implementation, less performant

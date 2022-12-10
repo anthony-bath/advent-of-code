@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { read, write } from '../utility.js';
 
 // Rock (1) = A, X
 // Paper (2) = B, Y
@@ -16,9 +16,6 @@ const scoreByPlays = new Map([
   ['C Z', 3 + 3],
 ]);
 
-const strategyScore = fs
-  .readFileSync('./02/input.txt', 'utf-8')
-  .split('\n')
-  .reduce((score, plays) => (score += scoreByPlays.get(plays)), 0);
+const strategyScore = read(2).reduce((score, plays) => (score += scoreByPlays.get(plays)), 0);
 
-fs.writeFileSync('./02/output-1.txt', `${strategyScore}`);
+write(2, 1, `${strategyScore}`);

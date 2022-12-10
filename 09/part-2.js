@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { write } from '../utility.js';
 import { directions, Knot } from './common.js';
 
 const KNOT_COUNT = 10;
@@ -13,4 +13,4 @@ const tail = knots.shift();
 
 directions.forEach((direction) => head.pull(direction));
 
-fs.writeFileSync('./09/output-2.txt', `${tail.positions.size}`);
+write(9, 2, `${tail.positions.size}`);

@@ -1,9 +1,6 @@
-import fs from 'fs';
+import { read, write } from '../utility.js';
 
-const grid = fs
-  .readFileSync('./08/input.txt', 'utf-8')
-  .split('\n')
-  .map((line) => line.split('').map((n) => parseInt(n, 10)));
+const grid = read(8).map((line) => line.split('').map((n) => parseInt(n, 10)));
 
 let visibleTreeCount = 0;
 let maxFromNorth = [...grid[0]];
@@ -70,4 +67,4 @@ function evaluate(direction, movingIndex, staticIndex, treeHeight, endValue) {
   return isVisible;
 }
 
-fs.writeFileSync('./08/output-1.txt', `${visibleTreeCount}`);
+write(8, 1, `${visibleTreeCount}`);

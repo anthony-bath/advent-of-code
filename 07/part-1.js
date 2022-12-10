@@ -1,10 +1,11 @@
-import fs from 'fs';
+import { write } from '../utility.js';
 import { loadDirectories } from './common.js';
 
 const directories = loadDirectories();
 
-fs.writeFileSync(
-  './07/output-1.txt',
+write(
+  7,
+  1,
   directories
     .map((directory) => directory.calculateSize())
     .filter((size) => size <= 100000)

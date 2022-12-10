@@ -1,8 +1,6 @@
-import fs from 'fs';
+import { read } from '../utility.js';
 
-export const directions = fs
-  .readFileSync('./09/input.txt', 'utf-8')
-  .split('\n')
+export const directions = read(9)
   .map((line) => {
     const [direction, distance] = line.split(' ');
     return direction.repeat(parseInt(distance)).split('');

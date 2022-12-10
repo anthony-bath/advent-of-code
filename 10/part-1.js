@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { write } from '../utility.js';
 import { cycles, TRACKED_CYCLE_INDICES } from './common.js';
 
 let X = 1;
@@ -12,4 +12,4 @@ for (let cycleIndex = 0; cycleIndex < cycles.length; cycleIndex++) {
   X += cycles[cycleIndex];
 }
 
-fs.writeFileSync('./10/output-1.txt', `${signalStrength}`);
+write(10, 1, `${signalStrength}`);

@@ -1,20 +1,18 @@
-import fs from 'fs';
-import { generatePriorityMap } from './common';
+import { read, write } from '../utility.js';
+import { generatePriorityMap } from './common.js';
 
 const priorityMap = generatePriorityMap();
 const groups = [];
 let currentGroup = [];
 
-fs.readFileSync('./03/input.txt', 'utf-8')
-  .split('\n')
-  .forEach((rucksack) => {
-    currentGroup.push(rucksack);
+read(3).forEach((rucksack) => {
+  currentGroup.push(rucksack);
 
-    if (currentGroup.length === 3) {
-      groups.push([...currentGroup]);
-      currentGroup = [];
-    }
-  });
+  if (currentGroup.length === 3) {
+    groups.push([...currentGroup]);
+    currentGroup = [];
+  }
+});
 
 const prioritySum = groups.reduce((sum, [r1, r2, r3]) => {
   const r2Set = new Set([...r2.split('')]);
@@ -24,4 +22,4 @@ const prioritySum = groups.reduce((sum, [r1, r2, r3]) => {
   return (sum += priorityMap.get(commonItem));
 }, 0);
 
-fs.writeFileSync('./03/output-2.txt', `${prioritySum}`);
+write(3, 2, `${prioritySum}`);

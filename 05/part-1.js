@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { write } from '../utility.js';
 import { loadData } from './common.js';
 
 const { stacks, instructions } = loadData();
@@ -11,4 +11,4 @@ instructions.forEach(([amount, sourceStackNumber, targetStackNumber]) => {
   targetStack.unshift(...movedItems.reverse());
 });
 
-fs.writeFileSync('./05/output-1.txt', `${stacks.map((stack) => stack[0]).join('')}`);
+write(5, 1, `${stacks.map((stack) => stack[0]).join('')}`);

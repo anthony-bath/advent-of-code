@@ -1,9 +1,6 @@
-import fs from 'fs';
+import { read, write } from '../utility.js';
 
-const grid = fs
-  .readFileSync('./08/input.txt', 'utf-8')
-  .split('\n')
-  .map((line) => line.split('').map((n) => parseInt(n, 10)));
+const grid = read(8).map((line) => line.split('').map((n) => parseInt(n, 10)));
 
 let maxScenicScoreSoFar = -Infinity;
 
@@ -45,7 +42,7 @@ for (let row = 0; row < grid.length; row++) {
   }
 }
 
-fs.writeFileSync('./08/output-2.txt', `${maxScenicScoreSoFar}`);
+write(8, 2, `${maxScenicScoreSoFar}`);
 
 function getScore(height, trees) {
   let score = 0;

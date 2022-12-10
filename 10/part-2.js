@@ -1,4 +1,4 @@
-import fs from 'fs';
+import { write } from '../utility.js';
 import { cycles, DARK_PIXEL, LIT_PIXEL, LINE_LENGTH } from './common.js';
 
 let X = 1;
@@ -20,4 +20,4 @@ for (let cycleIndex = 0; cycleIndex < cycles.length; cycleIndex++) {
   }
 }
 
-fs.writeFileSync('./10/output-2.txt', output.join('\n'));
+write(10, 2, output.join('\n'));
