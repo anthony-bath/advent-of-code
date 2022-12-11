@@ -1,4 +1,4 @@
-import { read, write } from '../utility.js';
+import { read } from '../utility.js';
 
 class Monkey {
   constructor(
