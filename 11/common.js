@@ -65,7 +65,7 @@ class Item {
 
     switch (operator) {
       case '*':
-        this.worryLevel = this.worryLevel * value;
+        this.worryLevel *= value;
         break;
       case '/':
         this.worryLevel = Math.floor(this.worryLevel / value);
@@ -77,7 +77,7 @@ class Item {
         this.worryLevel -= value;
         break;
       case '%':
-        this.worryLevel = this.worryLevel % value;
+        this.worryLevel %= value;
         break;
     }
   }
