@@ -40,7 +40,7 @@ const slopes = [
 while (slopes.some((slope) => !slope.atBottom)) {
   slopes.forEach((slope) => {
     if (!slope.atBottom) {
-      slope.progress(map);
+      slope.progress();
     }
   });
 }
