@@ -2,7 +2,15 @@ import { write, read } from '../utility.js';
 
 const HEIGHT = 183;
 
-const blockers = new Set();
+const blockers = {};
+
+function addBlocker(y, x) {
+  if (!blockers[y]) {
+    blockers[y] = {};
+  }
+
+  blockers[y][x] = 1;
+}
 
 console.time('Day 14 Part 2');
 read(14).forEach((line) => {
@@ -16,43 +24,39 @@ read(14).forEach((line) => {
     const p2 = points[i];
 
     if (p1.x === p2.x) {
-      // vertical line
-      for (let j = Math.min(p1.y, p2.y); j <= Math.max(p1.y, p2.y); j++) {
-        blockers.add(`${p1.x},${j}`);
+      const min = Math.min(p1.y, p2.y);
+      const max = Math.max(p1.y, p2.y);
+
+      for (let j = min; j <= max; j++) {
+        addBlocker(j, p1.x);
       }
     } else {
-      // horizontal line
-      for (let j = Math.min(p1.x, p2.x); j <= Math.max(p1.x, p2.x); j++) {
-        blockers.add(`${j},${p1.y}`);
+      const min = Math.min(p1.x, p2.x);
+      const max = Math.max(p1.x, p2.x);
+
+      for (let j = min; j <= max; j++) {
+        addBlocker(p1.y, j);
       }
     }
   }
 });
 
-let grain = { x: 500, y: 0, atRest: false };
-//const grains = new Set();
+let grain = { x: 500, y: 0 };
 const path = [];
 let grainCount = 0;
 
 while (true) {
-  if (grain.atRest) {
-    //grains.add(`${grain.x},${grain.y}`);
-    blockers.add(`${grain.x},${grain.y}`);
+  const moveDelta = getMoveDelta(grain);
+
+  if (!moveDelta) {
+    addBlocker(grain.y, grain.x);
     grainCount++;
 
     if (grain.x === 500 && grain.y === 0) {
       break;
     }
 
-    const { x, y } = path.pop();
-    grain = { x, y, atRest: false };
-    continue;
-  }
-
-  const moveDelta = getMoveDelta(grain);
-
-  if (!moveDelta) {
-    grain.atRest = true;
+    grain = path.pop();
     continue;
   }
 
@@ -71,15 +75,15 @@ function getMoveDelta({ x, y }) {
     return null;
   }
 
-  const down = `${x},${y + 1}`;
-  const downLeft = `${x - 1},${y + 1}`;
-  const downRight = `${x + 1},${y + 1}`;
+  if (!blockers[y + 1]) {
+    blockers[y + 1] = {};
+  }
 
-  if (!blockers.has(down)) {
+  if (!blockers[y + 1][x]) {
     return { xDelta: 0, yDelta: 1 };
-  } else if (!blockers.has(downLeft)) {
+  } else if (!blockers[y + 1][x - 1]) {
     return { xDelta: -1, yDelta: 1 };
-  } else if (!blockers.has(downRight)) {
+  } else if (!blockers[y + 1][x + 1]) {
     return { xDelta: 1, yDelta: 1 };
   }
 }
