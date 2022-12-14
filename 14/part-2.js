@@ -1,4 +1,4 @@
-import { output, read } from '../utility.js';
+import { write, read } from '../utility.js';
 
 const HEIGHT = 183;
 
@@ -15,10 +15,12 @@ read(14).forEach((line) => {
     const p2 = points[i];
 
     if (p1.x === p2.x) {
+      // vertical line
       for (let j = Math.min(p1.y, p2.y); j <= Math.max(p1.y, p2.y); j++) {
         rocks.add(`${p1.x},${j}`);
       }
     } else {
+      // horizontal line
       for (let j = Math.min(p1.x, p2.x); j <= Math.max(p1.x, p2.x); j++) {
         rocks.add(`${j},${p1.y}`);
       }
@@ -30,19 +32,7 @@ let grain = { x: 500, y: 0, atRest: false };
 const grains = new Set();
 
 while (true) {
-  if (!grain.atRest) {
-    if (canMoveDirectlyDown(grain)) {
-      grain.y++;
-    } else if (canMoveDownLeft(grain)) {
-      grain.y++;
-      grain.x--;
-    } else if (canMoveDownRight(grain)) {
-      grain.y++;
-      grain.x++;
-    } else {
-      grain.atRest = true;
-    }
-  } else {
+  if (grain.atRest) {
     grains.add(`${grain.x},${grain.y}`);
 
     if (grain.x === 500 && grain.y === 0) {
@@ -50,41 +40,37 @@ while (true) {
     }
 
     grain = { x: 500, y: 0, atRest: false };
+    continue;
   }
+
+  const moveDelta = getMoveDelta(grain);
+
+  if (!moveDelta) {
+    grain.atRest = true;
+    continue;
+  }
+
+  const { xDelta, yDelta } = moveDelta;
+  grain.x += xDelta;
+  grain.y += yDelta;
 }
 
-function canMoveDirectlyDown({ x, y }) {
+write(14, 2, `${grains.size}`);
+
+function getMoveDelta({ x, y }) {
   if (y + 1 >= HEIGHT) {
-    return false;
+    return null;
   }
 
-  if (rocks.has(`${x},${y + 1}`) || grains.has(`${x},${y + 1}`)) {
-    return false;
+  const down = `${x},${y + 1}`;
+  const downLeft = `${x - 1},${y + 1}`;
+  const downRight = `${x + 1},${y + 1}`;
+
+  if (!rocks.has(down) && !grains.has(down)) {
+    return { xDelta: 0, yDelta: 1 };
+  } else if (!rocks.has(downLeft) && !grains.has(downLeft)) {
+    return { xDelta: -1, yDelta: 1 };
+  } else if (!rocks.has(downRight) && !grains.has(downRight)) {
+    return { xDelta: 1, yDelta: 1 };
   }
-
-  return true;
-}
-
-function canMoveDownLeft({ x, y }) {
-  if (y + 1 >= HEIGHT) {
-    return false;
-  }
-
-  if (rocks.has(`${x - 1},${y + 1}`) || grains.has(`${x - 1},${y + 1}`)) {
-    return false;
-  }
-
-  return true;
-}
-
-function canMoveDownRight({ x, y }) {
-  if (y + 1 >= HEIGHT) {
-    return false;
-  }
-
-  if (rocks.has(`${x + 1},${y + 1}`) || grains.has(`${x + 1},${y + 1}`)) {
-    return false;
-  }
-
-  return true;
 }
