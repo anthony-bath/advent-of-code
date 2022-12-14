@@ -41,13 +41,14 @@ function compare(left, right) {
 }
 
 const input = read(13);
-const packets = [[[2]], [[6]]];
+const markers = [[[2]], [[6]]];
+const packets = [...markers];
 
 for (const line of input) {
   if (!line) continue;
   packets.push(JSON.parse(line));
 }
 
-const stringified = packets.sort(compare).map((packet) => JSON.stringify(packet));
+packets.sort(compare);
 
-write(13, 2, `${(1 + stringified.indexOf('[[6]]')) * (1 + stringified.indexOf('[[2]]'))}`);
+write(13, 2, `${(1 + packets.indexOf(markers[0])) * (1 + packets.indexOf(markers[1]))}`);
