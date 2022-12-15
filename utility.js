@@ -2,6 +2,7 @@ import fs from 'fs';
 import { EOL } from 'os';
 
 export function write(day, part, content) {
+  console.log(content);
   fs.writeFileSync(`./${day.toString().padStart(2, '0')}/output-${part}.txt`, content);
 }
 

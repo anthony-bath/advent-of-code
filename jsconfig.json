@@ -1,0 +1,6 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "NodeNext",
+  },
+  "exclude": ["node_modules"]
+}
