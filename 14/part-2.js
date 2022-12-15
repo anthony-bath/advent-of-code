@@ -76,7 +76,7 @@ function getMoveDelta({ x, y }) {
   }
 
   if (!blockers[y + 1]) {
-    blockers[y + 1] = {};
+    return { xDelta: 0, yDelta: 1 };
   }
 
   if (!blockers[y + 1][x]) {
