@@ -1,6 +1,7 @@
-import { read, output } from '../utility.js';
+import { read, write } from '../utility.js';
 
 const digits = new RegExp(/-?\d+/g);
+const SEARCH_Y = 2000000;
 
 class Sensor {
   constructor(x, y, bx, by) {
@@ -12,25 +13,32 @@ class Sensor {
   }
 }
 
-const beacons = new Set();
+const beacons = {};
 
 const sensors = read(15).map((line) => {
   const [sx, sy, bx, by] = line.match(digits).map((n) => parseInt(n));
-  beacons.add(`${bx},${by}`);
+
+  if (by === SEARCH_Y) {
+    beacons[bx] = 1;
+  }
+
   return new Sensor(sx, sy, bx, by);
 });
 
-const targetY = 2000000;
-const points = new Set();
+let unavailableLocations = 0;
+let alreadyUnavailable = {};
 
 sensors.forEach((sensor) => {
-  const yDiff = Math.abs(sensor.y - targetY);
+  const yDiff = Math.abs(sensor.y - SEARCH_Y);
   const startX = sensor.x - sensor.range + yDiff;
   const endX = sensor.x + sensor.range - yDiff;
 
   for (let x = startX; x <= endX; x++) {
-    if (!beacons.has(`${x},${targetY}`)) points.add(x);
+    if (!beacons[x] && !alreadyUnavailable[x]) {
+      alreadyUnavailable[x] = 1;
+      unavailableLocations++;
+    }
   }
 });
 
-console.log(points.size);
+write(15, 1, `${unavailableLocations}`);

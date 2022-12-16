@@ -1,6 +1,8 @@
-import { read, output } from '../utility.js';
+import { read, write } from '../utility.js';
+import { filterAndSortRanges, findMissingWithinRanges } from './common.js';
 
 const digits = new RegExp(/-?\d+/g);
+const SEARCH_RANGE = 4000000;
 
 class Sensor {
   constructor(x, y, bx, by) {
@@ -14,25 +16,19 @@ class Sensor {
   }
 }
 
-const beacons = new Set();
-
 const sensors = read(15).map((line) => {
   const [sx, sy, bx, by] = line.match(digits).map((n) => parseInt(n));
-  beacons.add(`${bx},${by}`);
   return new Sensor(sx, sy, bx, by);
 });
 
-sensors.sort((a, b) => a.left - b.left);
+let foundX;
 
-const RANGE = 4000000;
-let foundX = [];
-for (let y = 0; y <= RANGE; y++) {
+for (let y = 0; y <= SEARCH_RANGE; y++) {
   const ranges = sensors.reduce((ranges, sensor) => {
     if (y >= sensor.top && y <= sensor.bottom) {
       const yDiff = Math.abs(sensor.y - y);
       const start = Math.max(0, sensor.left + yDiff);
-      const end = Math.min(RANGE, sensor.right - yDiff);
-      //console.log(end);
+      const end = Math.min(SEARCH_RANGE, sensor.right - yDiff);
 
       return [...ranges, { start, end }];
     } else {
@@ -40,93 +36,26 @@ for (let y = 0; y <= RANGE; y++) {
     }
   }, []);
 
-  const filteredSortedRanges = ranges
-    .sort((a, b) => a.start - b.start)
-    .filter((range, index) => {
-      if (index === 0) return range;
+  const filteredSortedRanges = filterAndSortRanges(ranges);
+  const result = findMissingWithinRanges(filteredSortedRanges);
 
-      return range.end > ranges[index - 1].end;
-    });
-
-  //console.log(filteredSortedRanges);
-
-  let currentEnd = 0;
-  for (const range of filteredSortedRanges) {
-    if (currentEnd === 0) {
-      currentEnd = range.end;
-      continue;
-    }
-
-    if (range.end <= currentEnd) {
-      continue;
-    }
-
-    if ((range.start <= currentEnd && range.end > currentEnd) || range.start - currentEnd === 1) {
-      currentEnd = range.end;
-    }
-
-    if (range.start - currentEnd > 1) {
-      foundX.push(currentEnd + 1);
-      break;
-    }
+  if (result) {
+    foundX = result;
+    break;
   }
 }
 
-console.log(foundX);
+const ranges = sensors
+  .filter((sensor) => sensor.left <= foundX && sensor.right >= foundX)
+  .reduce((ranges, sensor) => {
+    const xDiff = Math.abs(sensor.x - foundX);
+    const start = Math.max(0, sensor.top + xDiff);
+    const end = Math.min(SEARCH_RANGE, sensor.bottom - xDiff);
 
-let foundY = [];
-
-for (let x = 0; x <= RANGE; x++) {
-  const ranges = sensors.reduce((ranges, sensor) => {
-    if (x >= sensor.left && x <= sensor.right) {
-      const xDiff = Math.abs(sensor.x - x);
-      const start = Math.max(0, sensor.top + xDiff);
-      const end = Math.min(RANGE, sensor.bottom - xDiff);
-
-      return [...ranges, { start, end }];
-    } else {
-      return ranges;
-    }
+    return [...ranges, { start, end }];
   }, []);
 
-  const filteredSortedRanges = ranges
-    .sort((a, b) => a.start - b.start)
-    .filter((range, index) => {
-      if (index === 0) return range;
+const filteredSortedRanges = filterAndSortRanges(ranges);
+const foundY = findMissingWithinRanges(filteredSortedRanges);
 
-      return range.end > ranges[index - 1].end;
-    });
-
-  let currentEnd = 0;
-  for (const range of filteredSortedRanges) {
-    if (currentEnd === 0) {
-      currentEnd = range.end;
-      continue;
-    }
-
-    if (range.end <= currentEnd) {
-      continue;
-    }
-
-    if ((range.start <= currentEnd && range.end > currentEnd) || range.start - currentEnd === 1) {
-      currentEnd = range.end;
-    }
-
-    if (range.start - currentEnd > 1) {
-      foundY.push(currentEnd + 1);
-      break;
-    }
-  }
-}
-
-console.log(foundY);
-
-console.log(foundX[0] * 4000000 + foundY[0]);
-
-//
-
-// console.log(
-//   sensors
-//     .map((sensor) => `${sensor.left}-${sensor.right}\t${sensor.top}-${sensor.bottom}`)
-//     .join('\n')
-// );
+write(15, 2, `${foundX * 4000000 + foundY}`);
