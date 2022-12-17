@@ -1,9 +1,8 @@
-// INCOMPLETE WIP
-
 import { output, read, write } from '../utility.js';
 
 const JET_PATTERN = read(17, '');
 const CAVERN_WIDTH = 7;
+const TARGET_ROCK_COUNT = 1000000000000;
 const MINUS_ROCK_TEMPLATE = {
   id: 'm',
   points: [
@@ -69,6 +68,7 @@ class Rock {
     this.template = template;
     this.points = [];
     this.atRest = false;
+    this.restRow = null;
   }
 
   spawn(offsetX, offsetY) {
@@ -90,6 +90,8 @@ class Rock {
     ) {
       this.atRest = true;
       this.points.forEach(({ x, y }) => (occupiedPoints[`${x},${y}`] = 1));
+      const minY = Math.min(...this.points.map((point) => point.y));
+      this.restRow = [...Array(7).keys()].map((x) => occupiedPoints[`${x},${minY}`] || '.');
     } else {
       this.points = this.points.map(({ x, y }) => ({ x, y: y - 1 }));
     }
@@ -122,9 +124,7 @@ class Rock {
               x: x + 1,
               y,
             }))
-            .some(
-              ({ x, y }) => x > CAVERN_WIDTH - 1 || occupiedPoints[`${x},${y}`]
-            )
+            .some(({ x, y }) => x > CAVERN_WIDTH - 1 || occupiedPoints[`${x},${y}`])
         ) {
           return;
         } else {
@@ -146,15 +146,15 @@ let blowCount = 0;
 let currentRock = null;
 let highPoint = 0;
 let nextAction = 'blow';
+let detectedCycle = null;
+let heights = new Map();
 const dp = [];
 
-while (rockCount < 500) {
+while (true) {
   const direction = JET_PATTERN[blowCount % JET_PATTERN.length];
 
   if (!currentRock) {
-    currentRock = new Rock(
-      TEMPLATE_SPAWN_ORDER[rockCount % TEMPLATE_SPAWN_ORDER.length]
-    );
+    currentRock = new Rock(TEMPLATE_SPAWN_ORDER[rockCount % TEMPLATE_SPAWN_ORDER.length]);
     currentRock.spawn(2, highPoint + 3);
     nextAction = 'blow';
   }
@@ -172,20 +172,21 @@ while (rockCount < 500) {
       if (currentRock.atRest) {
         rockCount++;
         highPoint = Math.max(highPoint, currentRock.getMaxVerticalPoint() + 1);
+        heights.set(rockCount, highPoint);
 
-        const cavern = getCavern(occupiedPoints)
-          .map((row) => row.join(''))
-          .join('');
+        const blowIndex = (blowCount - 1) % JET_PATTERN.length;
+        const key = `${currentRock.template.id}-${blowIndex}-${currentRock.restRow}`;
 
-        // const key = `${currentRock.template.id}-${cavernTop}-${
-        //   JET_PATTERN[(blowCount - 1) % JET_PATTERN.length]
-        // }`;
-
-        // if (!dp[key]) {
-        //   dp[key] = { highPoint, rockCount };
-        // } else {
-        //   console.log(key, dp[key], rockCount, highPoint);
-        // }
+        if (!dp[key]) {
+          dp[key] = { highPoint, rockCount };
+        } else {
+          detectedCycle = {
+            cycleStart: dp[key].rockCount,
+            heightAtCycleStart: dp[key].highPoint,
+            cycleSize: rockCount - dp[key].rockCount,
+            heightPerCycle: highPoint - dp[key].highPoint,
+          };
+        }
 
         currentRock = null;
       } else {
@@ -193,29 +194,18 @@ while (rockCount < 500) {
       }
       break;
   }
+
+  if (detectedCycle) {
+    break;
+  }
 }
 
-output(
-  getCavern(occupiedPoints)
-    .map((row) => row.join(''))
-    .join('\n')
-);
+const { cycleStart, cycleSize, heightAtCycleStart, heightPerCycle } = detectedCycle;
 
-function getCavern(occupiedPoints) {
-  const lines = [];
-  Object.keys(occupiedPoints).forEach((point) => {
-    const [x, y] = point.split(',').map((n) => Number(n));
+const completeCycles = Math.floor((TARGET_ROCK_COUNT - cycleStart) / cycleSize);
+const heightFromCycles = completeCycles * heightPerCycle;
+const heightFromBeforeCycleStarted = heightAtCycleStart;
+const partialCycleSize = TARGET_ROCK_COUNT - cycleStart - completeCycles * cycleSize;
+const partialCycleHeight = heights.get(cycleStart + partialCycleSize) - heightAtCycleStart;
 
-    if (!lines[y]) {
-      lines[y] = Array(7).fill('.');
-    }
-
-    lines[y][x] = '#';
-  });
-
-  return lines.reverse();
-}
-
-console.log(blowCount);
-
-write(17, 2, `${highPoint}`);
+write(17, 2, `${heightFromCycles + heightFromBeforeCycleStarted + partialCycleHeight}`);

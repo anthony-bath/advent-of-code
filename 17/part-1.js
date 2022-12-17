@@ -105,9 +105,7 @@ class Rock {
               x: x + 1,
               y,
             }))
-            .some(
-              ({ x, y }) => x > CAVERN_WIDTH - 1 || occupiedPoints[`${x},${y}`]
-            )
+            .some(({ x, y }) => x > CAVERN_WIDTH - 1 || occupiedPoints[`${x},${y}`])
         ) {
           return;
         } else {
@@ -132,9 +130,7 @@ let nextAction = 'blow';
 
 while (rockCount < 2022) {
   if (!currentRock) {
-    currentRock = new Rock(
-      TEMPLATE_SPAWN_ORDER[rockCount % TEMPLATE_SPAWN_ORDER.length]
-    );
+    currentRock = new Rock(TEMPLATE_SPAWN_ORDER[rockCount % TEMPLATE_SPAWN_ORDER.length]);
     currentRock.spawn(2, highPoint + 3);
     nextAction = 'blow';
   }
@@ -159,26 +155,6 @@ while (rockCount < 2022) {
       }
       break;
   }
-}
-
-function printCavern(occupiedPoints) {
-  const lines = [];
-  Object.keys(occupiedPoints).forEach((point) => {
-    const [x, y] = point.split(',').map((n) => Number(n));
-
-    if (!lines[y]) {
-      lines[y] = Array(7).fill('.');
-    }
-
-    lines[y][x] = '#';
-  });
-
-  output(
-    lines
-      .reverse()
-      .map((row) => row.join(''))
-      .join('\n')
-  );
 }
 
 write(17, 1, `${highPoint}`);
