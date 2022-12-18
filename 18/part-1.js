@@ -1,29 +1,22 @@
 import { read, write } from '../utility.js';
+import { getNeighbors, getKey } from './common.js';
 
-const cache = {};
-const parsed = [];
+const lavaCache = {};
+const lavaCoordinates = [];
 
 read(18).forEach((line) => {
   const [x, y, z] = line.split(',').map((n) => Number(n));
-  parsed.push([x, y, z]);
-
-  cache[`${x}-${y}-${z}`] = 1;
+  lavaCoordinates.push([x, y, z]);
+  lavaCache[`${x}-${y}-${z}`] = 1;
 });
 
 const countFromCache = (x, y, z) => {
-  const keys = [
-    `${x - 1}-${y}-${z}`,
-    `${x + 1}-${y}-${z}`,
-    `${x}-${y + 1}-${z}`,
-    `${x}-${y - 1}-${z}`,
-    `${x}-${y}-${z + 1}`,
-    `${x}-${y}-${z - 1}`,
-  ];
-
-  return keys.reduce((count, key) => count + (cache[key] ? 0 : 1), 0);
+  return getNeighbors([x, y, z])
+    .map(getKey)
+    .reduce((count, key) => count + (lavaCache[key] ? 0 : 1), 0);
 };
 
-const surfaceArea = parsed.reduce(
+const surfaceArea = lavaCoordinates.reduce(
   (area, [x, y, z]) => area + countFromCache(x, y, z),
   0
 );

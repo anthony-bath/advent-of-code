@@ -1,4 +1,5 @@
 import { read, write } from '../utility.js';
+import { getKey, getNeighbors } from './common.js';
 
 const lavaCache = {};
 const waterCache = {};
@@ -25,21 +26,6 @@ function inRange([x, y, z]) {
   );
 }
 
-function getKey([x, y, z]) {
-  return `${x}-${y}-${z}`;
-}
-
-function getNeighbors([x, y, z]) {
-  return [
-    [x + 1, y, z],
-    [x - 1, y, z],
-    [x, y + 1, z],
-    [x, y - 1, z],
-    [x, y, z + 1],
-    [x, y, z - 1],
-  ];
-}
-
 function fill(origin) {
   const queue = [origin];
 
@@ -59,16 +45,9 @@ function fill(origin) {
 }
 
 const getArea = ([x, y, z]) => {
-  const keys = [
-    `${x - 1}-${y}-${z}`,
-    `${x + 1}-${y}-${z}`,
-    `${x}-${y + 1}-${z}`,
-    `${x}-${y - 1}-${z}`,
-    `${x}-${y}-${z + 1}`,
-    `${x}-${y}-${z - 1}`,
-  ];
-
-  return keys.reduce((count, key) => count + (waterCache[key] ? 1 : 0), 0);
+  return getNeighbors([x, y, z])
+    .map(getKey)
+    .reduce((count, key) => count + (waterCache[key] ? 1 : 0), 0);
 };
 
 fill([minX, minY, minZ]);
