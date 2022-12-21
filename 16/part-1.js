@@ -62,7 +62,6 @@ function dfs(state) {
     .filter(
       ({ name }) =>
         !state.openedValves.includes(name) &&
-        name !== state.valve.name &&
         state.minutes > distance[state.valve.name][name] + 1
     )
     .map(({ name }) => valvesByName.get(name));
