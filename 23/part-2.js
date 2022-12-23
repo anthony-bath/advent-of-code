@@ -1,38 +1,14 @@
 import { read, write } from '../utility.js';
+import { Elf, NORTH_MOVES, SOUTH_MOVES, WEST_MOVES, EAST_MOVES, ALL_MOVES } from './common.js';
 
 let [minX, minY, maxX, maxY] = [Infinity, Infinity, -Infinity, -Infinity];
-
-class Point {
-  constructor([x, y]) {
-    this.x = x;
-    this.y = y;
-  }
-
-  add([x, y]) {
-    return new Point([this.x + x, this.y + y]);
-  }
-
-  propose(proposed) {
-    this.proposed = proposed;
-  }
-
-  moveToProposal() {
-    this.x = this.proposed.x;
-    this.y = this.proposed.y;
-  }
-
-  toString() {
-    return `${this.x},${this.y}`;
-  }
-}
-
 const elves = [];
 
 read(23).forEach((line, y) => {
   line.split('').forEach((cell, x) => {
     if (cell === '.') return;
 
-    elves.push(new Point([x, y]));
+    elves.push(new Elf([x, y]));
 
     if (x > maxX) maxX = x;
     if (y > maxY) maxY = y;
@@ -41,35 +17,9 @@ read(23).forEach((line, y) => {
   });
 });
 
-const occupiedPoints = new Set(elves.map((point) => point.toString()));
-
-const NORTH_MOVES = [
-  [0, -1], //N
-  [-1, -1], //NW
-  [1, -1], //NE
-];
-
-const SOUTH_MOVES = [
-  [0, 1], //S
-  [-1, 1], //SW
-  [1, 1], //SE
-];
-
-const WEST_MOVES = [
-  [-1, 0], //W
-  [-1, -1], //NW
-  [-1, 1], //SW
-];
-
-const EAST_MOVES = [
-  [1, 0], //E
-  [1, -1], //NE
-  [1, 1], //SE
-];
-
+const occupiedPoints = new Set(elves.map((elf) => elf.location.toString()));
 let proposalOrder = [NORTH_MOVES, SOUTH_MOVES, WEST_MOVES, EAST_MOVES];
-
-let round = 0;
+let round = 1;
 
 while (true) {
   const proposals = new Map();
@@ -79,40 +29,29 @@ while (true) {
   for (const elf of elves) {
     elf.propose(null);
 
-    const allChecks = proposalOrder.reduce(
-      (allMoves, moves) => [...allMoves, ...moves],
-      []
-    );
-
-    if (
-      allChecks.every((check) => !occupiedPoints.has(elf.add(check).toString()))
-    ) {
+    if (ALL_MOVES.every((check) => !occupiedPoints.has(elf.location.add(check).toString()))) {
       continue;
     }
 
     for (const moves of proposalOrder) {
-      const checks = moves.map((move) => elf.add(move));
+      const possibleLocations = moves.map(([dx, dy]) => elf.location.add([dx, dy]));
 
-      if (checks.every((check) => !occupiedPoints.has(check.toString()))) {
-        const proposal = checks[0];
-        elf.propose(proposal);
-        elvesWhoProposed.push(elf);
-
-        if (!proposals.has(proposal.toString())) {
-          proposals.set(proposal.toString(), 1);
-        } else {
-          proposals.set(
-            proposal.toString(),
-            proposals.get(proposal.toString()) + 1
-          );
-        }
-
-        // console.log(
-        //   `Elf at ${elf.toString()} proposed ${elf.proposed.toString()}`
-        // );
-
-        break;
+      if (possibleLocations.some((location) => occupiedPoints.has(location.toString()))) {
+        continue;
       }
+
+      const proposal = possibleLocations[0];
+      elf.propose(proposal);
+      elvesWhoProposed.push(elf);
+
+      const key = proposal.toString();
+      if (!proposals.has(key)) {
+        proposals.set(key, 1);
+      } else {
+        proposals.set(key, proposals.get(key) + 1);
+      }
+
+      break;
     }
   }
 
@@ -120,48 +59,27 @@ while (true) {
   let elvesWhoMoved = 0;
   for (const elf of elvesWhoProposed) {
     if (proposals.get(elf.proposed.toString()) === 1) {
-      occupiedPoints.delete(elf.toString());
+      occupiedPoints.delete(elf.location.toString());
+      occupiedPoints.add(elf.proposed.toString());
       elf.moveToProposal();
-
-      if (elf.x < minX) minX = elf.x;
-      if (elf.x > maxX) maxX = elf.x;
-      if (elf.y < minY) minY = elf.y;
-      if (elf.y > maxY) maxY = elf.y;
-
-      occupiedPoints.add(elf.toString());
       elvesWhoMoved++;
+
+      const { x, y } = elf.location;
+
+      if (x < minX) minX = x;
+      else if (x > maxX) maxX = x;
+
+      if (y < minY) minY = y;
+      else if (y > maxY) maxY = y;
     }
   }
 
   if (elvesWhoMoved === 0) {
     break;
-  } else {
-    round++;
   }
 
-  //print(round);
-
+  round++;
   proposalOrder = [...proposalOrder.slice(1), proposalOrder[0]];
 }
 
-function print(round) {
-  const output = [];
-  for (let y = minY; y <= maxY; y++) {
-    const line = [];
-    for (let x = minX; x <= maxX; x++) {
-      if (!occupiedPoints.has(`${x},${y}`)) {
-        line.push('.');
-      } else {
-        line.push('#');
-      }
-    }
-
-    output.push(line.join(''));
-  }
-
-  console.log(`\nAFTER ROUND ${round + 1}`);
-  console.log(output.join('\n'));
-  console.log('');
-}
-
-write(23, 2, `${1 + round}`);
+write(23, 2, `${round}`);

@@ -28,26 +28,18 @@ export class Point {
   }
 }
 
-export const NORTH_MOVES = [
-  [0, -1], //N
-  [-1, -1], //NW
-  [1, -1], //NE
-];
+const N = [0, -1];
+const NW = [-1, -1];
+const NE = [1, -1];
+const S = [0, 1];
+const SW = [-1, 1];
+const SE = [1, 1];
+const W = [-1, 0];
+const E = [1, 0];
 
-export const SOUTH_MOVES = [
-  [0, 1], //S
-  [-1, 1], //SW
-  [1, 1], //SE
-];
+export const ALL_MOVES = [N, S, W, E, NW, NE, SW, SE];
 
-export const WEST_MOVES = [
-  [-1, 0], //W
-  [-1, -1], //NW
-  [-1, 1], //SW
-];
-
-export const EAST_MOVES = [
-  [1, 0], //E
-  [1, -1], //NE
-  [1, 1], //SE
-];
+export const NORTH_MOVES = [N, NW, NE];
+export const SOUTH_MOVES = [S, SW, SE];
+export const WEST_MOVES = [W, NW, SW];
+export const EAST_MOVES = [E, NE, SE];

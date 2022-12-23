@@ -1,5 +1,5 @@
 import { read, write } from '../utility.js';
-import { Elf, NORTH_MOVES, SOUTH_MOVES, WEST_MOVES, EAST_MOVES } from './common.js';
+import { Elf, NORTH_MOVES, SOUTH_MOVES, WEST_MOVES, EAST_MOVES, ALL_MOVES } from './common.js';
 
 let [minX, minY, maxX, maxY] = [Infinity, Infinity, -Infinity, -Infinity];
 const elves = [];
@@ -30,36 +30,29 @@ for (let round = 0; round < ROUNDS; round++) {
   for (const elf of elves) {
     elf.propose(null);
 
-    let adjacentOccupiedCount = 0;
-
-    for (const moves of proposalOrder) {
-      const possibleLocations = moves.map((move) => elf.location.add(move));
-      const occupied = possibleLocations.reduce(
-        (count, location) => (count + occupiedPoints.has(location.toString()) ? 1 : 0),
-        0
-      );
-
-      if (!elf.proposed && occupied === 0) {
-        const proposal = possibleLocations[0];
-        elf.propose(proposal);
-        elvesWhoProposed.push(elf);
-
-        const key = proposal.toString();
-        if (!proposals.has(key)) {
-          proposals.set(key, 1);
-        } else {
-          proposals.set(key, proposals.get(key) + 1);
-        }
-      }
-
-      adjacentOccupiedCount += occupied;
+    if (ALL_MOVES.every((check) => !occupiedPoints.has(elf.location.add(check).toString()))) {
+      continue;
     }
 
-    if (adjacentOccupiedCount === 0) {
-      const key = elf.proposed.toString();
-      proposals.set(key, proposals.get(key) - 1);
-      elf.propose(null);
-      elvesWhoProposed.pop();
+    for (const moves of proposalOrder) {
+      const possibleLocations = moves.map(([dx, dy]) => elf.location.add([dx, dy]));
+
+      if (possibleLocations.some((location) => occupiedPoints.has(location.toString()))) {
+        continue;
+      }
+
+      const proposal = possibleLocations[0];
+      elf.propose(proposal);
+      elvesWhoProposed.push(elf);
+
+      const key = proposal.toString();
+      if (!proposals.has(key)) {
+        proposals.set(key, 1);
+      } else {
+        proposals.set(key, proposals.get(key) + 1);
+      }
+
+      break;
     }
   }
 
