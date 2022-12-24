@@ -100,7 +100,6 @@ function isBlizzardOccupied(minute, location) {
 
 function bfs(state, visited) {
   const queue = [state];
-  let minimum = Infinity;
 
   visited[`${state.minute}-${state.x}-${state.y}`] = 1;
 
@@ -108,12 +107,8 @@ function bfs(state, visited) {
     const current = queue.shift();
     const { minute, x, y, goalX, goalY } = current;
 
-    if (minute > minimum) {
-      continue;
-    }
-
     if (x === goalX && y === goalY) {
-      minimum = Math.min(minimum, minute);
+      return minute;
     } else {
       // Move Down
       let location = `${x},${y + 1}`;
@@ -171,8 +166,6 @@ function bfs(state, visited) {
       }
     }
   }
-
-  return minimum;
 }
 
 const initialState = {
