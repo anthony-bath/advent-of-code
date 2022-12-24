@@ -122,6 +122,7 @@ input.forEach((row, y) => {
   });
 });
 
+// Pre-Calculate Blizzard Locations at all possible minutes per dimensions
 const vBlizzardLocationsByMinute = new Map();
 const hBlizzardLocationsByMinute = new Map();
 
@@ -146,26 +147,7 @@ function isBlizzardOccupied(minute, location) {
   );
 }
 
-// for (let i = 1; i < 19; i++) {
-//   console.log(`Minute ${i}`);
-//   print(i);
-//   console.log();
-// }
-
-// process.exit();
-
-const initialState = {
-  minute: 0,
-  x: startX,
-  y: 0,
-  path: [],
-};
-
-let minSoFar = Infinity;
-const cache = {};
-const visited = {};
-
-function bfs(state) {
+function bfs(state, visited) {
   const queue = [state];
   let minimum = Infinity;
 
@@ -173,18 +155,15 @@ function bfs(state) {
 
   while (queue.length) {
     const current = queue.shift();
-    const { minute, x, y } = current;
+    const { minute, x, y, goalX, goalY } = current;
 
     if (minute > minimum) {
       continue;
     }
 
-    if (x === endX && y === HEIGHT - 1) {
+    if (x === goalX && y === goalY) {
       minimum = Math.min(minimum, minute);
     } else {
-      // Compute where blizzards will be at (minute+1) to determine options
-      //const nextLocations = new Set(blizzards.map((blizzard) => blizzard.getLocation(minute + 1)));
-
       // Move Down
       let location = `${x},${y + 1}`;
       if (
@@ -193,34 +172,36 @@ function bfs(state) {
         !visited[`${minute + 1}-${x}-${y + 1}`]
       ) {
         visited[`${minute + 1}-${x}-${y + 1}`] = 1;
-        queue.push({ minute: minute + 1, x, y: y + 1 });
+        queue.push({ minute: minute + 1, x, y: y + 1, goalX, goalY });
       }
 
-      // Move Right (if not on start row)
+      // Move Right (if not on start or end row)
       location = `${x + 1},${y}`;
       if (
-        y > 0 &&
+        y !== 0 &&
+        y !== HEIGHT - 1 &&
         x + 1 <= WIDTH - 2 &&
         !isBlizzardOccupied(minute + 1, location) &&
         !visited[`${minute + 1}-${x + 1}-${y}`]
       ) {
         visited[`${minute + 1}-${x + 1}-${y}`] = 1;
-        queue.push({ minute: minute + 1, x: x + 1, y });
+        queue.push({ minute: minute + 1, x: x + 1, y, goalX, goalY });
       }
 
-      // Move Left (if not on start row)
+      // Move Left (if not on start  or end row)
       location = `${x - 1},${y}`;
       if (
-        y > 0 &&
+        y !== 0 &&
+        y !== HEIGHT - 1 &&
         x - 1 >= 1 &&
         !isBlizzardOccupied(minute + 1, location) &&
         !visited[`${minute + 1}-${x - 1}-${y}`]
       ) {
         visited[`${minute + 1}-${x - 1}-${y}`] = 1;
-        queue.push({ minute: minute + 1, x: x - 1, y });
+        queue.push({ minute: minute + 1, x: x - 1, y, goalX, goalY });
       }
 
-      // Move Up (assuming never move back to starting position which might be a bad assumption)
+      // Move Up
       location = `${x},${y - 1}`;
       if (
         (y - 1 >= 1 || (x === startX && y - 1 === 0)) &&
@@ -228,14 +209,14 @@ function bfs(state) {
         !visited[`${minute + 1}-${x}-${y - 1}`]
       ) {
         visited[`${minute + 1}-${x}-${y - 1}`] = 1;
-        queue.push({ minute: minute + 1, x, y: y - 1 });
+        queue.push({ minute: minute + 1, x, y: y - 1, goalX, goalY });
       }
 
       // Wait
       location = `${x},${y}`;
       if (!visited[`${minute + 1}-${x}-${y}`] && !isBlizzardOccupied(minute + 1, location)) {
         visited[`${minute + 1}-${x}-${y}`] = 1;
-        queue.push({ minute: minute + 1, x, y });
+        queue.push({ minute: minute + 1, x, y, goalX, goalY });
       }
     }
   }
@@ -243,4 +224,16 @@ function bfs(state) {
   return minimum;
 }
 
-write(24, 1, `${bfs(initialState)}`);
+const initialState = {
+  minute: 0,
+  x: startX,
+  y: 0,
+  goalX: endX,
+  goalY: HEIGHT - 1,
+};
+
+const p1 = bfs(initialState, {});
+const p2 = bfs({ minute: p1, x: endX, y: HEIGHT - 1, goalX: startX, goalY: 0 }, {});
+const p3 = bfs({ ...initialState, minute: p2 }, {});
+
+write(24, 2, `${p3}`);
