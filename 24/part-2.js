@@ -9,40 +9,38 @@ const possibleX = Array.from({ length: WIDTH - 2 }).map((_, i) => i + 1);
 const possibleY = Array.from({ length: HEIGHT - 2 }).map((_, i) => i + 1);
 
 class Blizzard {
-  constructor(x, y, dx, dy, cycleX, cycleY) {
+  constructor(x, y, type, delta, cycle) {
     this.x = x;
     this.y = y;
-    this.dx = dx;
-    this.dy = dy;
-    this.cycleX = cycleX;
-    this.cycleY = cycleY;
-    this.index = dx !== 0 ? possibleX.indexOf(x) : possibleY.indexOf(y);
+    this.type = type;
+    this.delta = delta;
+    this.cycle = cycle;
+
+    this.index = this.type === 'h' ? possibleX.indexOf(x) : possibleY.indexOf(y);
+    this.maxIndex = this.type === 'h' ? possibleX.length - 1 : possibleY.length - 1;
   }
 
   getLocation(minute) {
-    let shifts = minute % (this.cycleY ? this.cycleY : this.cycleX);
+    let shifts = minute % this.cycle;
 
     if (shifts === 0) return `${this.x},${this.y}`;
 
     let targetIndex = this.index;
 
     while (shifts > 0) {
-      targetIndex += this.cycleY ? this.dy : this.dx;
+      targetIndex += this.delta;
 
       if (targetIndex < 0) {
-        targetIndex = this.cycleY ? possibleY.length - 1 : possibleX.length - 1;
-      } else if (
-        (this.cycleY && targetIndex === possibleY.length) ||
-        (this.cycleX && targetIndex === possibleX.length)
-      ) {
+        targetIndex = this.maxIndex;
+      } else if (targetIndex === this.maxIndex + 1) {
         targetIndex = 0;
       }
 
       shifts--;
     }
 
-    const x = this.cycleY ? this.x : possibleX[targetIndex];
-    const y = this.cycleY ? possibleY[targetIndex] : this.y;
+    const x = this.type === 'h' ? possibleX[targetIndex] : this.x;
+    const y = this.type === 'v' ? possibleY[targetIndex] : this.y;
 
     return `${x},${y}`;
   }
@@ -57,16 +55,16 @@ input.forEach((row, y) => {
   row.split('').forEach((cell, x) => {
     switch (cell) {
       case '<':
-        horizontalBlizzards.push(new Blizzard(x, y, -1, 0, WIDTH - 2, null));
+        horizontalBlizzards.push(new Blizzard(x, y, 'h', -1, WIDTH - 2));
         break;
       case '>':
-        horizontalBlizzards.push(new Blizzard(x, y, 1, 0, WIDTH - 2, null));
+        horizontalBlizzards.push(new Blizzard(x, y, 'h', 1, WIDTH - 2));
         break;
       case '^':
-        verticalBlizzards.push(new Blizzard(x, y, 0, -1, null, HEIGHT - 2));
+        verticalBlizzards.push(new Blizzard(x, y, 'v', -1, HEIGHT - 2));
         break;
       case 'v':
-        verticalBlizzards.push(new Blizzard(x, y, 0, 1, null, HEIGHT - 2));
+        verticalBlizzards.push(new Blizzard(x, y, 'v', 1, HEIGHT - 2));
         break;
       case '.':
         if (startX === null) startX = x;
