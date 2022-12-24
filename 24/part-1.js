@@ -138,6 +138,80 @@ const initialState = {
 
 let minSoFar = Infinity;
 const cache = {};
+const visited = {};
+
+function bfs(state) {
+  const queue = [state];
+  let minimum = Infinity;
+
+  visited[`${state.minute}-${state.x}-${state.y}`] = 1;
+
+  while (queue.length) {
+    const current = queue.shift();
+    const { minute, x, y } = current;
+
+    if (minute > minimum) {
+      continue;
+    }
+
+    if (x === endX && y === HEIGHT - 1) {
+      minimum = Math.min(minimum, minute);
+    } else {
+      // Compute where blizzards will be at (minute+1) to determine options
+      const nextLocations = new Set(blizzards.map((blizzard) => blizzard.getLocation(minute + 1)));
+
+      // Move Down
+      if (
+        ((x !== endX && y + 1 <= HEIGHT - 2) || (x === endX && y + 1 <= HEIGHT - 1)) &&
+        !nextLocations.has(`${x},${y + 1}`) &&
+        !visited[`${minute + 1}-${x}-${y + 1}`]
+      ) {
+        visited[`${minute + 1}-${x}-${y + 1}`] = 1;
+        queue.push({ minute: minute + 1, x, y: y + 1 });
+      }
+
+      // Move Right (if not on start row)
+      if (
+        y > 0 &&
+        x + 1 <= WIDTH - 2 &&
+        !nextLocations.has(`${x + 1},${y}`) &&
+        !visited[`${minute + 1}-${x + 1}-${y}`]
+      ) {
+        visited[`${minute + 1}-${x + 1}-${y}`] = 1;
+        queue.push({ minute: minute + 1, x: x + 1, y });
+      }
+
+      // Move Left (if not on start row)
+      if (
+        y > 0 &&
+        x - 1 >= 1 &&
+        !nextLocations.has(`${x - 1},${y}`) &&
+        !visited[`${minute + 1}-${x - 1}-${y}`]
+      ) {
+        visited[`${minute + 1}-${x - 1}-${y}`] = 1;
+        queue.push({ minute: minute + 1, x: x - 1, y });
+      }
+
+      // Move Up (assuming never move back to starting position which might be a bad assumption)
+      if (
+        (y - 1 >= 1 || (x === startX && y - 1 === 0)) &&
+        !nextLocations.has(`${x},${y - 1}`) &&
+        !visited[`${minute + 1}-${x}-${y - 1}`]
+      ) {
+        visited[`${minute + 1}-${x}-${y - 1}`] = 1;
+        queue.push({ minute: minute + 1, x, y: y - 1 });
+      }
+
+      // Wait
+      if (!visited[`${minute + 1}-${x}-${y}`] && !nextLocations.has(`${x},${y}`)) {
+        visited[`${minute + 1}-${x}-${y}`] = 1;
+        queue.push({ minute: minute + 1, x, y });
+      }
+    }
+  }
+
+  return minimum;
+}
 
 function dfs(state) {
   if (state.minute > 1000) {
@@ -255,4 +329,4 @@ function print(minute) {
   console.log(output.join('\n'));
 }
 
-write(24, 1, `${dfs(initialState)}`);
+write(24, 1, `${bfs(initialState)}`);
