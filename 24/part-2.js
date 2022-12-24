@@ -9,89 +9,42 @@ const possibleX = Array.from({ length: WIDTH - 2 }).map((_, i) => i + 1);
 const possibleY = Array.from({ length: HEIGHT - 2 }).map((_, i) => i + 1);
 
 class Blizzard {
-  constructor(x, y, dx, dy, cycleX, cycleY, icon) {
+  constructor(x, y, dx, dy, cycleX, cycleY) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
     this.cycleX = cycleX;
     this.cycleY = cycleY;
-    this.startIndex = dx !== 0 ? possibleX.indexOf(x) : possibleY.indexOf(y);
-    this.icon = icon;
+    this.index = dx !== 0 ? possibleX.indexOf(x) : possibleY.indexOf(y);
   }
 
   getLocation(minute) {
-    if (this.cycleY) {
-      let shifts = minute % this.cycleY;
-      if (shifts === 0) {
-        return `${this.x},${this.y}`;
+    let shifts = minute % (this.cycleY ? this.cycleY : this.cycleX);
+
+    if (shifts === 0) return `${this.x},${this.y}`;
+
+    let targetIndex = this.index;
+
+    while (shifts > 0) {
+      targetIndex += this.cycleY ? this.dy : this.dx;
+
+      if (targetIndex < 0) {
+        targetIndex = this.cycleY ? possibleY.length - 1 : possibleX.length - 1;
+      } else if (
+        (this.cycleY && targetIndex === possibleY.length) ||
+        (this.cycleX && targetIndex === possibleX.length)
+      ) {
+        targetIndex = 0;
       }
 
-      let targetIndex = this.startIndex;
-
-      switch (this.dy) {
-        case -1:
-          while (shifts > 0) {
-            if (targetIndex - 1 < 0) {
-              targetIndex = possibleY.length - 1;
-            } else {
-              targetIndex--;
-            }
-
-            shifts--;
-          }
-
-          return `${this.x},${possibleY[targetIndex]}`;
-
-        case 1:
-          while (shifts > 0) {
-            if (targetIndex + 1 === possibleY.length) {
-              targetIndex = 0;
-            } else {
-              targetIndex++;
-            }
-
-            shifts--;
-          }
-
-          return `${this.x},${possibleY[targetIndex]}`;
-      }
-    } else {
-      let shifts = minute % this.cycleX;
-      if (shifts === 0) {
-        return `${this.x},${this.y}`;
-      }
-
-      let targetIndex = this.startIndex;
-
-      switch (this.dx) {
-        case -1:
-          while (shifts > 0) {
-            if (targetIndex - 1 < 0) {
-              targetIndex = possibleX.length - 1;
-            } else {
-              targetIndex--;
-            }
-
-            shifts--;
-          }
-
-          return `${possibleX[targetIndex]},${this.y}`;
-
-        case 1:
-          while (shifts > 0) {
-            if (targetIndex + 1 === possibleX.length) {
-              targetIndex = 0;
-            } else {
-              targetIndex++;
-            }
-
-            shifts--;
-          }
-
-          return `${possibleX[targetIndex]},${this.y}`;
-      }
+      shifts--;
     }
+
+    const x = this.cycleY ? this.x : possibleX[targetIndex];
+    const y = this.cycleY ? possibleY[targetIndex] : this.y;
+
+    return `${x},${y}`;
   }
 }
 
@@ -104,16 +57,16 @@ input.forEach((row, y) => {
   row.split('').forEach((cell, x) => {
     switch (cell) {
       case '<':
-        horizontalBlizzards.push(new Blizzard(x, y, -1, 0, WIDTH - 2, null, cell));
+        horizontalBlizzards.push(new Blizzard(x, y, -1, 0, WIDTH - 2, null));
         break;
       case '>':
-        horizontalBlizzards.push(new Blizzard(x, y, 1, 0, WIDTH - 2, null, cell));
+        horizontalBlizzards.push(new Blizzard(x, y, 1, 0, WIDTH - 2, null));
         break;
       case '^':
-        verticalBlizzards.push(new Blizzard(x, y, 0, -1, null, HEIGHT - 2, cell));
+        verticalBlizzards.push(new Blizzard(x, y, 0, -1, null, HEIGHT - 2));
         break;
       case 'v':
-        verticalBlizzards.push(new Blizzard(x, y, 0, 1, null, HEIGHT - 2, cell));
+        verticalBlizzards.push(new Blizzard(x, y, 0, 1, null, HEIGHT - 2));
         break;
       case '.':
         if (startX === null) startX = x;
