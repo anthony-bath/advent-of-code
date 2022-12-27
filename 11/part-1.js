@@ -5,9 +5,9 @@ const grid = read(11).map((line) => line.split(''));
 const WIDTH = grid[0].length;
 const HEIGHT = grid.length;
 
-let toOccupy = new Set();
-let toVacate = new Set();
-let totalOccupiedCount = 0;
+let toOccupy;
+let toVacate;
+let totalOccupiedCount;
 
 do {
   toOccupy = new Set();
