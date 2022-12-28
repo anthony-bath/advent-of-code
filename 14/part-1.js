@@ -26,4 +26,8 @@ read(14).forEach((line) => {
   }
 });
 
-write(14, 1, `${Object.values(mem).reduce((sum, value) => sum + value, 0)}`);
+write(
+  14,
+  1,
+  Object.values(mem).reduce((sum, value) => sum + value, 0)
+);

@@ -15,4 +15,4 @@ const sorted = buses
 
 const { id, wait } = sorted.shift();
 
-write(13, 1, `${id * wait}`);
+write(13, 1, id * wait);

@@ -27,4 +27,4 @@ while (true) {
   timestamp += step;
 }
 
-write(13, 2, `${timestamp}`);
+write(13, 2, timestamp);
