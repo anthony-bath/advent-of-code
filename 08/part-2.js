@@ -65,4 +65,4 @@ for (let i = 0; i < instructions.length; i++) {
   }
 }
 
-write(8, 2, `${accumulator}`);
+write(8, 2, accumulator);

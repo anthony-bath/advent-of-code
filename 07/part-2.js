@@ -34,4 +34,4 @@ function dfs(type) {
 
 const result = dfs('shiny gold') - 1;
 
-write(7, 2, `${result}`);
+write(7, 2, result);

@@ -39,7 +39,6 @@ do {
   }
 } while (possibleFields.some((pf) => pf.length > 1));
 
-//
 let result = 1;
 
 for (const [i, [field]] of possibleFields.entries()) {

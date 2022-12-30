@@ -209,4 +209,4 @@ read(12).forEach((line) => {
   }
 });
 
-write(12, 2, `${Math.abs(ship.x) + Math.abs(ship.y)}`);
+write(12, 2, Math.abs(ship.x) + Math.abs(ship.y));

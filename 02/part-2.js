@@ -10,4 +10,4 @@ const validCount = read(2).reduce((count, line) => {
   return count;
 }, 0);
 
-write(2, 2, `${validCount}`);
+write(2, 2, validCount);

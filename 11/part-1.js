@@ -50,4 +50,4 @@ do {
   }
 } while (toOccupy.size > 0 || toVacate.size > 0);
 
-write(11, 1, `${totalOccupiedCount}`);
+write(11, 1, totalOccupiedCount);

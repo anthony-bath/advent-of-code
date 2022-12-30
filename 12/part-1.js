@@ -58,4 +58,4 @@ read(12).forEach((line) => {
   }
 });
 
-write(12, 1, `${Math.abs(x) + Math.abs(y)}`);
+write(12, 1, Math.abs(x) + Math.abs(y));

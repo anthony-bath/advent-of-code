@@ -6,7 +6,6 @@ const TURNS = 30000000;
 let turn = 1;
 const spoken = new Map();
 let lastSpoken = null;
-const cache = {};
 
 while (turn <= TURNS) {
   if (turn <= numbers.length) {

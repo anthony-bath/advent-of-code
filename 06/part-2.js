@@ -33,4 +33,4 @@ for (let i = 0; i < input.length; i++) {
   }
 }
 
-write(6, 2, `${total}`);
+write(6, 2, total);

@@ -23,4 +23,4 @@ function getPaths(index) {
   return count;
 }
 
-write(10, 2, `${getPaths(0)}`);
+write(10, 2, getPaths(0));

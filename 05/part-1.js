@@ -16,5 +16,5 @@ write(
 
         return row * 8 + col;
       })
-  ).toString()
+  )
 );

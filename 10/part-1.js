@@ -13,4 +13,4 @@ for (let i = 1; i < joltages.length; i++) {
   differences[joltages[i] - joltages[i - 1] - 1]++;
 }
 
-write(10, 1, `${differences[0] * differences[2]}`);
+write(10, 1, differences[0] * differences[2]);

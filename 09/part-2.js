@@ -25,4 +25,4 @@ for (let i = 2; i < input.length; i++) {
 
 contiguous.sort((a, b) => a - b);
 
-write(9, 2, `${contiguous.shift() + contiguous.pop()}`);
+write(9, 2, contiguous.shift() + contiguous.pop());

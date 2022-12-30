@@ -38,4 +38,4 @@ for (let i = SIZE; i < input.length; i++) {
     .forEach((value, j) => sums.push({ indexes: [i, j + start], value: input[i] + value }));
 }
 
-write(9, 1, `${result}`);
+write(9, 1, result);

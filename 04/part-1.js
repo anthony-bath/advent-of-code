@@ -15,4 +15,4 @@ read(4).forEach((line) => {
   fields.push(...line.split(' ').map((pairs) => pairs.split(':')[0]));
 });
 
-write(4, 1, `${validCount}`);
+write(4, 1, validCount);

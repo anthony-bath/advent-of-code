@@ -45,4 +45,8 @@ while (slopes.some((slope) => !slope.atBottom)) {
   });
 }
 
-write(3, 2, `${slopes.reduce((result, slope) => result * slope.treesEncountered, 1)}`);
+write(
+  3,
+  2,
+  slopes.reduce((result, slope) => result * slope.treesEncountered, 1)
+);

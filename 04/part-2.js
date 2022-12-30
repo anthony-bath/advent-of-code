@@ -63,7 +63,7 @@ read(4).forEach((line) => {
         break;
 
       case 'hgt':
-        if (!/\d{3}cm/.test(value) && !/\d{2}in/.test(value)) {
+        if (!/^\d{3}cm$/.test(value) && !/^\d{2}in$/.test(value)) {
           continueToNextPassport = true;
         } else {
           if (value.endsWith('cm')) {
@@ -82,7 +82,7 @@ read(4).forEach((line) => {
         break;
 
       case 'hcl':
-        if (!/#[a-f0-9]{6}/.test(value)) {
+        if (!/^#[a-f0-9]{6}$/.test(value)) {
           continueToNextPassport = true;
         }
 
@@ -96,7 +96,7 @@ read(4).forEach((line) => {
         break;
 
       case 'pid':
-        if (!/\d{9}/.test(value)) {
+        if (!/^\d{9}$/.test(value)) {
           continueToNextPassport = true;
         }
 
@@ -105,4 +105,4 @@ read(4).forEach((line) => {
   }
 });
 
-write(4, 2, `${validCount}`);
+write(4, 2, validCount);

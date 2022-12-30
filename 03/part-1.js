@@ -24,4 +24,4 @@ while (position.y < HEIGHT) {
   }
 }
 
-write(3, 1, `${treesEncountered}`);
+write(3, 1, treesEncountered);

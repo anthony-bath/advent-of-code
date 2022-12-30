@@ -2,6 +2,16 @@ import { read, write } from '../utility.js';
 
 const numbers = read(1).map((n) => parseInt(n, 10));
 
+function findTwoNumbersToSum(target, array) {
+  for (const number of array) {
+    if (array.includes(target - number)) {
+      return [number, target - number];
+    }
+  }
+
+  return [];
+}
+
 let result;
 
 for (const number of numbers) {
@@ -14,14 +24,4 @@ for (const number of numbers) {
   }
 }
 
-write(1, 2, `${result}`);
-
-function findTwoNumbersToSum(target, array) {
-  for (const number of array) {
-    if (array.includes(target - number)) {
-      return [number, target - number];
-    }
-  }
-
-  return [];
-}
+write(1, 2, result);

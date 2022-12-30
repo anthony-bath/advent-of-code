@@ -20,4 +20,4 @@ for (let i = 0; i < input.length; i++) {
   }
 }
 
-write(6, 1, `${total}`);
+write(6, 1, total);

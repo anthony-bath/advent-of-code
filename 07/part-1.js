@@ -1,4 +1,4 @@
-import { read } from '../utility.js';
+import { read, write } from '../utility.js';
 
 const expr = /^(?<quantity>\d) (?<type>.+) bags?\.?/;
 const bagsByType = new Map();
@@ -44,4 +44,4 @@ for (const [key] of bagsByType) {
   result += dfs(key);
 }
 
-console.log(result);
+write(7, 1, result);

@@ -11,4 +11,4 @@ for (const number of numbers) {
   }
 }
 
-write(1, 1, `${result}`);
+write(1, 1, result);

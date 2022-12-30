@@ -1,7 +1,6 @@
 import { write } from '../utility.js';
 import fs from 'fs';
 
-console.time();
 const seatIds = fs
   .readFileSync('./05/input.txt', 'utf-8')
   .replace(/[FL]/g, '0')
@@ -15,5 +14,4 @@ const seatIds = fs
   })
   .sort((a, b) => a - b);
 
-write(5, 2, (1 + seatIds.find((id, index) => seatIds[index + 1] !== id + 1)).toString());
-console.timeEnd();
+write(5, 2, 1 + seatIds.find((id, index) => seatIds[index + 1] !== id + 1));
