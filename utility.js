@@ -11,9 +11,11 @@ export function write(year, day, part, content) {
   fs.writeFileSync(`./${year}/${day.toString().padStart(2, '0')}/output-${part}.txt`, content);
 }
 
-export function read(year, day, { test = false, splitBy = EOL } = {}) {
+export function read(year, day, { test = false, splitBy = EOL, part = null } = {}) {
   const data = fs.readFileSync(
-    `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input.txt`,
+    `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input${
+      part ? `-${part}` : ''
+    }.txt`,
     'utf-8'
   );
 
