@@ -12,12 +12,12 @@ export function write(year, day, part, content) {
 }
 
 export function read(year, day, { test = false, splitBy = EOL } = {}) {
-  return fs
-    .readFileSync(
-      `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input.txt`,
-      'utf-8'
-    )
-    .split(splitBy);
+  const data = fs.readFileSync(
+    `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input.txt`,
+    'utf-8'
+  );
+
+  return splitBy ? data.split(splitBy) : data;
 }
 
 export function output(content) {
