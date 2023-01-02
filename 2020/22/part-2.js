@@ -1,6 +1,6 @@
 import { read, write } from '../../utility.js';
 
-const [YEAR, DAY, PART] = [2020, 22, 1];
+const [YEAR, DAY, PART] = [2020, 22, 2];
 const player1 = [];
 const player2 = [];
 let parsedPlayer1 = false;
@@ -20,44 +20,47 @@ read(YEAR, DAY).forEach((line) => {
 });
 
 function getKey(p1, p2) {
-  return `${p1.join('|')}|${p2.join('|')}`;
+  return `${p1.join('|')}-${p2.join('|')}`;
 }
 
-function play(player1, player2, game, gameCache) {
-  while (player1.length && player2.length) {
-    const key = getKey(player1, player2);
+function getScore(deck) {
+  return deck.reduce((sum, card, index, deck) => sum + (deck.length - index) * card, 0);
+}
 
-    if (gameCache[key]) {
-      return { winner: 'p1', player1: [...player1], player2: [...player2] };
+function play(p1Deck, p2Deck, cache) {
+  while (p1Deck.length && p2Deck.length) {
+    const key = getKey(p1Deck, p2Deck);
+
+    if (cache[key]) {
+      return { winner: 1 };
     }
 
-    const p1Plays = player1.shift();
-    const p2Plays = player2.shift();
+    const p1Plays = p1Deck.shift();
+    const p2Plays = p2Deck.shift();
 
-    let result;
+    if (p1Deck.length >= p1Plays && p2Deck.length >= p2Plays) {
+      const { winner } = play(p1Deck.slice(0, p1Plays), p2Deck.slice(0, p2Plays), {});
 
-    if (player1.length >= p1Plays && player2.length >= p2Plays) {
-      const { winner } = play([...player1], [...player2], game + 1, {});
-
-      if (winner === 'p1') {
-        result = { winner, player1: [...player1, p1Plays, p2Plays], player2: [...player2] };
+      if (winner === 1) {
+        p1Deck.push(p1Plays, p2Plays);
       } else {
-        result = { winner, player1: [...player1], player2: [...player2, p2Plays, p1Plays] };
+        p2Deck.push(p2Plays, p1Plays);
       }
     } else if (p1Plays > p2Plays) {
-      result = { winner: 'p1', player1: [...player1, p1Plays, p2Plays], player2: [...player2] };
+      p1Deck.push(p1Plays, p2Plays);
     } else {
-      result = { winner: 'p2', player1: [...player1], player2: [...player2, p2Plays, p1Plays] };
+      p2Deck.push(p2Plays, p1Plays);
     }
 
-    gameCache[key] = result;
+    cache[key] = 1;
   }
 
-  if (player1.length) {
-    return { winner: 'p1', player1: [...player1], player2: [...player2] };
-  } else {
-    return { winner: 'p2', player1: [...player1], player2: [...player2] };
-  }
+  return {
+    winner: p1Deck.length ? 1 : 2,
+    score: getScore(p1Deck.length ? p1Deck : p2Deck),
+  };
 }
 
-console.log(play(player1, player2, 1, {}));
+const result = play(player1, player2, {});
+
+write(YEAR, DAY, PART, result.score);
