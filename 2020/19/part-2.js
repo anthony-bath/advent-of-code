@@ -116,7 +116,7 @@ messages.forEach((message) => {
 
     if (structure[1] === 31) {
       // can never have 31 in second position because there
-      // wouldn't be anough 42s to meet the other criteria
+      // wouldn't be enough 42s to meet the other criteria
       return;
     }
 
