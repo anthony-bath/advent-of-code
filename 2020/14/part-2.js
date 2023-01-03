@@ -21,21 +21,17 @@ function getAddresses(mask, address) {
     }
   }
 
+  const baseAddress = output.join('');
+
   const floatingBitCombinations = [...Array(Math.pow(2, floatingBits)).keys()].map((_, i) =>
     i.toString(2).padStart(floatingBits, '0').split('')
   );
 
   const addresses = floatingBitCombinations.map((combination) => {
     let comboIndex = 0;
-    const address = [...output];
+    const address = baseAddress.replace(/X/g, () => combination[comboIndex++]);
 
-    for (let i = 0; i < address.length; i++) {
-      if (address[i] === 'X') {
-        address[i] = combination[comboIndex++];
-      }
-    }
-
-    return parseInt(address.join(''), 2);
+    return parseInt(address, 2);
   });
 
   return addresses;
