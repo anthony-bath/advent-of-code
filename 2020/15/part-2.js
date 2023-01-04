@@ -22,8 +22,14 @@ while (turn <= TURNS) {
       lastSpoken = spokenOnTurns[1] - spokenOnTurns[0];
     }
 
-    if (spoken.has(lastSpoken)) {
-      spoken.set(lastSpoken, [spoken.get(lastSpoken).pop(), turn]);
+    const lastSpokenTurns = spoken.get(lastSpoken);
+
+    if (lastSpokenTurns) {
+      if (lastSpokenTurns.length === 2) {
+        lastSpokenTurns.shift();
+      }
+
+      lastSpokenTurns.push(turn);
     } else {
       spoken.set(lastSpoken, [turn]);
     }
