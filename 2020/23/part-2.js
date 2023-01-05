@@ -2,55 +2,77 @@ import { read, write } from '../../utility.js';
 
 const [YEAR, DAY, PART] = [2020, 23, 2];
 
-let cups = read(YEAR, DAY, { test: true, splitBy: '' }).map((n) => Number(n));
-
-for (let x = 10; x <= 1000000; x++) {
-  cups.push(x);
+class Node {
+  constructor(value, next, prev) {
+    this.value = value;
+    this.next = next;
+    this.previous = prev;
+  }
 }
 
+const input = read(YEAR, DAY, { splitBy: '' }).map((n) => Number(n));
+const cups = [];
+
+cups[input[0]] = new Node(input[0]);
+
+for (const [index, cup] of input.entries()) {
+  if (index === 0) continue;
+
+  const prev = cups[input[index - 1]];
+  const node = new Node(cup, null, prev);
+  cups[cup] = node;
+  prev.next = node;
+}
+
+const MAX = 1000000;
+
+for (let x = 10; x <= MAX; x++) {
+  const prev = x === 10 ? cups[input[input.length - 1]] : cups[x - 1];
+  const node = new Node(x, null, prev);
+  cups[x] = node;
+  prev.next = node;
+}
+
+const first = cups[input[0]];
+const last = cups[MAX];
+
+first.prev = last;
+last.next = first;
+
 const MOVES = 10000000;
-let index = 0;
+let currentCup = first;
 
-console.time();
 for (let move = 0; move < MOVES; move++) {
-  if (move % 1000 === 0) {
-    console.log(move);
-    console.timeLog();
-  }
-  const currentCup = cups[index];
   const pickup = [];
+  const pickupLabels = [];
+  let temp = currentCup.next;
 
-  while (index + 1 <= cups.length - 1 && pickup.length < 3) {
-    pickup.push(...cups.splice(index + 1, 1));
+  while (pickup.length < 3) {
+    pickup.push(temp);
+    pickupLabels.push(temp.value);
+    temp = temp.next;
   }
 
-  if (pickup.length < 3) {
-    pickup.push(...cups.splice(0, 3 - pickup.length));
-  }
+  let destinationLabel = currentCup.value - 1;
 
-  let destinationCup = currentCup - 1;
+  while (pickupLabels.includes(destinationLabel) || destinationLabel <= 0) {
+    destinationLabel--;
 
-  if (destinationCup < 1) {
-    destinationCup = 9;
-  }
-
-  while (pickup.includes(destinationCup)) {
-    destinationCup--;
-
-    if (destinationCup < 1) {
-      destinationCup = 9;
+    if (destinationLabel < 1) {
+      destinationLabel = MAX;
     }
   }
 
-  const destinationIndex = cups.indexOf(destinationCup);
+  const destinationCup = cups[destinationLabel];
 
-  cups.splice(destinationIndex + 1, 0, ...pickup);
+  currentCup.next = pickup[2].next;
+  pickup[0].prev = destinationCup;
+  pickup[2].next = destinationCup.next;
+  destinationCup.next = pickup[0];
 
-  index = 1 + cups.indexOf(currentCup);
-  if (index === cups.length) index = 0;
+  currentCup = currentCup.next;
 }
 
-const index1 = cups.indexOf(1);
-console.log(cups[index1 + 1], cups[index1 + 2]);
+const one = cups[1];
 
-write(YEAR, DAY, PART, result.join(''));
+write(YEAR, DAY, PART, one.next.value * one.next.next.value);
