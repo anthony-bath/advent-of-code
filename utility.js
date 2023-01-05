@@ -22,7 +22,7 @@ export function read(year, day, { test = false, splitBy = EOL, part = null } = {
 
   console.time(getTimingLabel(year, day));
 
-  return splitBy ? data.split(splitBy) : data;
+  return splitBy !== null ? data.split(splitBy) : data;
 }
 
 export function output(content) {
