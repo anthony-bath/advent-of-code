@@ -41,6 +41,13 @@ class Tile {
     console.log(this.connections.map((conn) => `${EDGENAME[conn.edge]} -> ${conn.tile.id}`));
   }
 
+  removeBorders() {
+    this.data = this.data.reduce((borderless, row, index) => {
+      if (index === 0 || index === this.data.length - 1) return borderless;
+      return [...borderless, row.slice(1, row.length - 1)];
+    }, []);
+  }
+
   flipVertically() {
     this.data = this.data.reduce(
       (flipped, _, index) => [...flipped, this.data[this.data.length - 1 - index]],
@@ -69,7 +76,7 @@ class Tile {
     });
   }
 
-  rotateClockwise() {
+  rotate() {
     this.data = this.data[0].map((_, index) => this.data.map((row) => row[index]).reverse());
     this.edges = [this.edges.pop(), ...this.edges];
 
@@ -85,7 +92,7 @@ class Connection {
   }
 }
 
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, { test: true });
 
 function compare(edge1, edge2) {
   return edge1.join('') === edge2.join('');
@@ -138,9 +145,6 @@ tiles.forEach((tile1) => {
 const SIZE = Math.sqrt(tiles.length);
 const grid = [...Array(SIZE)].map((_) => Array(SIZE).fill(null));
 
-// Corner connection edges
-// 0+1,1+2,2+3,3+0
-
 // Find a corner to start in top left
 const corners = tiles.filter((tile) => tile.connections.length === 2);
 let filtered;
@@ -153,7 +157,7 @@ do {
   );
 
   if (filtered.length === 0) {
-    corners.forEach((tile) => tile.rotateClockwise(1));
+    corners.forEach((tile) => tile.rotate(1));
   }
 } while (filtered.length === 0);
 
@@ -194,7 +198,7 @@ for (let row = 0; row < SIZE; row++) {
         !leftConnection
       ) {
         if (rotated < 4) {
-          tile.rotateClockwise();
+          tile.rotate();
           rotated++;
         } else if (!flippedH) {
           tile.flipHorizontally();
@@ -233,7 +237,7 @@ for (let row = 0; row < SIZE; row++) {
         !topConnection
       ) {
         if (rotated < 4) {
-          tile.rotateClockwise();
+          tile.rotate();
           rotated++;
         } else if (!flippedH) {
           tile.flipHorizontally();
@@ -260,7 +264,28 @@ for (let row = 0; row < SIZE; row++) {
   }
 }
 
-console.log(grid.map((row) => row.join(' ')).join('\n'));
-console.log(corners.map((corner) => corner.id));
+tiles.forEach((tile) => tile.removeBorders());
+
+const TILE_SIZE = tiles[0].data.length;
+const IMAGE_SIZE = SIZE * TILE_SIZE;
+const imageData = [...Array(IMAGE_SIZE)].map((_) => Array(IMAGE_SIZE).fill(null));
+
+for (let row = 0; row < SIZE; row++) {
+  for (let col = 0; col < SIZE; col++) {
+    const tile = tilesById.get(grid[row][col]);
+
+    for (let tileDataRow = 0; tileDataRow < tile.data.length; tileDataRow++) {
+      for (let tileDataCol = 0; tileDataCol < tile.data[0].length; tileDataCol++) {
+        imageData[row * TILE_SIZE + tileDataRow][col * TILE_SIZE + tileDataCol] =
+          tile.data[tileDataRow][tileDataCol];
+      }
+    }
+  }
+}
+
+const image = new Tile(null, imageData);
+
+image.flipVertically();
+image.print();
 
 write(YEAR, DAY, PART, '');
