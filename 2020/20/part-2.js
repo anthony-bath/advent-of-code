@@ -92,15 +92,11 @@ class Connection {
   }
 }
 
-const input = read(YEAR, DAY, { test: true });
-
-function compare(edge1, edge2) {
-  return edge1.join('') === edge2.join('');
-}
-
+const input = read(YEAR, DAY);
 const tiles = [];
 const tilesById = new Map();
 
+// Create Tiles
 for (let i = 0; i < input.length; i += 12) {
   const id = Number(input[i].match(/\d+/));
   const data = [];
@@ -114,6 +110,7 @@ for (let i = 0; i < input.length; i += 12) {
   tilesById.set(id, tile);
 }
 
+// Set Tile Connections
 tiles.forEach((tile1) => {
   tiles.forEach((tile2) => {
     if (tile2.id === tile1.id) return;
@@ -142,9 +139,6 @@ tiles.forEach((tile1) => {
   });
 });
 
-const SIZE = Math.sqrt(tiles.length);
-const grid = [...Array(SIZE)].map((_) => Array(SIZE).fill(null));
-
 // Find a corner to start in top left
 const corners = tiles.filter((tile) => tile.connections.length === 2);
 let filtered;
@@ -160,6 +154,10 @@ do {
     corners.forEach((tile) => tile.rotate(1));
   }
 } while (filtered.length === 0);
+
+// Build the grid of Tile Ids correctly positioned and orientated
+const SIZE = Math.sqrt(tiles.length);
+const grid = [...Array(SIZE)].map((_) => Array(SIZE).fill(null));
 
 grid[0][0] = filtered[0].id;
 
@@ -264,7 +262,8 @@ for (let row = 0; row < SIZE; row++) {
   }
 }
 
-tiles.forEach((tile) => tile.removeBorders());
+// Create the joined image with borderless tiles
+// tiles.forEach((tile) => tile.removeBorders());
 
 const TILE_SIZE = tiles[0].data.length;
 const IMAGE_SIZE = SIZE * TILE_SIZE;
@@ -285,7 +284,74 @@ for (let row = 0; row < SIZE; row++) {
 
 const image = new Tile(null, imageData);
 
-image.flipVertically();
 image.print();
 
-write(YEAR, DAY, PART, '');
+// Search for the Sea Monsters
+let rotated = 0;
+let flippedH = false;
+let flippedV = false;
+let found = false;
+
+const midExpr = /#.{4}##.{4}##.{4}###/g;
+const botExpr = /.#..#..#..#..#..#.../g;
+const midDeltas = [0, 5, 6, 11, 12, 17, 18, 19];
+const botDeltas = [1, 4, 7, 10, 13, 16];
+
+while (true) {
+  for (let row = 1; row < image.data.length - 1; row++) {
+    let mid = image.data[row].join('');
+    let bot = image.data[row + 1].join('');
+
+    const midMatches = [...mid.matchAll(midExpr)];
+    const botMatches = [...bot.matchAll(botExpr)];
+
+    if (midMatches && botMatches) {
+      midMatches.forEach((midMatch) => {
+        if (
+          image.data[row - 1][midMatch.index + 18] === '#' &&
+          botMatches.some((botMatch) => botMatch.index === midMatch.index)
+        ) {
+          found = true;
+
+          // Update top row of Sea Monster
+          image.data[row - 1][midMatch.index + 18] = 'O';
+
+          // Update middle row of Sea Monster
+          midDeltas.forEach((d) => (image.data[row][midMatch.index + d] = 'O'));
+
+          // Update bottom row of Sea Monster
+          botDeltas.forEach((d) => (image.data[row + 1][midMatch.index + d] = 'O'));
+        }
+      });
+    }
+  }
+
+  if (found) {
+    break;
+  } else {
+    if (rotated < 4) {
+      image.rotate();
+    } else if (!flippedH) {
+      image.flipHorizontally();
+      rotated = 0;
+      flippedH = true;
+    } else if (!flippedV) {
+      image.flipHorizontally();
+      image.flipVertically();
+      rotated = 0;
+      flippedV = true;
+    } else {
+      image.flipHorizontally();
+      rotated = 0;
+    }
+  }
+}
+
+image.print();
+
+const result = image.data.reduce(
+  (count, row) => count + row.filter((pixel) => pixel === '#').length,
+  0
+);
+
+write(YEAR, DAY, PART, result);
