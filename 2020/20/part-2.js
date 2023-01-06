@@ -29,14 +29,16 @@ class Tile {
       data.reduce((edge, _, i) => [...edge, data[i][0]], []), // Left
     ];
 
-    this.edgeOrder = [EDGE.TOP, EDGE.RIGHT, EDGE.BOTTOM, EDGE.LEFT];
-
     this.connections = [];
   }
 
   print() {
     console.log(this.data.map((row) => row.join('')).join('\n'));
     console.log();
+  }
+
+  printConnections() {
+    console.log(this.connections.map((conn) => `${EDGENAME[conn.edge]} -> ${conn.tile.id}`));
   }
 
   flipVertically() {
@@ -46,57 +48,49 @@ class Tile {
     );
 
     this.edges = [this.edges[2], this.edges[1], this.edges[0], this.edges[3]];
-    //this.edgeOrder = [this.edgeOrder[2], this.edgeOrder[1], this.edgeOrder[0], this.edgeOrder[3]];
+    this.connections.forEach((conn) => {
+      if (conn.edge === EDGE.TOP) {
+        conn.edge = EDGE.BOTTOM;
+      } else if (conn.edge === EDGE.BOTTOM) {
+        conn.edge = EDGE.TOP;
+      }
+    });
   }
 
   flipHorizontally() {
     this.data = this.data.map((row) => row.reverse());
     this.edges = [this.edges[0], this.edges[3], this.edges[2], this.edges[1]];
-    // this.edgeOrder = [this.edgeOrder[0], this.edgeOrder[3], this.edgeOrder[2], this.edgeOrder[1]];
+    this.connections.forEach((conn) => {
+      if (conn.edge === EDGE.RIGHT) {
+        conn.edge = EDGE.LEFT;
+      } else if (conn.edge === EDGE.LEFT) {
+        conn.edge = EDGE.RIGHT;
+      }
+    });
   }
 
-  rotateClockwise(times) {
-    for (let time = 0; time < times; time++) {
-      this.data = this.data[0].map((_, index) => this.data.map((row) => row[index]).reverse());
-      this.edgeOrder = [this.edgeOrder.pop(), ...this.edgeOrder];
-      this.edges = [this.edges.pop(), ...this.edges];
+  rotateClockwise() {
+    this.data = this.data[0].map((_, index) => this.data.map((row) => row[index]).reverse());
+    this.edges = [this.edges.pop(), ...this.edges];
 
-      this.connections.forEach((conn) => (conn.edge = (conn.edge + 1) % 4));
-    }
-  }
-
-  rotateCounterClockwise(times) {
-    for (let time = 0; time < times; time++) {
-      this.data = this.data[0].map((_, index) =>
-        this.data.map((row) => row[row.length - 1 - index])
-      );
-
-      //const top = this.edgeOrder.shift();
-      //this.edgeOrder = [...this.edgeOrder, top];
-
-      const first = this.edges.shift();
-      this.edges = [...this.edges, first];
-
-      this.connections.forEach((conn) => {
-        conn.edge--;
-
-        if (conn.edge < 0) conn.edge = 3;
-      });
-    }
+    this.connections.forEach((conn) => (conn.edge = (conn.edge + 1) % 4));
   }
 }
 
 class Connection {
-  constructor(edge, flipped, connectedTile, connectedEdge, connectedFlipped) {
+  constructor(edge, connectedEdge, tile) {
     this.edge = edge;
-    this.flipped = flipped;
-    this.connectedTile = connectedTile;
+    this.tile = tile;
     this.connectedEdge = connectedEdge;
-    this.connectedFlipped = connectedFlipped;
   }
 }
 
 const input = read(YEAR, DAY);
+
+function compare(edge1, edge2) {
+  return edge1.join('') === edge2.join('');
+}
+
 const tiles = [];
 const tilesById = new Map();
 
@@ -113,11 +107,7 @@ for (let i = 0; i < input.length; i += 12) {
   tilesById.set(id, tile);
 }
 
-const matches = new Map();
-
 tiles.forEach((tile1) => {
-  const tileMatches = new Set();
-
   tiles.forEach((tile2) => {
     if (tile2.id === tile1.id) return;
 
@@ -131,31 +121,18 @@ tiles.forEach((tile1) => {
         const e2F = edge2.join('');
         const e2R = edge2.reverse().join('');
 
-        if (e1F === e2F) {
-          // no orientation change required
-          tile1.connections.push(new Connection(i, false, tile2, j, false));
-        } else if (e1F === e2R) {
-          // edge2 is flipped
-          tile1.connections.push(new Connection(i, false, tile2, j, true));
-        } else if (e1R === e2F) {
-          // edge1 is flipped
-          tile1.connections.push(new Connection(i, true, tile2, j, false));
-        }
-
         if (e1F === e2F || e1F === e2R || e1R === e2F) {
+          tile1.connections.push(new Connection(i, j, tile2));
           matched = true;
           break;
         }
       }
 
       if (matched) {
-        tileMatches.add(tile2.id);
         break;
       }
     }
   });
-
-  matches.set(tile1.id, tileMatches);
 });
 
 const SIZE = Math.sqrt(tiles.length);
@@ -166,20 +143,6 @@ const grid = [...Array(SIZE)].map((_) => Array(SIZE).fill(null));
 
 // Find a corner to start in top left
 const corners = tiles.filter((tile) => tile.connections.length === 2);
-// corners.forEach((corner) => {
-//   console.log(
-//     corner.connections.map((conn) => `${EDGENAME[conn.edge]} -> ${conn.connectedTile.id}`)
-//   );
-// });
-
-// corners.forEach((corner) => corner.rotateClockwise(1));
-
-// corners.forEach((corner) => {
-//   console.log(
-//     corner.connections.map((conn) => `${EDGENAME[conn.edge]} -> ${conn.connectedTile.id}`)
-//   );
-// });
-// process.exit();
 let filtered;
 
 do {
@@ -190,9 +153,8 @@ do {
   );
 
   if (filtered.length === 0) {
-    tiles.forEach((tile) => tile.rotateClockwise(1));
+    corners.forEach((tile) => tile.rotateClockwise(1));
   }
-  console.log(filtered.length);
 } while (filtered.length === 0);
 
 grid[0][0] = filtered[0].id;
@@ -203,27 +165,102 @@ for (let row = 0; row < SIZE; row++) {
 
     const leftTileId = col > 0 ? grid[row][col - 1] : null;
     const aboveTileId = row > 0 ? grid[row - 1][col] : null;
+    const expectedConnections = [];
+
+    // if row > 0, there should be a top connection
+    // if row < SIZE - 1, there should be a bottom connection
+    // if col > 0, there should be a left connection
+    // if col < SIZE - 1, there should be a right connection
+
+    row > 0 && expectedConnections.push(EDGE.TOP);
+    col < SIZE - 1 && expectedConnections.push(EDGE.RIGHT);
+    row < SIZE - 1 && expectedConnections.push(EDGE.BOTTOM);
+    col > 0 && expectedConnections.push(EDGE.LEFT);
 
     if (leftTileId) {
-      // get right connection from prev tile
-      const tile = tilesById.get(leftTileId);
-      const connectedTileId = tile.connections.filter((conn) => conn.edge === EDGE.RIGHT)[0]
-        .connectedTile.id;
+      const leftTile = tilesById.get(leftTileId);
+      const tile = leftTile.connections.find((conn) => conn.edge === EDGE.RIGHT).tile;
+      let actualConnections = tile.connections.map((conn) => conn.edge);
+      let leftConnection = tile.connections.find(
+        (conn) => conn.tile.id === leftTileId && conn.edge === EDGE.LEFT
+      );
 
-      grid[row][col] = connectedTileId;
-    }
+      let rotated = 0;
+      let flippedH = false;
+      let flippedV = false;
 
-    if (aboveTileId) {
-      // get bottom connection from above tile
-      const tile = tilesById.get(aboveTileId);
-      const connectedTileId = tile.connections.filter((conn) => conn.edge === EDGE.BOTTOM)[0]
-        .connectedTile.id;
+      while (
+        !actualConnections.every((edge) => expectedConnections.includes(edge)) ||
+        !leftConnection
+      ) {
+        if (rotated < 4) {
+          tile.rotateClockwise();
+          rotated++;
+        } else if (!flippedH) {
+          tile.flipHorizontally();
+          rotated = 0;
+          flippedH = true;
+        } else if (!flippedV) {
+          tile.flipHorizontally();
+          tile.flipVertically();
+          rotated = 0;
+          flippedV = true;
+        } else {
+          tile.flipHorizontally();
+          rotated = 0;
+        }
 
-      grid[row][col] = connectedTileId;
+        actualConnections = tile.connections.map((conn) => conn.edge);
+        leftConnection = tile.connections.find(
+          (conn) => conn.tile.id === leftTileId && conn.edge === EDGE.LEFT
+        );
+      }
+
+      grid[row][col] = tile.id;
+    } else if (aboveTileId) {
+      const aboveTile = tilesById.get(aboveTileId);
+      const tile = aboveTile.connections.find((conn) => conn.edge === EDGE.BOTTOM).tile;
+      let actualConnections = tile.connections.map((conn) => conn.edge);
+      let topConnection = tile.connections.find(
+        (conn) => conn.tile.id === aboveTileId && conn.edge === EDGE.TOP
+      );
+      let rotated = 0;
+      let flippedH = false;
+      let flippedV = false;
+
+      while (
+        !actualConnections.every((edge) => expectedConnections.includes(edge)) ||
+        !topConnection
+      ) {
+        if (rotated < 4) {
+          tile.rotateClockwise();
+          rotated++;
+        } else if (!flippedH) {
+          tile.flipHorizontally();
+          rotated = 0;
+          flippedH = true;
+        } else if (!flippedV) {
+          tile.flipHorizontally();
+          tile.flipVertically();
+          rotated = 0;
+          flippedV = true;
+        } else {
+          tile.flipHorizontally();
+          rotated = 0;
+        }
+
+        actualConnections = tile.connections.map((conn) => conn.edge);
+        topConnection = tile.connections.find(
+          (conn) => conn.tile.id === aboveTileId && conn.edge === EDGE.TOP
+        );
+      }
+
+      grid[row][col] = tile.id;
     }
   }
 }
 
-console.log(grid);
+console.log(grid.map((row) => row.join(' ')).join('\n'));
+console.log(corners.map((corner) => corner.id));
 
 write(YEAR, DAY, PART, '');
