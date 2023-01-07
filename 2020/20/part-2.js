@@ -9,36 +9,23 @@ const EDGE = {
   LEFT: 3,
 };
 
-const EDGENAME = {
-  0: 'TOP',
-  1: 'RIGHT',
-  2: 'BOTTOM',
-  3: 'LEFT',
-};
-
 class Tile {
-  constructor(id, data) {
+  constructor(data, id) {
     this.id = id;
     this.data = data;
-
-    // Original orientation edges
-    this.edges = [
-      data[0], // Top
-      data.reduce((edge, _, i) => [...edge, data[i][data.length - 1]], []), // Right
-      data[data.length - 1], // Bottom
-      data.reduce((edge, _, i) => [...edge, data[i][0]], []), // Left
-    ];
-
+    this.edges = [this.topEdge(), this.rightEdge(), this.bottomEdge(), this.leftEdge()];
     this.connections = [];
+    this.rotations = 0;
   }
 
-  print() {
-    console.log(this.data.map((row) => row.join('')).join('\n'));
-    console.log();
-  }
-
-  printConnections() {
-    console.log(this.connections.map((conn) => `${EDGENAME[conn.edge]} -> ${conn.tile.id}`));
+  nextOrientation() {
+    if (this.rotations < 3) {
+      this.rotate();
+      this.rotations++;
+    } else {
+      this.flip();
+      this.rotations = 0;
+    }
   }
 
   removeBorders() {
@@ -48,25 +35,9 @@ class Tile {
     }, []);
   }
 
-  flipVertically() {
-    this.data = this.data.reduce(
-      (flipped, _, index) => [...flipped, this.data[this.data.length - 1 - index]],
-      []
-    );
-
-    this.edges = [this.edges[2], this.edges[1], this.edges[0], this.edges[3]];
-    this.connections.forEach((conn) => {
-      if (conn.edge === EDGE.TOP) {
-        conn.edge = EDGE.BOTTOM;
-      } else if (conn.edge === EDGE.BOTTOM) {
-        conn.edge = EDGE.TOP;
-      }
-    });
-  }
-
-  flipHorizontally() {
+  flip() {
     this.data = this.data.map((row) => row.reverse());
-    this.edges = [this.edges[0], this.edges[3], this.edges[2], this.edges[1]];
+
     this.connections.forEach((conn) => {
       if (conn.edge === EDGE.RIGHT) {
         conn.edge = EDGE.LEFT;
@@ -77,23 +48,39 @@ class Tile {
   }
 
   rotate() {
-    this.data = this.data[0].map((_, index) => this.data.map((row) => row[index]).reverse());
-    this.edges = [this.edges.pop(), ...this.edges];
-
+    this.data = this.data[0].map((_, index) => [...this.data.map((row) => row[index])].reverse());
     this.connections.forEach((conn) => (conn.edge = (conn.edge + 1) % 4));
+  }
+
+  leftEdge() {
+    return this.data.reduce((edge, _, i) => [...edge, this.data[i][0]], []);
+  }
+
+  topEdge() {
+    return this.data[0];
+  }
+
+  rightEdge() {
+    return this.data.reduce((edge, _, i) => [...edge, this.data[i][this.data.length - 1]], []);
+  }
+
+  bottomEdge() {
+    return this.data[this.data.length - 1];
   }
 }
 
 class Connection {
-  constructor(edge, connectedEdge, tile) {
+  constructor(edge, tile) {
     this.edge = edge;
     this.tile = tile;
-    this.connectedEdge = connectedEdge;
   }
 }
 
+function compare(edge1, edge2) {
+  return edge1.join('') === edge2.join('');
+}
+
 const input = read(YEAR, DAY);
-const tiles = [];
 const tilesById = new Map();
 
 // Create Tiles
@@ -105,10 +92,10 @@ for (let i = 0; i < input.length; i += 12) {
     data.push(input[j].split(''));
   }
 
-  const tile = new Tile(id, data);
-  tiles.push(tile);
-  tilesById.set(id, tile);
+  tilesById.set(id, new Tile(data, id));
 }
+
+const tiles = [...tilesById.values()];
 
 // Set Tile Connections
 tiles.forEach((tile1) => {
@@ -119,14 +106,14 @@ tiles.forEach((tile1) => {
 
     for (const [i, edge1] of tile1.edges.entries()) {
       const e1F = edge1.join('');
-      const e1R = edge1.reverse().join('');
+      const e1R = [...edge1].reverse().join('');
 
-      for (const [j, edge2] of tile2.edges.entries()) {
+      for (const edge2 of tile2.edges) {
         const e2F = edge2.join('');
-        const e2R = edge2.reverse().join('');
+        const e2R = [...edge2].reverse().join('');
 
         if (e1F === e2F || e1F === e2R || e1R === e2F) {
-          tile1.connections.push(new Connection(i, j, tile2));
+          tile1.connections.push(new Connection(i, tile2));
           matched = true;
           break;
         }
@@ -141,217 +128,107 @@ tiles.forEach((tile1) => {
 
 // Find a corner to start in top left
 const corners = tiles.filter((tile) => tile.connections.length === 2);
-let filtered;
+let corner;
 
 do {
-  filtered = corners.filter(
+  corner = corners.find(
     (corner) =>
       corner.connections.filter((connection) => [EDGE.BOTTOM, EDGE.RIGHT].includes(connection.edge))
         .length === 2
   );
 
-  if (filtered.length === 0) {
-    corners.forEach((tile) => tile.rotate(1));
+  if (!corner) {
+    corners.forEach((tile) => tile.rotate());
   }
-} while (filtered.length === 0);
+} while (!corner);
 
 // Build the grid of Tile Ids correctly positioned and orientated
 const SIZE = Math.sqrt(tiles.length);
 const grid = [...Array(SIZE)].map((_) => Array(SIZE).fill(null));
 
-grid[0][0] = filtered[0].id;
+grid[0][0] = corner.id;
 
 for (let row = 0; row < SIZE; row++) {
   for (let col = 0; col < SIZE; col++) {
     if (row === 0 && col === 0) continue;
 
-    const leftTileId = col > 0 ? grid[row][col - 1] : null;
-    const aboveTileId = row > 0 ? grid[row - 1][col] : null;
-    const expectedConnections = [];
+    const leftTile = col > 0 ? tilesById.get(grid[row][col - 1]) : null;
+    const aboveTile = row > 0 ? tilesById.get(grid[row - 1][col]) : null;
+    let tile;
 
-    // if row > 0, there should be a top connection
-    // if row < SIZE - 1, there should be a bottom connection
-    // if col > 0, there should be a left connection
-    // if col < SIZE - 1, there should be a right connection
+    if (leftTile) {
+      tile = leftTile.connections.find((conn) => conn.edge === EDGE.RIGHT).tile;
 
-    row > 0 && expectedConnections.push(EDGE.TOP);
-    col < SIZE - 1 && expectedConnections.push(EDGE.RIGHT);
-    row < SIZE - 1 && expectedConnections.push(EDGE.BOTTOM);
-    col > 0 && expectedConnections.push(EDGE.LEFT);
-
-    if (leftTileId) {
-      const leftTile = tilesById.get(leftTileId);
-      const tile = leftTile.connections.find((conn) => conn.edge === EDGE.RIGHT).tile;
-      let actualConnections = tile.connections.map((conn) => conn.edge);
-      let leftConnection = tile.connections.find(
-        (conn) => conn.tile.id === leftTileId && conn.edge === EDGE.LEFT
-      );
-
-      let rotated = 0;
-      let flippedH = false;
-      let flippedV = false;
-
-      while (
-        !actualConnections.every((edge) => expectedConnections.includes(edge)) ||
-        !leftConnection
-      ) {
-        if (rotated < 4) {
-          tile.rotate();
-          rotated++;
-        } else if (!flippedH) {
-          tile.flipHorizontally();
-          rotated = 0;
-          flippedH = true;
-        } else if (!flippedV) {
-          tile.flipHorizontally();
-          tile.flipVertically();
-          rotated = 0;
-          flippedV = true;
-        } else {
-          tile.flipHorizontally();
-          rotated = 0;
-        }
-
-        actualConnections = tile.connections.map((conn) => conn.edge);
-        leftConnection = tile.connections.find(
-          (conn) => conn.tile.id === leftTileId && conn.edge === EDGE.LEFT
-        );
+      while (!compare(tile.leftEdge(), leftTile.rightEdge())) {
+        tile.nextOrientation();
       }
+    } else if (aboveTile) {
+      tile = aboveTile.connections.find((conn) => conn.edge === EDGE.BOTTOM).tile;
 
-      grid[row][col] = tile.id;
-    } else if (aboveTileId) {
-      const aboveTile = tilesById.get(aboveTileId);
-      const tile = aboveTile.connections.find((conn) => conn.edge === EDGE.BOTTOM).tile;
-      let actualConnections = tile.connections.map((conn) => conn.edge);
-      let topConnection = tile.connections.find(
-        (conn) => conn.tile.id === aboveTileId && conn.edge === EDGE.TOP
-      );
-      let rotated = 0;
-      let flippedH = false;
-      let flippedV = false;
-
-      while (
-        !actualConnections.every((edge) => expectedConnections.includes(edge)) ||
-        !topConnection
-      ) {
-        if (rotated < 4) {
-          tile.rotate();
-          rotated++;
-        } else if (!flippedH) {
-          tile.flipHorizontally();
-          rotated = 0;
-          flippedH = true;
-        } else if (!flippedV) {
-          tile.flipHorizontally();
-          tile.flipVertically();
-          rotated = 0;
-          flippedV = true;
-        } else {
-          tile.flipHorizontally();
-          rotated = 0;
-        }
-
-        actualConnections = tile.connections.map((conn) => conn.edge);
-        topConnection = tile.connections.find(
-          (conn) => conn.tile.id === aboveTileId && conn.edge === EDGE.TOP
-        );
+      while (!compare(tile.topEdge(), aboveTile.bottomEdge())) {
+        tile.nextOrientation();
       }
-
-      grid[row][col] = tile.id;
     }
+
+    grid[row][col] = tile.id;
   }
 }
 
 // Create the joined image with borderless tiles
-// tiles.forEach((tile) => tile.removeBorders());
+tiles.forEach((tile) => tile.removeBorders());
 
 const TILE_SIZE = tiles[0].data.length;
 const IMAGE_SIZE = SIZE * TILE_SIZE;
-const imageData = [...Array(IMAGE_SIZE)].map((_) => Array(IMAGE_SIZE).fill(null));
+const imageData = [...Array(IMAGE_SIZE)].map((_) => Array(IMAGE_SIZE).fill('K'));
 
 for (let row = 0; row < SIZE; row++) {
   for (let col = 0; col < SIZE; col++) {
     const tile = tilesById.get(grid[row][col]);
 
-    for (let tileDataRow = 0; tileDataRow < tile.data.length; tileDataRow++) {
-      for (let tileDataCol = 0; tileDataCol < tile.data[0].length; tileDataCol++) {
-        imageData[row * TILE_SIZE + tileDataRow][col * TILE_SIZE + tileDataCol] =
-          tile.data[tileDataRow][tileDataCol];
+    for (let tileRow = 0; tileRow < tile.data.length; tileRow++) {
+      for (let tileCol = 0; tileCol < tile.data[0].length; tileCol++) {
+        imageData[row * TILE_SIZE + tileRow][col * TILE_SIZE + tileCol] =
+          tile.data[tileRow][tileCol];
       }
     }
   }
 }
 
-const image = new Tile(null, imageData);
-
-image.print();
+const image = new Tile(imageData);
 
 // Search for the Sea Monsters
-let rotated = 0;
-let flippedH = false;
-let flippedV = false;
-let found = false;
+const MONSTER_LENGTH = 20;
+const HEAD_POS = 18;
+const MONSTER_SIZE = 15;
 
-const midExpr = /#.{4}##.{4}##.{4}###/g;
-const botExpr = /.#..#..#..#..#..#.../g;
-const midDeltas = [0, 5, 6, 11, 12, 17, 18, 19];
-const botDeltas = [1, 4, 7, 10, 13, 16];
+const midExpr = /#....##....##....###/;
+const botExpr = /.#..#..#..#..#..#.../;
+
+let found = false;
+let count = 0;
 
 while (true) {
   for (let row = 1; row < image.data.length - 1; row++) {
-    let mid = image.data[row].join('');
-    let bot = image.data[row + 1].join('');
+    for (let i = 0; i < image.data[row].length - MONSTER_LENGTH; i++) {
+      const top = image.data[row - 1][i + HEAD_POS] === '#';
+      const mid = image.data[row].slice(i, i + MONSTER_LENGTH).join('');
+      const bot = image.data[row + 1].slice(i, i + MONSTER_LENGTH).join('');
 
-    const midMatches = [...mid.matchAll(midExpr)];
-    const botMatches = [...bot.matchAll(botExpr)];
-
-    if (midMatches && botMatches) {
-      midMatches.forEach((midMatch) => {
-        if (
-          image.data[row - 1][midMatch.index + 18] === '#' &&
-          botMatches.some((botMatch) => botMatch.index === midMatch.index)
-        ) {
-          found = true;
-
-          // Update top row of Sea Monster
-          image.data[row - 1][midMatch.index + 18] = 'O';
-
-          // Update middle row of Sea Monster
-          midDeltas.forEach((d) => (image.data[row][midMatch.index + d] = 'O'));
-
-          // Update bottom row of Sea Monster
-          botDeltas.forEach((d) => (image.data[row + 1][midMatch.index + d] = 'O'));
-        }
-      });
+      if (top && midExpr.test(mid) && botExpr.test(bot)) {
+        found = true;
+        count++;
+      }
     }
   }
 
   if (found) {
     break;
   } else {
-    if (rotated < 4) {
-      image.rotate();
-    } else if (!flippedH) {
-      image.flipHorizontally();
-      rotated = 0;
-      flippedH = true;
-    } else if (!flippedV) {
-      image.flipHorizontally();
-      image.flipVertically();
-      rotated = 0;
-      flippedV = true;
-    } else {
-      image.flipHorizontally();
-      rotated = 0;
-    }
+    image.nextOrientation();
   }
 }
 
-image.print();
-
-const result = image.data.reduce(
-  (count, row) => count + row.filter((pixel) => pixel === '#').length,
-  0
-);
+const pixels = image.data.reduce((count, row) => count + row.filter((p) => p === '#').length, 0);
+const result = pixels - count * MONSTER_SIZE;
 
 write(YEAR, DAY, PART, result);
