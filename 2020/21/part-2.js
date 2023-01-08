@@ -1,6 +1,6 @@
 import { read, write } from '../../utility.js';
 
-const [YEAR, DAY, PART] = [2020, 21, 1];
+const [YEAR, DAY, PART] = [2020, 21, 2];
 
 const expr = /(?<ingredientList>.+) \(contains (?<allergenList>.+)\)/;
 
