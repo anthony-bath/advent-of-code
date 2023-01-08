@@ -4,7 +4,7 @@ const [YEAR, DAY, PART] = [2019, 4, 1];
 
 const [start, end] = read(YEAR, DAY, { splitBy: '-' }).map((n) => Number(n));
 
-const dups = /(11|22|33|44|55|66|77|88|99|00)/;
+const dups = /(\d)\1/;
 const neverDecreases = (number) => {
   const digits = number.split('').map((n) => Number(n));
 
