@@ -5,7 +5,7 @@ const [YEAR, DAY, PART] = [2019, 4, 1];
 const [start, end] = read(YEAR, DAY, { splitBy: '-' }).map((n) => Number(n));
 
 // Negative Lookbehind & Negative Lookhead
-// Only matches adjacent numbers if the number immediately before or after is is not the same
+// Only matches adjacent numbers if the number immediately before or after is not the same
 const expr = [...Array(10).keys()].map((n) => `(?<!${n})${n}${n}(?!${n})`).join('|');
 const dups = new RegExp(`(${expr})`);
 
