@@ -8,10 +8,14 @@ class Tile {
     this.data = data;
 
     this.edges = [
-      data[0],
-      data[data.length - 1],
-      data.reduce((edge, _, i) => [...edge, data[i][0]], []),
-      data.reduce((edge, _, i) => [...edge, data[i][data.length - 1]], []),
+      data[0].join(''),
+      data[data.length - 1].join(''),
+      data.reduce((edge, _, i) => [...edge, data[i][0]], []).join(''),
+      data.reduce((edge, _, i) => [...edge, data[i][data.length - 1]], []).join(''),
+      [...data[0]].reverse().join(''),
+      [...data[data.length - 1]].reverse().join(''),
+      [...data.reduce((edge, _, i) => [...edge, data[i][0]], [])].reverse().join(''),
+      [...data.reduce((edge, _, i) => [...edge, data[i][data.length - 1]], [])].reverse().join(''),
     ];
   }
 }
@@ -41,14 +45,8 @@ tiles.forEach((tile1) => {
     let matched = false;
 
     for (const edge1 of tile1.edges) {
-      const e1F = edge1.join('');
-      const e1R = edge1.reverse().join('');
-
       for (const edge2 of tile2.edges) {
-        const e2F = edge2.join('');
-        const e2R = edge2.reverse().join('');
-
-        if (e1F === e2F || e1F === e2R || e1R === e2F) {
+        if (edge1 === edge2) {
           matched = true;
           break;
         }

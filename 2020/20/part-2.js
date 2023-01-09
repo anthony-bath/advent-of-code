@@ -13,7 +13,16 @@ class Tile {
   constructor(data, id) {
     this.id = id;
     this.data = data;
-    this.edges = [this.topEdge(), this.rightEdge(), this.bottomEdge(), this.leftEdge()];
+    this.edges = [
+      this.topEdge().join(''),
+      this.rightEdge().join(''),
+      this.bottomEdge().join(''),
+      this.leftEdge().join(''),
+      [...this.topEdge()].reverse().join(''),
+      [...this.rightEdge()].reverse().join(''),
+      [...this.bottomEdge()].reverse().join(''),
+      [...this.leftEdge()].reverse().join(''),
+    ];
     this.connections = [];
     this.rotations = 0;
   }
@@ -105,15 +114,9 @@ tiles.forEach((tile1) => {
     let matched = false;
 
     for (const [i, edge1] of tile1.edges.entries()) {
-      const e1F = edge1.join('');
-      const e1R = [...edge1].reverse().join('');
-
       for (const edge2 of tile2.edges) {
-        const e2F = edge2.join('');
-        const e2R = [...edge2].reverse().join('');
-
-        if (e1F === e2F || e1F === e2R || e1R === e2F) {
-          tile1.connections.push(new Connection(i, tile2));
+        if (edge1 === edge2) {
+          tile1.connections.push(new Connection(i % 4, tile2));
           matched = true;
           break;
         }
