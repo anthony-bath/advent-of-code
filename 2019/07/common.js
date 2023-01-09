@@ -138,9 +138,7 @@ export function execute(program, inputs) {
 }
 
 export function execute2(state, input) {
-  let output;
-
-  while (state.pointer < state.program.length) {
+  while (!state.halted) {
     const command = state.program[state.pointer];
     let commandString = command.toString();
 
@@ -191,14 +189,10 @@ export function execute2(state, input) {
             } else {
               state.program[p1] = input;
             }
+            state.pointer += 2;
           } else {
-            output = p1Value;
-          }
-
-          state.pointer += 2;
-
-          if (op === 4 && !state.halted) {
-            return output;
+            state.pointer += 2;
+            return p1Value;
           }
         }
         break;
@@ -275,10 +269,7 @@ export function execute2(state, input) {
 
       case 99:
         state.halted = true;
+        return null;
     }
-
-    if (state.halted) break;
   }
-
-  return output;
 }
