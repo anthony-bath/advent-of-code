@@ -11,7 +11,7 @@ let output;
 const state = { pointer: 0, program: [...program], halted: false };
 
 while (!state.halted) {
-  const result = execute(state, INPUT_VALUE);
+  const result = execute(state, [INPUT_VALUE]);
 
   if (result !== null) {
     output = result;

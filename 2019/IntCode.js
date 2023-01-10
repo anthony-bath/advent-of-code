@@ -1,4 +1,6 @@
-export function execute(state, input) {
+export function execute(state, inputs) {
+  let inputIndex = 0;
+
   while (!state.halted) {
     const command = state.program[state.pointer];
     let commandString = command.toString();
@@ -44,7 +46,7 @@ export function execute(state, input) {
           const p1Value = modes[0] === '0' ? state.program[p1] : p1;
 
           if (op === 3) {
-            state.program[p1] = input;
+            state.program[p1] = inputs[inputIndex++];
             state.pointer += 2;
           } else {
             state.pointer += 2;
