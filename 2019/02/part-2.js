@@ -1,4 +1,5 @@
 import { read, write } from '../../utility.js';
+import { execute } from '../IntCode.js';
 
 const [YEAR, DAY, PART] = [2019, 2, 2];
 
@@ -12,31 +13,14 @@ let found = false;
 
 for (noun = 0; noun < 99; noun++) {
   for (verb = 0; verb < 99; verb++) {
-    const data = [...input];
-    data[1] = noun;
-    data[2] = verb;
+    const program = [...input];
+    program[1] = noun;
+    program[2] = verb;
 
-    for (let i = 0; i < data.length; i += 4) {
-      const op = data[i];
-      const p1 = data[i + 1];
-      const p2 = data[i + 2];
-      const p3 = data[i + 3];
+    const state = { pointer: 0, program };
+    execute(state);
 
-      switch (op) {
-        case 1:
-          data[p3] = data[p1] + data[p2];
-          break;
-
-        case 2:
-          data[p3] = data[p1] * data[p2];
-          break;
-
-        case 99:
-          break;
-      }
-    }
-
-    if (data[0] === TARGET) {
+    if (state.program[0] === TARGET) {
       found = true;
       break;
     }
