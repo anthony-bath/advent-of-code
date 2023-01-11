@@ -15,11 +15,11 @@ export function execute(state, inputs) {
     let modes;
 
     if (command < 100) {
-      modes = ['0', '0'];
+      modes = [MODE.POSITON, MODE.POSITON];
     } else if (command < 1000) {
-      modes = [commandString[0], '0'];
+      modes = [commandString[0], MODE.POSITON];
     } else if (command < 10000) {
-      modes = [commandString[1], commandString[0], '0'];
+      modes = [commandString[1], commandString[0], MODE.POSITON];
     } else {
       modes = [commandString[2], commandString[1], commandString[0]];
     }
@@ -28,19 +28,16 @@ export function execute(state, inputs) {
       case 1:
       case 2:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p2 = getFromAddress(state.pointer + 2, state);
-          const address = getFromAddress(state.pointer + 3, state);
+          const params = getParameters(3, modes, state);
 
-          const p1Value = getParameterValue(p1, modes[0], state);
-          const p2Value = getParameterValue(p2, modes[1], state);
+          const p1Value = getParameterValue(params[0], state);
+          const p2Value = getParameterValue(params[1], state);
+          const address = getAddress(modes[2], params[2].raw, state.relativeBase);
 
           if (op === 1) {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] =
-              p1Value + p2Value;
+            state.program[address] = p1Value + p2Value;
           } else {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] =
-              p1Value * p2Value;
+            state.program[address] = p1Value * p2Value;
           }
 
           state.pointer += 4;
@@ -48,32 +45,33 @@ export function execute(state, inputs) {
         break;
 
       case 3:
-      case 4:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p1Value = getParameterValue(p1, modes[0], state);
+          const params = getParameters(1, modes, state);
+          const address = getAddress(modes[0], params[0].raw, state.relativeBase);
 
-          if (op === 3) {
-            if (modes[0] === MODE.RELATIVE) {
-              state.program[p1 + state.relativeBase] = inputs[inputIndex++];
-            } else {
-              state.program[p1] = inputs[inputIndex++];
-            }
-            state.pointer += 2;
-          } else {
-            state.pointer += 2;
-            return p1Value;
-          }
+          state.program[address] = inputs[inputIndex++];
+          state.pointer += 2;
         }
         break;
 
+      case 4: {
+        const params = getParameters(1, modes, state);
+        const p1Value = getParameterValue(params[0], state);
+
+        if (op === 3) {
+          state.pointer += 2;
+        } else {
+          state.pointer += 2;
+          return p1Value;
+        }
+      }
+
       case 5:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p2 = getFromAddress(state.pointer + 2, state);
+          const params = getParameters(2, modes, state);
 
-          const p1Value = getParameterValue(p1, modes[0], state);
-          const p2Value = getParameterValue(p2, modes[1], state);
+          const p1Value = getParameterValue(params[0], state);
+          const p2Value = getParameterValue(params[1], state);
 
           if (p1Value !== 0) {
             state.pointer = p2Value;
@@ -85,11 +83,10 @@ export function execute(state, inputs) {
 
       case 6:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p2 = getFromAddress(state.pointer + 2, state);
+          const params = getParameters(2, modes, state);
 
-          const p1Value = getParameterValue(p1, modes[0], state);
-          const p2Value = getParameterValue(p2, modes[1], state);
+          const p1Value = getParameterValue(params[0], state);
+          const p2Value = getParameterValue(params[1], state);
 
           if (p1Value === 0) {
             state.pointer = p2Value;
@@ -101,17 +98,16 @@ export function execute(state, inputs) {
 
       case 7:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p2 = getFromAddress(state.pointer + 2, state);
-          const address = getFromAddress(state.pointer + 3, state);
+          const params = getParameters(3, modes, state);
 
-          const p1Value = getParameterValue(p1, modes[0], state);
-          const p2Value = getParameterValue(p2, modes[1], state);
+          const p1Value = getParameterValue(params[0], state);
+          const p2Value = getParameterValue(params[1], state);
+          const address = getAddress(modes[2], params[2].raw, state.relativeBase);
 
           if (p1Value < p2Value) {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] = 1;
+            state.program[address] = 1;
           } else {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] = 0;
+            state.program[address] = 0;
           }
 
           state.pointer += 4;
@@ -120,17 +116,16 @@ export function execute(state, inputs) {
 
       case 8:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p2 = getFromAddress(state.pointer + 2, state);
-          const address = getFromAddress(state.pointer + 3, state);
+          const params = getParameters(3, modes, state);
 
-          const p1Value = getParameterValue(p1, modes[0], state);
-          const p2Value = getParameterValue(p2, modes[1], state);
+          const p1Value = getParameterValue(params[0], state);
+          const p2Value = getParameterValue(params[1], state);
+          const address = getAddress(modes[2], params[2].raw, state.relativeBase);
 
           if (p1Value === p2Value) {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] = 1;
+            state.program[address] = 1;
           } else {
-            state.program[modes[2] === MODE.RELATIVE ? address + state.relativeBase : address] = 0;
+            state.program[address] = 0;
           }
 
           state.pointer += 4;
@@ -139,8 +134,8 @@ export function execute(state, inputs) {
 
       case 9:
         {
-          const p1 = getFromAddress(state.pointer + 1, state);
-          const p1Value = getParameterValue(p1, modes[0], state);
+          const params = getParameters(1, modes, state);
+          const p1Value = getParameterValue(params[0], state);
 
           state.relativeBase += p1Value;
           state.pointer += 2;
@@ -154,6 +149,27 @@ export function execute(state, inputs) {
   }
 }
 
+class Parameter {
+  constructor(raw, mode) {
+    this.raw = raw;
+    this.mode = mode;
+  }
+}
+
+function getParameters(count, modes, state) {
+  const output = [];
+
+  for (let i = 1; i <= count; i++) {
+    output.push(new Parameter(state.program[state.pointer + i], modes[i - 1]));
+  }
+
+  return output;
+}
+
+function getAddress(mode, address, relativeBase) {
+  return mode === MODE.RELATIVE ? address + relativeBase : address;
+}
+
 function getFromAddress(address, state) {
   if (state.program[address] === undefined) {
     state.program[address] = 0;
@@ -162,15 +178,15 @@ function getFromAddress(address, state) {
   return state.program[address];
 }
 
-function getParameterValue(parameterRaw, mode, state) {
-  switch (mode) {
+function getParameterValue(parameter, state) {
+  switch (parameter.mode) {
     case MODE.POSITON:
-      return getFromAddress(parameterRaw, state);
+      return getFromAddress(parameter.raw, state);
 
     case MODE.IMMEDIATE:
-      return parameterRaw;
+      return parameter.raw;
 
     case MODE.RELATIVE:
-      return getFromAddress(parameterRaw + state.relativeBase, state);
+      return getFromAddress(parameter.raw + state.relativeBase, state);
   }
 }

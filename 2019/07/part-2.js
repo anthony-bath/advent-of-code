@@ -10,7 +10,7 @@ let max = -Infinity;
 const phaseOrders = permute([5, 6, 7, 8, 9]);
 
 for (const phaseOrder of phaseOrders) {
-  const states = phaseOrder.map((phase, i) => ({
+  const states = phaseOrder.map(() => ({
     program: [...program],
     halted: false,
     pointer: 0,
