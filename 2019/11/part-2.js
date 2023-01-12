@@ -14,7 +14,6 @@ const DIR = {
 
 const white = new Set();
 const black = new Set();
-let painted = new Set();
 
 white.add(`0|0`);
 const robot = { x: 0, y: 0, dir: DIR.UP, square: 'w' };
@@ -33,12 +32,10 @@ while (!state.halted) {
 
     if (color === 0) {
       // paint black
-      painted.add(beforePosKey);
       black.add(beforePosKey);
       white.delete(beforePosKey);
     } else {
       // paint white
-      painted.add(beforePosKey);
       black.delete(beforePosKey);
       white.add(beforePosKey);
     }
@@ -87,12 +84,30 @@ while (!state.halted) {
   }
 }
 
+let [minX, maxX, minY, maxY] = [Infinity, -Infinity, Infinity, -Infinity];
+
+white.forEach((key) => {
+  const [x, y] = key.split('|').map((n) => Number(n));
+
+  if (x > maxX) {
+    maxX = x;
+  } else if (x < minX) {
+    minX = x;
+  }
+
+  if (y > maxY) {
+    maxY = y;
+  } else if (y < minY) {
+    minY = y;
+  }
+});
+
 const result = [];
 
-for (let x = 0; x <= 42; x++) {
+for (let y = maxY; y >= minY; y--) {
   const row = [];
 
-  for (let y = -5; y <= 0; y++) {
+  for (let x = minX; x <= maxX; x++) {
     if (white.has(`${x}|${y}`)) {
       row.push('⬜');
     } else {
