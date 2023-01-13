@@ -26,8 +26,8 @@ export class Moon {
     return sum(this.position) * sum(this.velocity);
   }
 
-  key() {
-    return `${this.position.join('|')}-${this.velocity.join('|')}`;
+  keys() {
+    return this.position.map((pos, i) => `${pos}|${this.velocity[i]}`);
   }
 }
 
