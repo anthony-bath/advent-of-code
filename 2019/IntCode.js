@@ -1,5 +1,5 @@
 const MODE = {
-  POSITON: '0',
+  POSITION: '0',
   IMMEDIATE: '1',
   RELATIVE: '2',
 };
@@ -15,11 +15,11 @@ export function execute(state, inputs) {
     let modes;
 
     if (command < 100) {
-      modes = [MODE.POSITON, MODE.POSITON];
+      modes = [MODE.POSITION, MODE.POSITION, MODE.POSITION];
     } else if (command < 1000) {
-      modes = [commandString[0], MODE.POSITON];
+      modes = [commandString[0], MODE.POSITION, MODE.POSITION];
     } else if (command < 10000) {
-      modes = [commandString[1], commandString[0], MODE.POSITON];
+      modes = [commandString[1], commandString[0], MODE.POSITION];
     } else {
       modes = [commandString[2], commandString[1], commandString[0]];
     }
@@ -58,12 +58,8 @@ export function execute(state, inputs) {
         const params = getParameters(1, modes, state);
         const p1Value = getParameterValue(params[0], state);
 
-        if (op === 3) {
-          state.pointer += 2;
-        } else {
-          state.pointer += 2;
-          return p1Value;
-        }
+        state.pointer += 2;
+        return p1Value;
       }
 
       case 5:
@@ -180,7 +176,7 @@ function getFromAddress(address, state) {
 
 function getParameterValue(parameter, state) {
   switch (parameter.mode) {
-    case MODE.POSITON:
+    case MODE.POSITION:
       return getFromAddress(parameter.raw, state);
 
     case MODE.IMMEDIATE:
