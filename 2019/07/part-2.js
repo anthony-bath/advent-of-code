@@ -1,5 +1,6 @@
-import { permute, read, write } from '../../utility.js';
+import { read, write } from '../../utility.js';
 import { execute } from '../IntCode.js';
+import { permute } from '../../utilities/array.js';
 
 const [YEAR, DAY, PART] = [2019, 7, 2];
 
