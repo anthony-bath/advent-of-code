@@ -24,7 +24,6 @@ while (!state.halted) {
   output.push(execute(state, [robot.square === 'b' ? 0 : 1]));
 
   if (output.length === 2) {
-    console.log(output);
     const color = output.shift();
     const turn = output.shift();
 
