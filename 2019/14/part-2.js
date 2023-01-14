@@ -52,18 +52,19 @@ function getCost(element, quantity) {
 }
 
 let availableOre = 1000000000000;
-let count = Math.floor(availableOre / getCost('FUEL', 1));
+let low = Math.floor(availableOre / getCost('FUEL', 1));
+let high = availableOre;
 
-while (true) {
+while (low < high) {
+  const mid = Math.round((low + high) / 2);
+
   inventory = new Map();
-  let consumedOre = getCost('FUEL', count);
 
-  if (consumedOre > availableOre) {
-    count--;
-    break;
+  if (getCost('FUEL', mid) < availableOre) {
+    low = mid;
   } else {
-    count++;
+    high = mid - 1;
   }
 }
 
-write(YEAR, DAY, PART, count);
+write(YEAR, DAY, PART, low);
