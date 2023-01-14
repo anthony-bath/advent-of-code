@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 8, 2];
 
-const instructions = read(YEAR, DAY).map((instruction) => {
+const instructions = read(YEAR, DAY, PART).map((instruction) => {
   const [operation, value] = instruction.split(' ');
   return [operation, Number(value)];
 });
@@ -67,4 +67,4 @@ for (let i = 0; i < instructions.length; i++) {
   }
 }
 
-write(YEAR, PART, DAY, accumulator);
+write(YEAR, DAY, PART, accumulator);

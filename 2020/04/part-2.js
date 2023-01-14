@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 4, 2];
 
@@ -6,7 +6,7 @@ let validCount = 0;
 let continueToNextPassport = false;
 let fields = [];
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   if (!line) {
     if (
       !continueToNextPassport &&

@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 15, 1];
 
-const numbers = read(YEAR, DAY, { splitBy: ',' }).map((n) => Number(n));
+const numbers = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 const TURNS = 2020;
 
 let turn = 1;

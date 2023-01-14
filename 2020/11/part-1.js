@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 11, 1];
 
-const grid = read(YEAR, DAY).map((line) => line.split(''));
+const grid = read(YEAR, DAY, PART).map((line) => line.split(''));
 
 const WIDTH = grid[0].length;
 const HEIGHT = grid.length;

@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 14, 2];
 
@@ -41,7 +41,7 @@ const expr = /\d+/g;
 const mem = {};
 let mask;
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   if (line.startsWith('mask')) {
     const parts = line.split(' = ');
     mask = parts[1].split('');

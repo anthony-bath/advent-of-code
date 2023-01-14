@@ -1,7 +1,9 @@
-import { write } from '../../utility.js';
-import { tickets, fields } from './common.js';
+import { write } from '../../utilities/io.js';
+import { loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2020, 16, 1];
+
+const { tickets, fields } = loadData(PART);
 
 write(
   YEAR,

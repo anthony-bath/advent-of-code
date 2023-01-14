@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 6, 1];
 
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, PART);
 
 let total = 0;
 let currentGroup = new Set();

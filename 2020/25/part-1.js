@@ -1,10 +1,10 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 25, 1];
 
 const SUBJECT_NUMBER = 7;
 const FACTOR = 20201227;
-const [cardPublicKey, doorPublicKey] = read(YEAR, DAY).map((n) => Number(n));
+const [cardPublicKey, doorPublicKey] = read(YEAR, DAY, PART).map((n) => Number(n));
 
 let cardLoopSize = 0;
 let value = 1;

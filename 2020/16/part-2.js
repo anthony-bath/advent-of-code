@@ -1,7 +1,9 @@
-import { write } from '../../utility.js';
-import { tickets, fields, myTicket } from './common.js';
+import { write } from '../../utilities/io.js';
+import { loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2020, 16, 2];
+
+const { tickets, fields, myTicket } = loadData(PART);
 
 const validTickets = [
   myTicket,

@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 10, 2];
 
-const joltages = read(YEAR, DAY)
+const joltages = read(YEAR, DAY, PART)
   .map((n) => Number(n))
   .sort((a, b) => a - b);
 
@@ -25,4 +25,4 @@ function getPaths(index) {
   return count;
 }
 
-write(YEAR, PART, DAY, getPaths(0));
+write(YEAR, DAY, PART, getPaths(0));

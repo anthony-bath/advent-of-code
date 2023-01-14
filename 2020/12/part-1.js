@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 12, 1];
 
@@ -10,7 +10,7 @@ let facing = 90;
 let x = X_START;
 let y = Y_START;
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   let { instruction, amount } = line.match(expr).groups;
   amount = Number(amount);
 

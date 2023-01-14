@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 6, 2];
 
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, PART);
 
 function calculateGroupScore(group) {
   if (group.length === 1) {

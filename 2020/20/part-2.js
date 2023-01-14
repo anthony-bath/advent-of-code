@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 20, 2];
 
@@ -89,7 +89,7 @@ function compare(edge1, edge2) {
   return edge1.join('') === edge2.join('');
 }
 
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, PART);
 const tilesById = new Map();
 
 // Create Tiles

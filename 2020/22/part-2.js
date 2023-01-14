@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 22, 2];
 const player1 = [];
 const player2 = [];
 let parsedPlayer1 = false;
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   if (line.startsWith('Player')) return;
   if (!line) {
     parsedPlayer1 = true;

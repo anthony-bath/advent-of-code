@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 4, 1];
 
 let validCount = 0;
 let fields = [];
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   if (!line) {
     validCount +=
       fields.length === 8 || (fields.length === 7 && fields.indexOf('cid') === -1) ? 1 : 0;

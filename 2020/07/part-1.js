@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 7, 1];
 
 const expr = /^(?<quantity>\d) (?<type>.+) bags?\.?/;
 const bagsByType = new Map();
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const [type, others] = line.split(' bags contain ');
   const contains = [];
 

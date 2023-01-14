@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { EOL } from 'os';
 
 const [YEAR, DAY, PART] = [2020, 18, 1];
@@ -55,7 +55,7 @@ function evaluate(equation) {
   return values.pop();
 }
 
-const result = read(YEAR, DAY, { splitBy: null })
+const result = read(YEAR, DAY, PART, { splitBy: null })
   .replace(/\(\(/g, '( (')
   .replace(/\)\)/g, ') )')
   .replace(/(\()(\d+)/g, '$1 $2')

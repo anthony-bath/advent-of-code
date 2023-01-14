@@ -1,10 +1,10 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 9, 1];
 
 const SIZE = 25;
 
-const input = read(YEAR, DAY).map((n) => Number(n));
+const input = read(YEAR, DAY, PART).map((n) => Number(n));
 const preamble = input.slice(0, SIZE);
 let sums = [];
 const used = new Set();

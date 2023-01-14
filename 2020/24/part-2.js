@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 24, 2];
 
@@ -33,7 +33,7 @@ function getNeighborKeys(key) {
   return neighborKeysByKey.get(key);
 }
 
-read(YEAR, DAY).forEach((path) => {
+read(YEAR, DAY, PART).forEach((path) => {
   const moves = path.match(expr);
   let [x, y] = [0, 0];
 

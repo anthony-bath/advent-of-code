@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 5, 2];
 
-const seatIds = read(YEAR, DAY, { splitBy: null })
+const seatIds = read(YEAR, DAY, PART, { splitBy: null })
   .replace(/[FL]/g, '0')
   .replace(/[BR]/g, '1')
   .split('\n')

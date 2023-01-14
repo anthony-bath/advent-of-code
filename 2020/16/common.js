@@ -1,4 +1,4 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2020, 16];
 
@@ -27,34 +27,36 @@ class Field {
 const FIELD_EXPR =
   /(?<name>[a-z\s]+): (?<r1start>\d+)-(?<r1end>\d+) or (?<r2start>\d+)-(?<r2end>\d+)/;
 
-let parsingMyTicket = false;
-let parsingNearbyTickets = false;
+export function loadData(part) {
+  let parsingMyTicket = false;
+  let parsingNearbyTickets = false;
 
-const fields = [];
-let myTicket;
-const tickets = [];
+  const fields = [];
+  let myTicket;
+  const tickets = [];
 
-read(YEAR, DAY).forEach((line) => {
-  if (!line && !parsingMyTicket) {
-    parsingMyTicket = true;
-    return;
-  } else if (!line && !parsingNearbyTickets) {
-    parsingNearbyTickets = true;
-    return;
-  }
+  read(YEAR, DAY, part).forEach((line) => {
+    if (!line && !parsingMyTicket) {
+      parsingMyTicket = true;
+      return;
+    } else if (!line && !parsingNearbyTickets) {
+      parsingNearbyTickets = true;
+      return;
+    }
 
-  if (!parsingMyTicket && !parsingNearbyTickets) {
-    const { name, r1start, r1end, r2start, r2end } = line.match(FIELD_EXPR).groups;
-    fields.push(new Field(name, r1start, r1end, r2start, r2end));
-  } else if (parsingMyTicket && !parsingNearbyTickets) {
-    if (line.startsWith('your ticket')) return;
+    if (!parsingMyTicket && !parsingNearbyTickets) {
+      const { name, r1start, r1end, r2start, r2end } = line.match(FIELD_EXPR).groups;
+      fields.push(new Field(name, r1start, r1end, r2start, r2end));
+    } else if (parsingMyTicket && !parsingNearbyTickets) {
+      if (line.startsWith('your ticket')) return;
 
-    myTicket = line.split(',').map((n) => Number(n));
-  } else if (parsingNearbyTickets) {
-    if (line.startsWith('nearby tickets')) return;
+      myTicket = line.split(',').map((n) => Number(n));
+    } else if (parsingNearbyTickets) {
+      if (line.startsWith('nearby tickets')) return;
 
-    tickets.push(line.split(',').map((n) => Number(n)));
-  }
-});
+      tickets.push(line.split(',').map((n) => Number(n)));
+    }
+  });
 
-export { tickets, fields, myTicket };
+  return { tickets, fields, myTicket };
+}
