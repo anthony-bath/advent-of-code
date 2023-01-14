@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, evaluate } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 15, 1];
 
-const { queue, risk, visited, grid } = loadData(1);
+const { queue, risk, visited, grid } = loadData(PART);
 const cols = grid[0].length;
 const rows = grid.length;
 

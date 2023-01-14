@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 21, 1];
 
-const { p1Start, p2Start } = loadData();
+const { p1Start, p2Start } = loadData(PART);
 
 function sumMtoN(m, n) {
   return (n * (n + 1)) / 2 - (m * (m - 1)) / 2;

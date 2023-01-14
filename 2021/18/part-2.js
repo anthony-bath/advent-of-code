@@ -1,10 +1,10 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 18, 2];
 
 const magnitudes = [];
-const fish = loadData();
+const fish = loadData(PART);
 
 for (const fish1 of fish) {
   for (const fish2 of fish) {

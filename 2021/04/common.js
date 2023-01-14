@@ -1,14 +1,15 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 4];
 
-export const loadData = () => {
-  const numbers = read(YEAR, DAY, { splitBy: ',', part: 1 }).map((x) => Number(x));
+export const loadData = (part) => {
+  const input = read(YEAR, DAY, part);
+  const numbers = input[0].split(',').map((x) => Number(x));
 
   const boards = [];
   let board = [];
 
-  read(YEAR, DAY, { part: 2 }).forEach((row, index) => {
+  input.slice(2).forEach((row, index) => {
     if ((index + 1) % 6 === 0) {
       boards.push(board);
       board = [];
@@ -18,7 +19,7 @@ export const loadData = () => {
           .trim()
           .split(' ')
           .filter((x) => x)
-          .map((x) => parseInt(x))
+          .map((x) => Number(x))
       );
     }
   });

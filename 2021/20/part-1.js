@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, enhance } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 20, 1];
 
-let { image, algo } = loadData();
+let { image, algo } = loadData(PART);
 let result = 0;
 
 const STEPS = 2;

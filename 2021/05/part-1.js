@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, plotHorizontal, plotVertical, evaluateGrid } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 5, 1];
 
-const { lines, grid } = loadData();
+const { lines, grid } = loadData(PART);
 
 for (const line of lines) {
   const { x1, x2, y1, y2 } = line;

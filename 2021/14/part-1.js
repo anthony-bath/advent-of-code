@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { Node, loadData, getElementDifference } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 14, 1];
 
-const { rules, start } = loadData(1);
+const { rules, start } = loadData(PART);
 let current = start;
 const STEPS = 10;
 

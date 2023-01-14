@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, evaluateBoard, sumBoard } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 4, 2];
 
-const { numbers, boards } = loadData();
+const { numbers, boards } = loadData(PART);
 
 const winningStates = [];
 const wonBoardIndices = [];

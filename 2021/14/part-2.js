@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, getElementDifference } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 14, 2];
 
-let { template, rules, pairs } = loadData(2);
+let { template, rules, pairs } = loadData(PART);
 const STEPS = 40;
 
 for (let step = 0; step < STEPS; step++) {

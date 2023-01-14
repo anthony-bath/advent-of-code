@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 8, 1];
 
 const inputs = [];
 const outputs = [];
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const [input, output] = line.trim().split(' | ');
   inputs.push(input);
   outputs.push(output);

@@ -1,26 +1,36 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 13];
 
-export const loadData = () => {
+export const loadData = (part) => {
+  const input = read(YEAR, DAY, part);
+
   let xMax = 0;
   let yMax = 0;
+  let parsedCoords = false;
+  const coords = [];
+  const folds = [];
 
-  const coords = read(YEAR, DAY, { part: 1 }).map((entry) => {
-    const [x, y] = entry
-      .trim()
-      .split(',')
-      .map((val) => Number(val));
+  input.forEach((line) => {
+    if (!line) {
+      parsedCoords = true;
+      return;
+    }
 
-    xMax = Math.max(x, xMax);
-    yMax = Math.max(y, yMax);
+    if (!parsedCoords) {
+      const [x, y] = line
+        .trim()
+        .split(',')
+        .map((n) => Number(n));
 
-    return [x, y];
-  });
+      xMax = Math.max(x, xMax);
+      yMax = Math.max(y, yMax);
 
-  const folds = read(YEAR, DAY, { part: 2 }).map((line) => {
-    const [dir, point] = line.trim().replace('fold along ', '').split('=');
-    return [dir, Number(point)];
+      coords.push([x, y]);
+    } else {
+      const [dir, point] = line.trim().replace('fold along ', '').split('=');
+      folds.push([dir, Number(point)]);
+    }
   });
 
   return { xMax, yMax, coords, folds };

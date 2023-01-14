@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 2, 1];
 
-const data = read(YEAR, DAY).map((row) => {
+const data = read(YEAR, DAY, PART).map((row) => {
   const [direction, amount] = row.split(' ');
   return [direction, Number(amount)];
 });

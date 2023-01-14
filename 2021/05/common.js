@@ -1,13 +1,13 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 5];
 
-export const loadData = () => {
+export const loadData = (part) => {
   let xMax = 0;
   let yMax = 0;
   const lines = [];
 
-  read(YEAR, DAY).forEach((row) => {
+  read(YEAR, DAY, part).forEach((row) => {
     const [start, end] = row.split(' -> ');
     const [x1, y1] = start.split(',').map((n) => parseInt(n));
     const [x2, y2] = end.split(',').map((n) => parseInt(n));

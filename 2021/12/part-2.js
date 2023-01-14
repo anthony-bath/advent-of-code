@@ -1,9 +1,9 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { Path, getCavesMap } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 12, 1];
 
-const data = read(YEAR, DAY).map((entry) => entry.trim().split('-'));
+const data = read(YEAR, DAY, PART).map((entry) => entry.trim().split('-'));
 
 function walk(cave, path) {
   if (!cave.isLarge && !path.canVisitCave(cave.key)) {

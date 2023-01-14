@@ -1,9 +1,10 @@
-import { write } from '../../utility.js';
+import { printGrid } from '../../utilities/grid.js';
+import { write } from '../../utilities/io.js';
 import { loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 13, 2];
 
-let { xMax, yMax, coords, folds } = loadData();
+let { xMax, yMax, coords, folds } = loadData(PART);
 let paper = [...Array(yMax + 1)].map((_) => Array(xMax + 1).fill('.'));
 
 coords.forEach(([x, y]) => {
@@ -53,4 +54,4 @@ for (const [dir, point] of folds) {
   }
 }
 
-write(YEAR, DAY, PART, paper.map((row) => row.join('')).join('\n'));
+write(YEAR, DAY, PART, printGrid(paper, '#'));

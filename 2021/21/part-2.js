@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadData, ROLLS } from './common.js';
 
 const [YEAR, DAY, PART] = [2021, 21, 2];
 
-const { p1Start, p2Start } = loadData();
+const { p1Start, p2Start } = loadData(PART);
 
 function play(p1Pos, p2Pos, p1Score, p2Score, turn) {
   const gameStateKey = [p1Pos, p2Pos, p1Score, p2Score, turn % 2].join('|');

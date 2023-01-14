@@ -1,4 +1,4 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 14];
 
@@ -13,7 +13,7 @@ export class Node {
 }
 
 export const loadData = (part) => {
-  const data = read(YEAR, DAY).map((line) => line.trim());
+  const data = read(YEAR, DAY, part).map((line) => line.trim());
 
   const template = data[0];
 

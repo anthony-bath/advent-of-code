@@ -1,12 +1,12 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 20, 1];
 
-export const loadData = () => {
+export const loadData = (part) => {
   let algo = [];
   const image = [];
 
-  read(YEAR, DAY).forEach((line, i) => {
+  read(YEAR, DAY, part).forEach((line, i) => {
     if (i === 0) {
       algo = line.trim().split('');
     } else if (i > 1) {
