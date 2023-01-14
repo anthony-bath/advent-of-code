@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 25, 1];
 
@@ -43,6 +43,6 @@ function decimalToSNAFU(decimal) {
   return places.map((place) => reverseLookup[place]).join('');
 }
 
-const decimal = read(YEAR, DAY).reduce((sum, fuel) => sum + snafuToDecimal(fuel), 0);
+const decimal = read(YEAR, DAY, PART).reduce((sum, fuel) => sum + snafuToDecimal(fuel), 0);
 
 write(YEAR, DAY, PART, decimalToSNAFU(decimal));

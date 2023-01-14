@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { getKey, getNeighbors } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 18, 2];
@@ -9,7 +9,7 @@ const lavaCoordinates = [];
 let [minX, minY, minZ] = [Infinity, Infinity, Infinity];
 let [maxX, maxY, maxZ] = [-Infinity, -Infinity, -Infinity];
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const [x, y, z] = line.split(',').map((n) => Number(n));
   lavaCoordinates.push([x, y, z]);
   lavaCache[`${x}-${y}-${z}`] = 1;

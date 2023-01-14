@@ -1,43 +1,44 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 12];
 
-let start;
-let end;
+export function loadData(part) {
+  let start;
+  let end;
+  const lowPoints = [];
 
-const lowPoints = [];
+  const grid = read(YEAR, DAY, part).map((line, rowIndex) => {
+    const row = line.split('');
+    const startX = row.indexOf('S');
 
-const grid = read(YEAR, DAY).map((line, rowIndex) => {
-  const row = line.split('');
-  const startX = row.indexOf('S');
-
-  if (startX !== -1) {
-    start = { x: startX, y: rowIndex };
-    row[startX] = 'a';
-  }
-
-  const endX = row.indexOf('E');
-
-  if (endX !== -1) {
-    end = { x: endX, y: rowIndex };
-    row[endX] = 'z';
-  }
-
-  const rowWithHeights = row.map((letter, column) => {
-    if (letter === 'a') {
-      lowPoints.push({ x: column, y: rowIndex });
+    if (startX !== -1) {
+      start = { x: startX, y: rowIndex };
+      row[startX] = 'a';
     }
 
-    return letter.charCodeAt(0) - 97;
+    const endX = row.indexOf('E');
+
+    if (endX !== -1) {
+      end = { x: endX, y: rowIndex };
+      row[endX] = 'z';
+    }
+
+    const rowWithHeights = row.map((letter, column) => {
+      if (letter === 'a') {
+        lowPoints.push({ x: column, y: rowIndex });
+      }
+
+      return letter.charCodeAt(0) - 97;
+    });
+
+    return rowWithHeights;
   });
 
-  return rowWithHeights;
-});
+  const visited = [...Array(grid.length)].map((_) => Array(grid[0].length).fill(false));
+  const cost = [...Array(grid.length)].map((_) => Array(grid[0].length).fill(Infinity));
 
-const visited = [...Array(grid.length)].map((_) => Array(grid[0].length).fill(false));
-const cost = [...Array(grid.length)].map((_) => Array(grid[0].length).fill(Infinity));
-
-export { start, end, grid, visited, cost, lowPoints };
+  return { start, end, grid, visited, cost, lowPoints };
+}
 
 function insertIntoSortedQueue(queue, node) {
   let low = 0;

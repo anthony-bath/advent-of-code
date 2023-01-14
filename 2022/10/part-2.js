@@ -1,7 +1,10 @@
-import { write } from '../../utility.js';
-import { cycles, DARK_PIXEL, LIT_PIXEL, LINE_LENGTH } from './common.js';
+import { printGrid } from '../../utilities/grid.js';
+import { write } from '../../utilities/io.js';
+import { loadCycles, DARK_PIXEL, LIT_PIXEL, LINE_LENGTH } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 10, 2];
+
+const cycles = loadCycles(PART);
 
 let X = 1;
 const output = [];
@@ -22,4 +25,4 @@ for (let cycleIndex = 0; cycleIndex < cycles.length; cycleIndex++) {
   }
 }
 
-write(YEAR, DAY, PART, output.join('\n'));
+write(YEAR, DAY, PART, printGrid(output, '#'));

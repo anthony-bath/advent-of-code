@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 13, 2];
 
@@ -42,7 +42,7 @@ function compare(left, right) {
   }
 }
 
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, PART);
 const markers = [[[2]], [[6]]];
 const packets = [...markers];
 

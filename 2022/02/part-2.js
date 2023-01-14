@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 2, 2];
 
@@ -22,7 +22,7 @@ const scoreByPlays = new Map([
   ['C Z', 6 + 1],
 ]);
 
-const strategyScore = read(YEAR, DAY).reduce(
+const strategyScore = read(YEAR, DAY, PART).reduce(
   (score, plays) => (score += scoreByPlays.get(plays)),
   0
 );

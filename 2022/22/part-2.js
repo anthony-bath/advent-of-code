@@ -1,9 +1,9 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 22, 2];
 
 const SIZE = 50;
-const input = read(YEAR, DAY);
+const input = read(YEAR, DAY, PART);
 
 const WIDTH = Math.max(...input.filter((line) => !/\d/.test(line)).map((line) => line.length));
 

@@ -1,9 +1,9 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { Rock, TEMPLATE_SPAWN_ORDER } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 17, 1];
 
-const JET_PATTERN = read(YEAR, DAY, { splitBy: '' });
+const JET_PATTERN = read(YEAR, DAY, PART, { splitBy: '' });
 const TARGET_ROCK_COUNT = 2022;
 
 let rockCount = 0;

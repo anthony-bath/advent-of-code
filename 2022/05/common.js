@@ -1,4 +1,4 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 5];
 
@@ -7,12 +7,12 @@ const chunkExpr = new RegExp(/.{1,4}/g);
 const itemExpr = new RegExp(/[^A-Z]/g);
 const instructionExpr = new RegExp(/\d+/g);
 
-export function loadData() {
+export function loadData(part) {
   const stacks = [];
   const instructions = [];
   let parsedData = false;
 
-  read(YEAR, DAY).forEach((line) => {
+  read(YEAR, DAY, part).forEach((line) => {
     if (!line) return;
     if (!parsedData && line === END_DATA) {
       parsedData = true;

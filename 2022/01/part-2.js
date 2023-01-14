@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 1, 2];
 
 let top3Carriers = [-Infinity, -Infinity, -Infinity];
 let currentElfTotal = 0;
 
-read(YEAR, DAY).forEach((carryValue) => {
+read(YEAR, DAY, PART).forEach((carryValue) => {
   if (!carryValue) {
     if (currentElfTotal > top3Carriers[0]) {
       top3Carriers = [currentElfTotal, top3Carriers[0], top3Carriers[1]];

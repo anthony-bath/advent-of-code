@@ -1,13 +1,6 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 9];
-
-export const directions = read(YEAR, DAY)
-  .map((line) => {
-    const [direction, distance] = line.split(' ');
-    return direction.repeat(parseInt(distance)).split('');
-  })
-  .flat();
 
 export class Knot {
   constructor(x, y, link) {

@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 8, 2];
 
-const grid = read(YEAR, DAY).map((line) => line.split('').map((n) => parseInt(n, 10)));
+const grid = read(YEAR, DAY, PART).map((line) => line.split('').map((n) => parseInt(n, 10)));
 
 let maxScenicScoreSoFar = -Infinity;
 

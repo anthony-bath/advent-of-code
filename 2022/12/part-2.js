@@ -1,8 +1,9 @@
-import { write } from '../../utility.js';
-import { end, cost, grid, visited, lowPoints, evaluate } from './common.js';
+import { write } from '../../utilities/io.js';
+import { evaluate, loadData } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 12, 2];
 
+const { end, grid, visited, cost, lowPoints } = loadData(PART);
 const WIDTH = grid[0].length;
 const HEIGHT = grid.length;
 

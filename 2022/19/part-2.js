@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 19, 2];
 
@@ -12,7 +12,7 @@ const TYPE = {
   GEODE: 3,
 };
 
-const blueprints = read(YEAR, DAY)
+const blueprints = read(YEAR, DAY, PART)
   .slice(0, 3)
   .map((line) => {
     const {

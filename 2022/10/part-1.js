@@ -1,7 +1,9 @@
-import { write } from '../../utility.js';
-import { cycles, TRACKED_CYCLE_INDICES } from './common.js';
+import { write } from '../../utilities/io.js';
+import { loadCycles, TRACKED_CYCLE_INDICES } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 10, 1];
+
+const cycles = loadCycles(PART);
 
 let X = 1;
 let signalStrength = 0;

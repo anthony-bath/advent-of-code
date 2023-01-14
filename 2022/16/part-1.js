@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 16, 1];
 
 const expr =
   /Valve (?<name>[A-Z]{2}) has flow rate=(?<flowRate>\d+); tunnels? leads? to valves? (?<connections>[A-Z,\s]+)/;
 
-const valves = read(YEAR, DAY).map((line) => {
+const valves = read(YEAR, DAY, PART).map((line) => {
   const { name, flowRate, connections } = line.match(expr).groups;
   return {
     name,

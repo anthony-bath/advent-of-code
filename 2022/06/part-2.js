@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 6, 2];
 
-const data = read(YEAR, DAY, { splitBy: '' });
+const data = read(YEAR, DAY, PART, { splitBy: '' });
 
 const marker = new Map();
 const TARGET_SIZE = 14;

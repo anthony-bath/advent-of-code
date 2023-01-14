@@ -1,4 +1,4 @@
-import { write, read } from '../../utility.js';
+import { write, read } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 14, 2];
 
@@ -14,7 +14,7 @@ function addBlocker(y, x) {
   blockers[y][x] = 1;
 }
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const points = line.split(' -> ').map((coords) => {
     const [x, y] = coords.split(',').map((n) => parseInt(n, 10));
     return { x, y };

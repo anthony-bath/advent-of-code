@@ -1,9 +1,9 @@
-import { write } from '../../utility.js';
+import { write } from '../../utilities/io.js';
 import { loadDirectories } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 7, 1];
 
-const directories = loadDirectories();
+const directories = loadDirectories(PART);
 
 write(
   YEAR,

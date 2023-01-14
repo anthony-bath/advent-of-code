@@ -1,8 +1,9 @@
-import { write } from '../../utility.js';
-import { monkeys } from './common.js';
+import { write } from '../../utilities/io.js';
+import { loadMonkeys } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 11, 2];
 
+const monkeys = loadMonkeys(PART);
 const ROUNDS = 10000;
 const WORRY_LEVEL_SCALE_BY = monkeys.reduce((scale, monkey) => scale * monkey.testDivisibleBy, 1);
 

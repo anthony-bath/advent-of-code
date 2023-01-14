@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { filterAndSortRanges, findMissingWithinRanges } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 15, 2];
@@ -18,7 +18,7 @@ class Sensor {
   }
 }
 
-const sensors = read(YEAR, DAY).map((line) => {
+const sensors = read(YEAR, DAY, PART).map((line) => {
   const [sx, sy, bx, by] = line.match(digits).map((n) => parseInt(n));
   return new Sensor(sx, sy, bx, by);
 });

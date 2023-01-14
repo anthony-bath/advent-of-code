@@ -1,4 +1,4 @@
-import { read } from '../../utility.js';
+import { read } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 11];
 
@@ -85,32 +85,37 @@ class Item {
   }
 }
 
-const input = read(YEAR, DAY);
+export function loadMonkeys(part) {
+  const input = read(YEAR, DAY, part);
 
-const numberExpr = new RegExp(/\d+/g);
-const monkeys = [];
+  const numberExpr = new RegExp(/\d+/g);
+  const monkeys = [];
 
-for (let i = 0; i < input.length; i += 7) {
-  const items = input[i + 1].match(numberExpr).map((n) => new Item(parseInt(n, 10)));
-  const [operator, operationValue] = input[i + 2].split(' = old ')[1].trim().split(' ');
-  const testDisibleBy = parseInt(input[i + 3].match(numberExpr)[0], 0);
-  const successRecipientIndex = parseInt(input[i + 4].match(numberExpr)[0], 0);
-  const failureRecipientIndex = parseInt(input[i + 5].match(numberExpr)[0], 0);
+  for (let i = 0; i < input.length; i += 7) {
+    const items = input[i + 1].match(numberExpr).map((n) => new Item(parseInt(n, 10)));
+    const [operator, operationValue] = input[i + 2].split(' = old ')[1].trim().split(' ');
+    const testDisibleBy = parseInt(input[i + 3].match(numberExpr)[0], 0);
+    const successRecipientIndex = parseInt(input[i + 4].match(numberExpr)[0], 0);
+    const failureRecipientIndex = parseInt(input[i + 5].match(numberExpr)[0], 0);
 
-  monkeys.push(
-    new Monkey(
-      items,
-      operator,
-      parseInt(operationValue, 10),
-      testDisibleBy,
-      successRecipientIndex,
-      failureRecipientIndex
+    monkeys.push(
+      new Monkey(
+        items,
+        operator,
+        parseInt(operationValue, 10),
+        testDisibleBy,
+        successRecipientIndex,
+        failureRecipientIndex
+      )
+    );
+  }
+
+  monkeys.forEach((monkey) =>
+    monkey.setRecipients(
+      monkeys[monkey.successRecipientIndex],
+      monkeys[monkey.failureRecipientIndex]
     )
   );
+
+  return monkeys;
 }
-
-monkeys.forEach((monkey) =>
-  monkey.setRecipients(monkeys[monkey.successRecipientIndex], monkeys[monkey.failureRecipientIndex])
-);
-
-export { monkeys };

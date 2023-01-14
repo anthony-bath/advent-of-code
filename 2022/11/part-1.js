@@ -1,8 +1,9 @@
-import { write } from '../../utility.js';
-import { monkeys } from './common.js';
+import { write } from '../../utilities/io.js';
+import { loadMonkeys } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 11, 1];
 
+const monkeys = loadMonkeys(PART);
 const ROUNDS = 20;
 
 for (let i = 0; i < ROUNDS; i++) {
