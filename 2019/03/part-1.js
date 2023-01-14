@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 3, 1];
 
-const [wire1, wire2] = read(YEAR, DAY).map((path) => path.split(','));
+const [wire1, wire2] = read(YEAR, DAY, PART).map((path) => path.split(','));
 
 function getMoveParts(move) {
   const dir = move.substring(0, 1);

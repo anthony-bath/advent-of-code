@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 6, 2];
 
 const directOrbitsByObject = new Map();
 const directOrbitersOfObject = new Map();
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const [orbitee, orbiter] = line.split(')');
   directOrbitsByObject.set(orbiter, orbitee);
 

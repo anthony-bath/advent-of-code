@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { Moon } from './common.js';
 import { pairs } from '../../utilities/array.js';
 import { lcm } from '../../utilities/math.js';
@@ -7,7 +7,7 @@ const [YEAR, DAY, PART] = [2019, 12, 2];
 
 const moons = [];
 
-read(YEAR, DAY).forEach((line) => {
+read(YEAR, DAY, PART).forEach((line) => {
   const position = line.match(/-?\d+/g).map((n) => Number(n));
   moons.push(new Moon(position));
 });

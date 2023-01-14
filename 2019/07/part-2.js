@@ -1,10 +1,10 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 import { permute } from '../../utilities/array.js';
 
 const [YEAR, DAY, PART] = [2019, 7, 2];
 
-const program = read(YEAR, DAY, { splitBy: ',' }).map((n) => Number(n));
+const program = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 let max = -Infinity;
 

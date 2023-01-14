@@ -1,4 +1,4 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 10, 1];
 
@@ -39,7 +39,7 @@ class Line {
 
 const asteroids = [];
 
-read(YEAR, DAY).forEach((line, y) =>
+read(YEAR, DAY, PART).forEach((line, y) =>
   line.split('').forEach((cell, x) => {
     if (cell === '#') asteroids.push(new Point(x, y));
   })
@@ -72,7 +72,6 @@ asteroids.forEach((a1) => {
 
   if (count > max) {
     max = count;
-    console.log(a1.key, count);
   }
 });
 

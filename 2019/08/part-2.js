@@ -1,11 +1,11 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 8, 2];
 
 const WIDTH = 25;
 const HEIGHT = 6;
 
-const data = read(YEAR, DAY, { splitBy: '' });
+const data = read(YEAR, DAY, PART, { splitBy: '' });
 const imageData = [];
 
 let layer = [];

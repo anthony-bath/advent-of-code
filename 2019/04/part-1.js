@@ -1,8 +1,8 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 4, 1];
 
-const [start, end] = read(YEAR, DAY, { splitBy: '-' }).map((n) => Number(n));
+const [start, end] = read(YEAR, DAY, PART, { splitBy: '-' }).map((n) => Number(n));
 
 const dups = /(\d)\1/;
 const neverDecreases = (number) => {
