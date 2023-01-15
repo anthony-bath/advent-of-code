@@ -1,4 +1,4 @@
-import { printGrid } from '../../utilities/grid.js';
+import { printTextGrid } from '../../utilities/grid.js';
 import { write } from '../../utilities/io.js';
 import { loadData } from './common.js';
 
@@ -54,4 +54,4 @@ for (const [dir, point] of folds) {
   }
 }
 
-write(YEAR, DAY, PART, printGrid(paper, '#'));
+write(YEAR, DAY, PART, printTextGrid(paper, '#'));

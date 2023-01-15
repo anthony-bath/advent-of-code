@@ -1,4 +1,4 @@
-import { printGrid } from '../../utilities/grid.js';
+import { printTextGrid } from '../../utilities/grid.js';
 import { write } from '../../utilities/io.js';
 import { loadCycles, DARK_PIXEL, LIT_PIXEL, LINE_LENGTH } from './common.js';
 
@@ -25,4 +25,4 @@ for (let cycleIndex = 0; cycleIndex < cycles.length; cycleIndex++) {
   }
 }
 
-write(YEAR, DAY, PART, printGrid(output, '#'));
+write(YEAR, DAY, PART, printTextGrid(output, '#'));
