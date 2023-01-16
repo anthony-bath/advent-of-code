@@ -27,3 +27,24 @@ export function permute(array) {
 export function pairs(array) {
   return array.map((v, i) => array.slice(i + 1).map((w) => [v, w])).flat();
 }
+
+export function getCombinations(array) {
+  const combos = [];
+  const count = Math.pow(2, array.length);
+
+  for (let i = 0; i < count; i++) {
+    const temp = [];
+
+    for (let j = 0; j < array.length; j++) {
+      if (i & Math.pow(2, j)) {
+        temp.push(array[j]);
+      }
+    }
+
+    if (temp.length > 0) {
+      combos.push(temp);
+    }
+  }
+
+  return combos;
+}
