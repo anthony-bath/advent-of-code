@@ -1,111 +1,62 @@
-import { read, write } from '../../utility.js';
+import { read, write } from '../../utilities/io.js';
+import { Point, Line } from './common.js';
 
 const [YEAR, DAY, PART] = [2019, 10, 2];
 
-class Point {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.key = `${x}|${y}`;
-  }
+const lines = [];
+const station = new Point(17, 22); // Part 1 Solution
 
-  isPartOfLine(line) {
-    const { p1, p2 } = line;
-
-    if (line.vertical) {
-      return this.x === line.x || Math.abs(this.x - line.x) < 1e-10;
-    } else {
-      const diff = Math.abs(this.y - (line.m * this.x + line.b));
-      return diff < 1e-10;
-    }
-  }
-
-  distanceFrom(point) {
-    return Math.sqrt(
-      Math.pow(Math.abs(this.x - point.x), 2) + Math.pow(Math.abs(this.y - point.y), 2)
-    );
-  }
-}
-
-class Line {
-  constructor(p1, p2) {
-    this.p1 = p1;
-    this.p2 = p2;
-
-    if (p1.x === p2.x || Math.abs(p1.x - p2.x) < 1e-10) {
-      // Vertical Line
-      this.vertical = true;
-      this.x = p1.x;
-    } else {
-      this.m = (p2.y - p1.y) / (p2.x - p1.x);
-      this.b = p1.y - this.m * p1.x;
-    }
-  }
-}
-
-const asteroids = new Map();
-
-read(YEAR, DAY).forEach((line, y) =>
+read(YEAR, DAY, PART).forEach((line, y) =>
   line.split('').forEach((cell, x) => {
+    if (x === station.x && y === station.y) return;
     if (cell === '#') {
-      const p = new Point(x, y);
-      asteroids.set(p.key, p);
+      lines.push(new Line(station, new Point(x, y)));
     }
   })
 );
 
-function getSlope(angleDeg) {
-  if (angleDeg === 90) {
-    return Infinity;
+function sortAsteroids(a, b) {
+  if (a.m > b.m) {
+    return 1;
+  } else if (a.m < b.m) {
+    return -1;
   }
+
+  return a.length - b.length;
 }
 
-function degToRad(angleDeg) {
-  return (angleDeg * Math.PI) / 180;
-}
+// Sort Asteroids starting from 90 deg rotating clockwise
+const sorted = [];
 
-const origin = new Point(17, 22); // from Part 1
-let angleDeg = 270;
-const len = 50;
+const sortingLambdas = [
+  (line) => line.vertical && line.p2.y < station.y,
+  (line) => line.p2.y < station.y && line.p2.x > station.x,
+  (line) => line.p2.x > station.x && line.p2.y === station.y,
+  (line) => line.p2.y > station.y && line.p2.x > station.x,
+  (line) => line.vertical && line.p2.y > station.y,
+  (line) => line.p2.y > station.y && line.p2.x < station.x,
+  (line) => line.p2.x < station.x && line.p2.y === station.y,
+  (line) => line.p2.y < station.y && line.p2.x < station.x,
+];
 
-// while (angleDeg < 360) {
-//   console.log(
-//     `(${origin.x + len * Math.cos(degToRad(angleDeg))},${
-//       origin.y - len * Math.sin(degToRad(angleDeg))
-//     })`
-//   );
-
-//   angleDeg++;
-// }
+sortingLambdas.forEach((lambda) => sorted.push(...lines.filter(lambda).sort(sortAsteroids)));
 
 const blasted = [];
+let index = 0;
 
 while (blasted.length < 200) {
-  const end = new Point(
-    origin.x + len * Math.cos(degToRad(angleDeg)),
-    origin.y - len * Math.sin(degToRad(angleDeg))
-  );
+  const [line] = sorted.splice(index, 1);
+  blasted.push(line.p2);
 
-  const line = new Line(origin, end);
-
-  const targeted = [];
-
-  for (const asteroid of asteroids.values()) {
-    if (asteroid.isPartOfLine(line)) {
-      targeted.push({ asteroid, distance: asteroid.distanceFrom(origin) });
-    }
+  while (sorted[index].m === line.m) {
+    index++;
   }
 
-  if (targeted.length > 0) {
-    const hit = targeted.shift().asteroid;
-
-    blasted.push(hit);
-    asteroids.delete(hit.key);
+  if (index >= sorted.length) {
+    index = 0;
   }
-
-  angleDeg = ++angleDeg % 360;
 }
 
-const last = blasted.pop();
+const { x, y } = blasted.pop();
 
-write(YEAR, DAY, PART, last.x * 100 + last.y);
+write(YEAR, DAY, PART, x * 100 + y);
