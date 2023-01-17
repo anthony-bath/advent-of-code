@@ -5,8 +5,6 @@ const MODE = {
 };
 
 export function execute(state, inputs) {
-  let inputIndex = 0;
-
   while (!state.halted) {
     const command = state.program[state.pointer];
     let commandString = command.toString();
@@ -46,10 +44,14 @@ export function execute(state, inputs) {
 
       case 3:
         {
+          if (!inputs.length) {
+            return null;
+          }
+
           const params = getParameters(1, modes, state);
           const address = getAddress(modes[0], params[0].raw, state.relativeBase);
 
-          state.program[address] = inputs[inputIndex++];
+          state.program[address] = inputs.shift();
           state.pointer += 2;
         }
         break;
