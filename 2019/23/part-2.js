@@ -29,8 +29,6 @@ let repeated = null;
 let done = false;
 
 while (true) {
-  NAT.packet = null;
-
   states.forEach((state, i) => {
     const input = data.booted[i]
       ? data.queue[i].length > 0
@@ -51,35 +49,34 @@ while (true) {
 
         if (address === 255) {
           NAT.packet = { x, y };
+
+          if (
+            data.lastInput.every((input) => input.length === 1 && input[0] === -1) &&
+            data.queue.every((queue) => queue.length === 0) &&
+            NAT.packet
+          ) {
+            // idle, NAT sends to address 0
+            const { x, y } = NAT.packet;
+            data.queue[0].push(...[x, y]);
+
+            NAT.sent.push(y);
+            NAT.secondLastSent = NAT.lastSent;
+            NAT.lastSent = y;
+            NAT.packet = null;
+
+            if (NAT.lastSent === NAT.secondLastSent) {
+              repeated = NAT.lastSent;
+              console.log(`Possible: ${repeated}`);
+              // TODO: Work out a fix to avoid this workaround that seems to stem
+              //       from a race condition. Maybe re-make the IntCode interpreter
+              //       to be multi-threaded, or step each computer 1 by 1
+              if (NAT.sent.filter((p) => p === repeated).length >= 5) {
+                done = true;
+              }
+            }
+          }
         } else {
-          NAT.packet = null;
           data.queue[address].push(...[x, y]);
-        }
-      }
-    }
-
-    if (
-      data.lastInput.every((input) => input.length === 1 && input[0] === -1) &&
-      data.queue.every((queue) => queue.length === 0) &&
-      NAT.packet
-    ) {
-      // idle, NAT sends to address 0
-      const { x, y } = NAT.packet;
-      data.queue[0].push(...[x, y]);
-
-      NAT.sent.push(y);
-      NAT.secondLastSent = NAT.lastSent;
-      NAT.lastSent = y;
-      NAT.packet = null;
-
-      if (NAT.lastSent === NAT.secondLastSent) {
-        repeated = NAT.lastSent;
-        console.log(`Possible: ${repeated}`);
-        // TODO: Work out a fix to avoid this workaround that seems to stem
-        //       from a race condition. Maybe re-make the IntCode interpreter
-        //       to be multi-threaded, or step each computer 1 by 1
-        if (NAT.sent.filter((p) => p === repeated).length >= 5) {
-          done = true;
         }
       }
     }
