@@ -4,25 +4,24 @@ const [YEAR, DAY, PART] = [2019, 18, 1];
 
 const maze = read(YEAR, DAY, PART).map((line) => line.split(''));
 
-const W = maze[0].length;
-const H = maze.length;
-
 const keyExpr = /[a-z]/;
 const doorExpr = /[A-Z]/;
 
-const keyByLocation = new Map();
-const doorByLocation = new Map();
-let location;
+const locationByKey = new Map();
+const keyValue = new Map();
+const doorValue = new Map();
+let origin;
 
 maze.forEach((row, y) => {
   row.forEach((cell, x) => {
     if (keyExpr.test(cell)) {
-      keyByLocation.set(`${x}|${y}`, cell);
+      keyValue.set(cell, Math.pow(2, cell.charCodeAt(0) - 97));
+      locationByKey.set(cell, { x, y });
     } else if (doorExpr.test(cell)) {
-      doorByLocation.set(`${x}|${y}`, cell);
+      doorValue.set(cell, Math.pow(2, cell.toLowerCase().charCodeAt(0) - 97));
     } else if (cell === '@') {
       maze[y][x] = '.';
-      location = { x, y };
+      origin = { x, y };
     }
   });
 });
@@ -34,130 +33,43 @@ const deltas = [
   [0, 1],
 ];
 
-function getCacheKey(state) {
-  const {
-    steps,
-    keys,
-    location: { x, y },
-  } = state;
-
-  return `${JSON.stringify(keys.sort())}|${x}|${y}`;
-}
-
-// const allKeys = [...keyByLocation.values()];
-
-// function insertIntoSortedQueue(queue, state) {
-//   let low = 0;
-//   let high = queue.length;
-
-//   while (low < high) {
-//     let mid = (low + high) >>> 1;
-
-//     if (queue[mid].rank > state.rank) {
-//       low = mid + 1;
-//     } else {
-//       high = mid;
-//     }
-//   }
-
-//   queue.splice(low, 0, state);
-// }
+const allKeys = Math.pow(2, locationByKey.size) - 1;
 
 function bfs(state) {
-  const visited = {};
+  const visited = { [`${state.x}|${state.y}|${state.collected}`]: 1 };
   const queue = [state];
 
   while (queue.length) {
-    const current = queue.shift();
-    const {
-      location: { x, y },
-      steps,
-      keys,
-      doors,
-      stepsSinceKey,
-      stepsSinceDoor,
-      // maze,
-    } = current;
+    let { x, y, steps, collected } = queue.shift();
 
-    visited[getCacheKey(current)] = 1;
-
-    if (keys.length === keyByLocation.size) {
+    if (collected === allKeys) {
       return steps;
     }
 
-    // if (allKeys.every((key) => keys.includes(key))) {
-    //   return steps;
-    // }
-
-    if (steps > 1000) {
-      continue;
-    }
-
-    if (stepsSinceKey > 300 || (stepsSinceDoor > 300 && !(doors.length === doorByLocation.size))) {
-      continue;
-    }
-
     for (const [dx, dy] of deltas) {
-      const nextState = {
-        stepsSinceKey: stepsSinceKey + 1,
-        stepsSinceDoor: stepsSinceDoor + 1,
-        steps: steps + 1,
-        location: { x: x + dx, y: y + dy },
-        keys: [...keys],
-        doors: [...doors],
-        // maze: maze.map((row) => [...row]),
-      };
+      const location = maze[y + dy][x + dx];
+      const lookup = `${x + dx}|${y + dy}|${collected}`;
+      const nextState = { x: x + dx, y: y + dy, steps: steps + 1, collected };
 
-      let nextCacheKey = getCacheKey(nextState);
+      if (location !== '#' && !visited[lookup]) {
+        if (doorExpr.test(location) && collected & doorValue.get(location)) {
+          queue.push(nextState);
+          visited[lookup] = 1;
+        } else if (keyExpr.test(location)) {
+          const nextCollected = collected | keyValue.get(location);
+          const lookup = `${x + dx}|${y + dy}|${nextCollected}`;
 
-      if (x + dx >= 0 && x + dx < W && y + dy >= 0 && y + dy < H && maze[y + dy][x + dx] !== '#') {
-        const cell = maze[y + dy][x + dx];
-
-        if (keyExpr.test(cell)) {
-          if (!nextState.keys.includes(cell)) {
-            nextState.keys.push(cell);
-            nextState.stepsSinceKey = 0;
-            // nextState.maze[y + dy][x + dx] = '.';
-            nextCacheKey = getCacheKey(nextState);
-            // insertIntoSortedQueue(queue, { ...nextState, rank: 4 });
-          }
-
-          if (!visited[nextCacheKey]) {
-            // insertIntoSortedQueue(queue, { ...nextState, rank: 2 });
-            queue.push(nextState);
-          }
-        } else if (doorExpr.test(cell)) {
-          if (nextState.keys.includes(cell.toLowerCase())) {
-            if (!visited[nextCacheKey]) {
-              // insertIntoSortedQueue(queue, { ...nextState, rank: 4 });
-              if (!nextState.doors.includes(cell)) {
-                nextState.doors.push(cell);
-                nextState.stepsSinceDoor = 0;
-              }
-
-              // nextState.maze[y + dy][x + dx] = '.';
-              queue.push(nextState);
-            }
-          }
-        } else {
-          if (!visited[nextCacheKey]) {
-            // insertIntoSortedQueue(queue, { ...nextState, rank: 3 });
-            queue.push(nextState);
-          }
+          queue.push({ ...nextState, collected: nextCollected });
+          visited[lookup] = 1;
+        } else if (location === '.') {
+          queue.push(nextState);
+          visited[lookup] = 1;
         }
       }
     }
   }
 }
 
-const state = {
-  location,
-  steps: 0,
-  keys: [],
-  doors: [],
-  stepsSinceKey: 0,
-  stepsSinceDoor: 0,
-  // maze: input.map((row) => [...row]),
-};
+const initialState = { x: origin.x, y: origin.y, steps: 0, collected: 0 };
 
-write(YEAR, DAY, PART, bfs(state));
+write(YEAR, DAY, PART, bfs(initialState));
