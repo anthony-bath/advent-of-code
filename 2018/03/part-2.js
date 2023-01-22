@@ -12,21 +12,26 @@ read(YEAR, DAY, PART).forEach((line) => {
 let result = null;
 
 for (const claim1 of claims) {
-  let overlaps = false;
+  let overlapCount = 0;
 
   for (const claim2 of claims) {
     if (claim1.id === claim2.id) continue;
 
     if (
-      Math.max(claim1.x1, claim2.x1) < Math.min(claim1.x2, claim2.x2) &&
-      Math.max(claim1.y2, claim2.y2) < Math.min(claim1.y1, claim2.y1)
+      claim1.x1 > claim2.x2 ||
+      claim2.x1 > claim1.x2 ||
+      claim1.y1 > claim2.y2 ||
+      claim2.y1 > claim1.y2
     ) {
-      overlaps = true;
+      // Does not overlap
+      continue;
+    } else {
+      overlapCount++;
       break;
     }
   }
 
-  if (!overlaps) {
+  if (overlapCount === 0) {
     result = claim1.id;
     break;
   }
