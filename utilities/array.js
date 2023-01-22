@@ -48,3 +48,7 @@ export function getCombinations(array) {
 
   return combos;
 }
+
+export function sum(array) {
+  return array.reduce((total, current) => total + current, 0);
+}
