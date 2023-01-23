@@ -29,8 +29,6 @@ const STEP_DURATION = [...Array(26).keys()].reduce(
   {}
 );
 
-console.log(STEP_DURATION);
-
 let time = 0;
 let inProgress = [];
 const completed = [];
@@ -49,7 +47,7 @@ while (true) {
 
   inProgress = inProgress.filter((t) => !justFinished.includes(t.step));
 
-  for (const [, dependencies] of Object.entries(steps)) {
+  for (const dependencies of Object.values(steps)) {
     for (const step of justFinished) {
       const index = dependencies.indexOf(step);
 
