@@ -14,7 +14,6 @@ class Marble {
   }
 }
 
-count *= 100;
 const marbles = [];
 
 for (let i = 0; i <= count; i++) {
