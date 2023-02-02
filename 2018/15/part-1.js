@@ -26,7 +26,7 @@ class Unit {
 
 let units = [];
 
-const map = read(YEAR, DAY, PART).map((line, y) => {
+const map = read(YEAR, DAY, PART, { test: true }).map((line, y) => {
   const row = line.split('');
 
   for (const [x, type] of row.entries()) {
@@ -56,20 +56,30 @@ function getInRange(unit, targets) {
   );
 }
 
-function getPaths(from, to, map) {
-  const queue = [{ ...from, path: [] }];
+function getClosestSquareToMoveTo(from, to, map) {
+  const queue = [{ ...from, distance: 0 }];
   const visited = { [`${from.x}|${from.y}`]: 1 };
   const toKeys = to.map(({ x, y }) => `${x}|${y}`);
 
-  const paths = [];
+  const squares = [];
+  let shortestPathDistance = Infinity;
 
   while (queue.length) {
     const current = queue.shift();
+
+    if (current.distance > shortestPathDistance) {
+      continue;
+    }
+
     const currentKey = `${current.x}|${current.y}`;
 
     if (toKeys.includes(currentKey)) {
       // Have reached one of the target locations
-      paths.push(current.path);
+      squares.push(current);
+
+      if (current.distance < shortestPathDistance) {
+        shortestPathDistance = current.distance;
+      }
     }
 
     for (const [dx, dy] of deltas) {
@@ -77,12 +87,30 @@ function getPaths(from, to, map) {
 
       if (!visited[`${next.x}|${next.y}`] && map[next.y][next.x] === '.') {
         visited[`${next.x}|${next.y}`] = 1;
-        queue.push({ ...next, path: [...current.path, next] });
+        queue.push({ ...next, distance: current.distance + 1 });
       }
     }
   }
 
-  return paths;
+  if (squares.length === 0) {
+    return null;
+  }
+
+  if (squares.length > 0) {
+    squares.sort(readingOrder);
+  }
+
+  return squares.shift();
+}
+
+function dfs(from, to) {
+  const stack = [{ ...from, path: [] }];
+  const visited = { [`${from.x}|${from.y}`]: 1 };
+  const paths = [];
+
+  while (stack.length) {
+    const current = stack.pop();
+  }
 }
 
 let round = 0;
@@ -131,9 +159,12 @@ while (true) {
       continue;
     }
 
-    const paths = getPaths(unit, openSquares, map);
-    console.log(paths);
-    process.exit();
+    const targetSquare = getClosestSquareToMoveTo(unit, openSquares, map);
+
+    if (!targetSquare) {
+      // Could not find a path to an open square, end of turn
+      continue;
+    }
   }
 
   if (combatFinished) {
