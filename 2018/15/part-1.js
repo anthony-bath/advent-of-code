@@ -24,7 +24,7 @@ class Unit {
   }
 }
 
-const units = [];
+let units = [];
 
 const map = read(YEAR, DAY, PART).map((line, y) => {
   const row = line.split('');
@@ -56,6 +56,35 @@ function getInRange(unit, targets) {
   );
 }
 
+function getPaths(from, to, map) {
+  const queue = [{ ...from, path: [] }];
+  const visited = { [`${from.x}|${from.y}`]: 1 };
+  const toKeys = to.map(({ x, y }) => `${x}|${y}`);
+
+  const paths = [];
+
+  while (queue.length) {
+    const current = queue.shift();
+    const currentKey = `${current.x}|${current.y}`;
+
+    if (toKeys.includes(currentKey)) {
+      // Have reached one of the target locations
+      paths.push(current.path);
+    }
+
+    for (const [dx, dy] of deltas) {
+      const next = { x: current.x + dx, y: current.y + dy };
+
+      if (!visited[`${next.x}|${next.y}`] && map[next.y][next.x] === '.') {
+        visited[`${next.x}|${next.y}`] = 1;
+        queue.push({ ...next, path: [...current.path, next] });
+      }
+    }
+  }
+
+  return paths;
+}
+
 let round = 0;
 
 while (true) {
@@ -81,14 +110,30 @@ while (true) {
     }
 
     // Are any targets in range immediately?
-    let inRange = getInRange(unit, targets);
+    let inRangeTargets = getInRange(unit, targets);
 
-    if (inRange.length > 0) {
-      // Perform attack
+    if (inRangeTargets.length > 0) {
+      // Identify lowest HP target and attack
       continue;
     }
 
-    // Move to closest Target
+    // Find open squares adjacent to targets
+    const openSquares = targets.reduce((squares, target) => {
+      const targetOpenSquares = deltas
+        .filter(([dx, dy]) => map[target.y + dy][target.x + dx] === '.')
+        .map(([dx, dy]) => ({ x: target.x + dx, y: target.y + dy }));
+
+      return [...squares, ...targetOpenSquares];
+    }, []);
+
+    if (openSquares.length === 0) {
+      // No available squares to move to, end of turn
+      continue;
+    }
+
+    const paths = getPaths(unit, openSquares, map);
+    console.log(paths);
+    process.exit();
   }
 
   if (combatFinished) {
