@@ -13,6 +13,11 @@ const TARGET_TYPE = {
   [UNIT_TYPE.GOBLIN]: UNIT_TYPE.ELF,
 };
 
+const ATTACK_OUTCOME = {
+  LIFE: 0,
+  DEATH: 1,
+};
+
 class Unit {
   constructor(x, y, type) {
     this.attackPower = 3;
@@ -22,11 +27,30 @@ class Unit {
     this.y = y;
     this.id = crypto.randomUUID();
   }
+
+  move(map, { x, y }) {
+    map[this.y][this.x] = '.';
+    map[y][x] = this.type;
+    this.x = x;
+    this.y = y;
+  }
+
+  getAttackPower() {
+    return this.attackPower;
+  }
+
+  receiveDamage(damage) {
+    this.hitPoints -= damage;
+  }
+
+  isDead() {
+    return this.hitPoints <= 0;
+  }
 }
 
 let units = [];
 
-const map = read(YEAR, DAY, PART, { test: true }).map((line, y) => {
+const map = read(YEAR, DAY, PART).map((line, y) => {
   const row = line.split('');
 
   for (const [x, type] of row.entries()) {
@@ -43,6 +67,22 @@ function readingOrder(u1, u2) {
   return u1.x - u2.x;
 }
 
+function distanceThenReadingOrder(p1, p2) {
+  if (p1.distance === p2.distance) {
+    return readingOrder(p1, p2);
+  }
+
+  return p1.distance - p2.distance;
+}
+
+function hitPointsThenReadingOrder(u1, u2) {
+  if (u1.hitPoints === u2.hitPoints) {
+    return readingOrder(u1, u2);
+  }
+
+  return u1.hitPoints - u2.hitPoints;
+}
+
 const deltas = [
   [0, -1],
   [-1, 0],
@@ -50,10 +90,23 @@ const deltas = [
   [0, 1],
 ];
 
-function getInRange(unit, targets) {
-  return targets.filter((target) =>
-    deltas.some(([dx, dy]) => target.x + dx === unit.x && target.y + dy === unit.y)
-  );
+function getAttackTarget(unit, targets) {
+  const inRangeTargets = targets
+    .filter((target) =>
+      deltas.some(([dx, dy]) => target.x + dx === unit.x && target.y + dy === unit.y)
+    )
+    .sort(hitPointsThenReadingOrder);
+
+  if (inRangeTargets.length > 0) {
+    return inRangeTargets.shift();
+  }
+
+  return null;
+}
+
+function attack(attacker, target) {
+  target.receiveDamage(attacker.getAttackPower());
+  return target.isDead() ? ATTACK_OUTCOME.DEATH : ATTACK_OUTCOME.LIFE;
 }
 
 function getClosestSquareToMoveTo(from, to, map) {
@@ -103,14 +156,34 @@ function getClosestSquareToMoveTo(from, to, map) {
   return squares.shift();
 }
 
-function dfs(from, to) {
-  const stack = [{ ...from, path: [] }];
-  const visited = { [`${from.x}|${from.y}`]: 1 };
-  const paths = [];
+function dijkstra(map, { x, y }) {
+  const distance = [...Array(map.length).keys()].map((_) => Array(map[0].length).fill(Infinity));
+  const visited = [...Array(map.length).keys()].map((_) => Array(map[0].length).fill(0));
 
-  while (stack.length) {
-    const current = stack.pop();
+  distance[y][x] = 0;
+
+  const queue = [{ x, y }];
+
+  while (queue.length) {
+    const current = queue.shift();
+
+    for (const [dx, dy] of deltas) {
+      const next = { x: current.x + dx, y: current.y + dy };
+
+      if (!visited[next.y][next.x] && map[next.y][next.x] === '.') {
+        visited[next.y][next.x] = 1;
+
+        distance[next.y][next.x] = Math.min(
+          distance[next.y][next.x],
+          distance[current.y][current.x] + 1
+        );
+
+        queue.push(next);
+      }
+    }
   }
+
+  return distance;
 }
 
 let round = 0;
@@ -121,16 +194,16 @@ while (true) {
 
   // Perform Unit Turns
   let combatFinished = false;
-  const unitsThisTurn = [...units];
+  let unitsThisTurn = [...units];
 
   for (const unit of units) {
     if (!unitsThisTurn.find((u) => u.id === unit.id)) {
-      // Unit was eliminated in this turn
+      // Unit was eliminated in this turn so does not get a turn this round
       continue;
     }
 
     const targetType = TARGET_TYPE[unit.type];
-    const targets = units.filter((unit) => unit.type === targetType);
+    const targets = unitsThisTurn.filter((unit) => unit.type === targetType);
 
     if (targets.length === 0) {
       combatFinished = true;
@@ -138,10 +211,22 @@ while (true) {
     }
 
     // Are any targets in range immediately?
-    let inRangeTargets = getInRange(unit, targets);
+    let attackTarget = getAttackTarget(unit, targets);
 
-    if (inRangeTargets.length > 0) {
-      // Identify lowest HP target and attack
+    if (attackTarget) {
+      const result = attack(unit, attackTarget);
+
+      if (result === ATTACK_OUTCOME.DEATH) {
+        unitsThisTurn = unitsThisTurn.filter((u) => u.id !== attackTarget.id);
+        map[attackTarget.y][attackTarget.x] = '.';
+      }
+
+      continue;
+    }
+
+    // No targets in range, can this unit move?
+    if (!deltas.some(([dx, dy]) => map[unit.y + dy][unit.x + dx] === '.')) {
+      // Unit has no empty squares around it so cannot move, end of turn
       continue;
     }
 
@@ -165,7 +250,35 @@ while (true) {
       // Could not find a path to an open square, end of turn
       continue;
     }
+
+    // Get distance from target square to every other square
+    const distance = dijkstra(map, targetSquare);
+
+    // Get the distances from the target square of the 4 squares adjacent to this unit
+    const unitAdjacentDistances = deltas
+      .map(([dx, dy]) => ({
+        x: unit.x + dx,
+        y: unit.y + dy,
+        distance: distance[unit.y + dy][unit.x + dx],
+      }))
+      .sort(distanceThenReadingOrder);
+
+    unit.move(map, unitAdjacentDistances.shift());
+
+    // Are any targets in range now?
+    attackTarget = getAttackTarget(unit, targets);
+
+    if (attackTarget) {
+      const result = attack(unit, attackTarget);
+
+      if (result === ATTACK_OUTCOME.DEATH) {
+        unitsThisTurn = unitsThisTurn.filter((u) => u.id !== attackTarget.id);
+        map[attackTarget.y][attackTarget.x] = '.';
+      }
+    }
   }
+
+  units = unitsThisTurn;
 
   if (combatFinished) {
     break;
@@ -174,4 +287,6 @@ while (true) {
   }
 }
 
-write(YEAR, DAY, PART, '');
+const remainingHitPoints = units.reduce((total, unit) => total + unit.hitPoints, 0);
+
+write(YEAR, DAY, PART, round * remainingHitPoints);
