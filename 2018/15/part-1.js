@@ -67,14 +67,6 @@ function readingOrder(u1, u2) {
   return u1.x - u2.x;
 }
 
-function distanceThenReadingOrder(p1, p2) {
-  if (p1.distance === p2.distance) {
-    return readingOrder(p1, p2);
-  }
-
-  return p1.distance - p2.distance;
-}
-
 function hitPointsThenReadingOrder(u1, u2) {
   if (u1.hitPoints === u2.hitPoints) {
     return readingOrder(u1, u2);
@@ -109,30 +101,17 @@ function attack(attacker, target) {
   return target.isDead() ? ATTACK_OUTCOME.DEATH : ATTACK_OUTCOME.LIFE;
 }
 
-function getClosestSquareToMoveTo(from, to, map) {
-  const queue = [{ ...from, distance: 0 }];
+function getNextLocation(from, to, map) {
+  const queue = [{ ...from }];
   const visited = { [`${from.x}|${from.y}`]: 1 };
   const toKeys = to.map(({ x, y }) => `${x}|${y}`);
 
-  const squares = [];
-  let shortestPathDistance = Infinity;
-
   while (queue.length) {
     const current = queue.shift();
-
-    if (current.distance > shortestPathDistance) {
-      continue;
-    }
-
     const currentKey = `${current.x}|${current.y}`;
 
     if (toKeys.includes(currentKey)) {
-      // Have reached one of the target locations
-      squares.push(current);
-
-      if (current.distance < shortestPathDistance) {
-        shortestPathDistance = current.distance;
-      }
+      return current.origin;
     }
 
     for (const [dx, dy] of deltas) {
@@ -140,50 +119,12 @@ function getClosestSquareToMoveTo(from, to, map) {
 
       if (!visited[`${next.x}|${next.y}`] && map[next.y][next.x] === '.') {
         visited[`${next.x}|${next.y}`] = 1;
-        queue.push({ ...next, distance: current.distance + 1 });
+        queue.push({ ...next, origin: current.origin ? current.origin : next });
       }
     }
   }
 
-  if (squares.length === 0) {
-    return null;
-  }
-
-  if (squares.length > 0) {
-    squares.sort(readingOrder);
-  }
-
-  return squares.shift();
-}
-
-function dijkstra(map, { x, y }) {
-  const distance = [...Array(map.length).keys()].map((_) => Array(map[0].length).fill(Infinity));
-  const visited = [...Array(map.length).keys()].map((_) => Array(map[0].length).fill(0));
-
-  distance[y][x] = 0;
-
-  const queue = [{ x, y }];
-
-  while (queue.length) {
-    const current = queue.shift();
-
-    for (const [dx, dy] of deltas) {
-      const next = { x: current.x + dx, y: current.y + dy };
-
-      if (!visited[next.y][next.x] && map[next.y][next.x] === '.') {
-        visited[next.y][next.x] = 1;
-
-        distance[next.y][next.x] = Math.min(
-          distance[next.y][next.x],
-          distance[current.y][current.x] + 1
-        );
-
-        queue.push(next);
-      }
-    }
-  }
-
-  return distance;
+  return null;
 }
 
 let round = 0;
@@ -244,28 +185,16 @@ while (true) {
       continue;
     }
 
-    const targetSquare = getClosestSquareToMoveTo(unit, openSquares, map);
+    const nextLocation = getNextLocation(unit, openSquares, map);
 
-    if (!targetSquare) {
+    if (!nextLocation) {
       // Could not find a path to an open square, end of turn
       continue;
     }
 
-    // Get distance from target square to every other square
-    const distance = dijkstra(map, targetSquare);
+    unit.move(map, nextLocation);
 
-    // Get the distances from the target square of the 4 squares adjacent to this unit
-    const unitAdjacentDistances = deltas
-      .map(([dx, dy]) => ({
-        x: unit.x + dx,
-        y: unit.y + dy,
-        distance: distance[unit.y + dy][unit.x + dx],
-      }))
-      .sort(distanceThenReadingOrder);
-
-    unit.move(map, unitAdjacentDistances.shift());
-
-    // Are any targets in range now?
+    // Are there any targets in range now after moving?
     attackTarget = getAttackTarget(unit, targets);
 
     if (attackTarget) {
