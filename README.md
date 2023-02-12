@@ -6,6 +6,7 @@
 - https://adventofcode.com/2019
 - https://adventofcode.com/2018
 - https://adventofcode.com/2017
+- https://adventofcode.com/2016
 
 Solutions can be ran via:
 
