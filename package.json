@@ -13,5 +13,8 @@
   "bugs": {
     "url": "https://github.com/anthony-bath/advent-of-code/issues"
   },
-  "homepage": "https://github.com/anthony-bath/advent-of-code#readme"
+  "homepage": "https://github.com/anthony-bath/advent-of-code#readme",
+  "devDependencies": {
+    "md5": "^2.3.0"
+  }
 }
