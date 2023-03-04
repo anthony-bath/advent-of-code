@@ -12,10 +12,11 @@ const deltas = [
   [-1, 0],
 ];
 
-function bfs(state, goalX, goalY) {
+function bfs(state, maxSteps) {
   const visited = [];
   const map = [];
   const queue = [state];
+  let visitCount = 0;
 
   const { x, y } = state;
 
@@ -28,9 +29,11 @@ function bfs(state, goalX, goalY) {
   while (queue.length) {
     const current = queue.shift();
 
-    if (current.x === goalX && current.y === goalY) {
-      return current.steps;
+    if (current.steps >= maxSteps) {
+      continue;
     }
+
+    visitCount++;
 
     for (const [dx, dy] of deltas) {
       const nextY = current.y + dy;
@@ -55,6 +58,8 @@ function bfs(state, goalX, goalY) {
       }
     }
   }
+
+  return visitCount;
 }
 
-write(YEAR, DAY, PART, bfs({ x: 1, y: 1, steps: 0 }, 31, 39));
+write(YEAR, DAY, PART, bfs({ x: 1, y: 1, steps: 0 }, 50));
