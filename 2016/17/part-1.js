@@ -41,7 +41,7 @@ function bfs(state, goalX, goalY) {
         continue;
       }
 
-      const nextState = { x: nextX, y: nextY, path: current.path };
+      const nextState = { x: nextX, y: nextY, path: [...current.path] };
 
       switch (index) {
         case 0:
@@ -51,6 +51,7 @@ function bfs(state, goalX, goalY) {
               const nextKey = key(nextState);
 
               if (!visited[nextKey]) {
+                visited[nextKey] = 1;
                 queue.push(nextState);
               }
             }
@@ -64,6 +65,7 @@ function bfs(state, goalX, goalY) {
               const nextKey = key(nextState);
 
               if (!visited[nextKey]) {
+                visited[nextKey] = 1;
                 queue.push(nextState);
               }
             }
@@ -77,6 +79,7 @@ function bfs(state, goalX, goalY) {
               const nextKey = key(nextState);
 
               if (!visited[nextKey]) {
+                visited[nextKey] = 1;
                 queue.push(nextState);
               }
             }
@@ -90,6 +93,7 @@ function bfs(state, goalX, goalY) {
               const nextKey = key(nextState);
 
               if (!visited[nextKey]) {
+                visited[nextKey] = 1;
                 queue.push(nextState);
               }
             }
