@@ -50,6 +50,17 @@ function isSafe([generators, microchips]) {
   return true;
 }
 
+function updateQueueIfSafe(nextData, currentFloor, nextFloor, nextSteps, queue, visited) {
+  if (isSafe(nextData[currentFloor]) && isSafe(nextData[nextFloor])) {
+    const nextKey = `${nextFloor}|${JSON.stringify(nextData)}`;
+
+    if (!visited[nextKey]) {
+      visited[nextKey] = 1;
+      queue.push({ floor: nextFloor, data: nextData, steps: nextSteps });
+    }
+  }
+}
+
 const visited = { [`0|${JSON.stringify(data)}`]: 1 };
 const queue = [{ floor: 0, data: data.map((f) => [...f]), steps: 0 }];
 let result = null;
@@ -66,7 +77,7 @@ while (queue.length) {
     break;
   }
 
-  const { floor } = current;
+  const { floor, steps } = current;
 
   for (const material of materials) {
     // ------------------------------------------------------------
@@ -81,14 +92,7 @@ while (queue.length) {
         nextDataUp[floor + 1][0] |= material;
         nextDataUp[floor + 1][1] |= material;
 
-        if (isSafe(nextDataUp[floor]) && isSafe(nextDataUp[floor + 1])) {
-          const nextKey = `${floor + 1}|${JSON.stringify(nextDataUp)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor + 1, data: nextDataUp, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataUp, floor, floor + 1, steps + 1, queue, visited);
       }
 
       if (floor > 0) {
@@ -99,14 +103,7 @@ while (queue.length) {
         nextDataDown[floor - 1][0] |= material;
         nextDataDown[floor - 1][1] |= material;
 
-        if (isSafe(nextDataDown[floor]) && isSafe(nextDataDown[floor - 1])) {
-          const nextKey = `${floor - 1}|${JSON.stringify(nextDataDown)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor - 1, data: nextDataDown, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataDown, floor, floor - 1, steps + 1, queue, visited);
       }
     }
 
@@ -121,45 +118,19 @@ while (queue.length) {
           if (floor < 3) {
             // can go up
             const nextDataUp = current.data.map((f) => [...f]);
-            nextDataUp[floor][1] ^= material;
-            nextDataUp[floor][1] ^= material2;
-            nextDataUp[floor + 1][1] |= material;
-            nextDataUp[floor + 1][1] |= material2;
+            nextDataUp[floor][1] ^= material | material2;
+            nextDataUp[floor + 1][1] |= material | material2;
 
-            if (isSafe(nextDataUp[floor]) && isSafe(nextDataUp[floor + 1])) {
-              const nextKey = `${floor + 1}|${JSON.stringify(nextDataUp)}`;
-
-              if (!visited[nextKey]) {
-                visited[nextKey] = 1;
-                queue.push({
-                  floor: floor + 1,
-                  data: nextDataUp,
-                  steps: current.steps + 1,
-                });
-              }
-            }
+            updateQueueIfSafe(nextDataUp, floor, floor + 1, steps + 1, queue, visited);
           }
 
           if (floor > 0) {
             // can go down
             const nextDataDown = current.data.map((f) => [...f]);
-            nextDataDown[floor][1] ^= material;
-            nextDataDown[floor][1] ^= material2;
-            nextDataDown[floor - 1][1] |= material;
-            nextDataDown[floor - 1][1] |= material2;
+            nextDataDown[floor][1] ^= material | material2;
+            nextDataDown[floor - 1][1] |= material | material2;
 
-            if (isSafe(nextDataDown[floor]) && isSafe(nextDataDown[floor - 1])) {
-              const nextKey = `${floor - 1}|${JSON.stringify(nextDataDown)}`;
-
-              if (!visited[nextKey]) {
-                visited[nextKey] = 1;
-                queue.push({
-                  floor: floor - 1,
-                  data: nextDataDown,
-                  steps: current.steps + 1,
-                });
-              }
-            }
+            updateQueueIfSafe(nextDataDown, floor, floor - 1, steps + 1, queue, visited);
           }
         }
       }
@@ -176,45 +147,19 @@ while (queue.length) {
           if (floor < 3) {
             // can go up
             const nextDataUp = current.data.map((f) => [...f]);
-            nextDataUp[floor][0] ^= material;
-            nextDataUp[floor][0] ^= material2;
-            nextDataUp[floor + 1][0] |= material;
-            nextDataUp[floor + 1][0] |= material2;
+            nextDataUp[floor][0] ^= material | material2;
+            nextDataUp[floor + 1][0] |= material | material2;
 
-            if (isSafe(nextDataUp[floor]) && isSafe(nextDataUp[floor + 1])) {
-              const nextKey = `${floor + 1}|${JSON.stringify(nextDataUp)}`;
-
-              if (!visited[nextKey]) {
-                visited[nextKey] = 1;
-                queue.push({
-                  floor: floor + 1,
-                  data: nextDataUp,
-                  steps: current.steps + 1,
-                });
-              }
-            }
+            updateQueueIfSafe(nextDataUp, floor, floor + 1, steps + 1, queue, visited);
           }
 
           if (floor > 0) {
             // can go down
             const nextDataDown = current.data.map((f) => [...f]);
-            nextDataDown[floor][0] ^= material;
-            nextDataDown[floor][0] ^= material2;
-            nextDataDown[floor - 1][0] |= material;
-            nextDataDown[floor - 1][0] |= material2;
+            nextDataDown[floor][0] ^= material | material2;
+            nextDataDown[floor - 1][0] |= material | material2;
 
-            if (isSafe(nextDataDown[floor]) && isSafe(nextDataDown[floor - 1])) {
-              const nextKey = `${floor - 1}|${JSON.stringify(nextDataDown)}`;
-
-              if (!visited[nextKey]) {
-                visited[nextKey] = 1;
-                queue.push({
-                  floor: floor - 1,
-                  data: nextDataDown,
-                  steps: current.steps + 1,
-                });
-              }
-            }
+            updateQueueIfSafe(nextDataDown, floor, floor - 1, steps + 1, queue, visited);
           }
         }
       }
@@ -230,14 +175,7 @@ while (queue.length) {
         nextDataUp[floor][1] ^= material;
         nextDataUp[floor + 1][1] |= material;
 
-        if (isSafe(nextDataUp[floor]) && isSafe(nextDataUp[floor + 1])) {
-          const nextKey = `${floor + 1}|${JSON.stringify(nextDataUp)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor + 1, data: nextDataUp, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataUp, floor, floor + 1, steps + 1, queue, visited);
       }
 
       if (floor > 0) {
@@ -246,14 +184,7 @@ while (queue.length) {
         nextDataDown[floor][1] ^= material;
         nextDataDown[floor - 1][1] |= material;
 
-        if (isSafe(nextDataDown[floor]) && isSafe(nextDataDown[floor - 1])) {
-          const nextKey = `${floor - 1}|${JSON.stringify(nextDataDown)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor - 1, data: nextDataDown, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataDown, floor, floor - 1, steps + 1, queue, visited);
       }
     }
 
@@ -267,14 +198,7 @@ while (queue.length) {
         nextDataUp[floor][0] ^= material;
         nextDataUp[floor + 1][0] |= material;
 
-        if (isSafe(nextDataUp[floor]) && isSafe(nextDataUp[floor + 1])) {
-          const nextKey = `${floor + 1}|${JSON.stringify(nextDataUp)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor + 1, data: nextDataUp, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataUp, floor, floor + 1, steps + 1, queue, visited);
       }
 
       if (floor > 0) {
@@ -283,14 +207,7 @@ while (queue.length) {
         nextDataDown[floor][0] ^= material;
         nextDataDown[floor - 1][0] |= material;
 
-        if (isSafe(nextDataDown[floor]) && isSafe(nextDataDown[floor - 1])) {
-          const nextKey = `${floor - 1}|${JSON.stringify(nextDataDown)}`;
-
-          if (!visited[nextKey]) {
-            visited[nextKey] = 1;
-            queue.push({ floor: floor - 1, data: nextDataDown, steps: current.steps + 1 });
-          }
-        }
+        updateQueueIfSafe(nextDataDown, floor, floor - 1, steps + 1, queue, visited);
       }
     }
   }
