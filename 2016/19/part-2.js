@@ -28,24 +28,24 @@ elves.get(n).next = head;
 head.prev = elves.get(n);
 
 let currentElf = head;
+let mid = elves.get(Math.floor(1 + elves.size / 2));
+let flip = false;
 
 while (elves.size > 1) {
-  let steps = Math.floor(elves.size / 2);
-  let stolenElf = currentElf;
+  const removedPrev = mid.prev;
+  const removedNext = mid.next;
+  removedPrev.next = removedNext;
+  removedNext.prev = removedPrev;
 
-  while (steps > 0) {
-    stolenElf = stolenElf.next;
-    steps--;
+  elves.delete(mid.id);
+
+  if (flip) {
+    mid = mid.next;
+  } else {
+    mid = mid.next.next;
   }
 
-  const prevElf = stolenElf.prev;
-  const nextElf = stolenElf.next;
-
-  prevElf.next = nextElf;
-  nextElf.prev = prevElf;
-
-  elves.delete(stolenElf.id);
-
+  flip = !flip;
   currentElf = currentElf.next;
 }
 
