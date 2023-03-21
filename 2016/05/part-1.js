@@ -1,5 +1,5 @@
 import { read, write } from '../../utilities/io.js';
-import md5 from 'md5';
+import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 5, 1];
 
@@ -8,7 +8,7 @@ const passwordChars = [];
 let num = 0;
 
 while (passwordChars.length < 8) {
-  const hash = md5(`${doorId}${num}`);
+  const hash = createHash('md5').update(`${doorId}${num}`).digest('hex');
 
   if (hash.startsWith('00000')) {
     passwordChars.push(hash[5]);

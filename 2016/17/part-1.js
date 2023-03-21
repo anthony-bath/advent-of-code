@@ -1,5 +1,5 @@
-import md5 from 'md5';
 import { read, write } from '../../utilities/io.js';
+import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 17, 1];
 
@@ -31,7 +31,9 @@ function bfs(state, goalX, goalY) {
       return current.path.join('');
     }
 
-    const hash = md5(`${passcode}${current.path.join('')}`);
+    const hash = createHash('md5')
+      .update(`${passcode}${current.path.join('')}`)
+      .digest('hex');
 
     for (const [index, [dx, dy]] of deltas.entries()) {
       const nextX = current.x + dx;

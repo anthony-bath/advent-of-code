@@ -1,5 +1,5 @@
 import { read, write } from '../../utilities/io.js';
-import md5 from 'md5';
+import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 14, 2];
 
@@ -26,10 +26,10 @@ function checkNext1000(fromIndex, character) {
 }
 
 function stretchHash(value) {
-  let result = md5(value);
+  let result = createHash('md5').update(value).digest('hex');
 
   for (let i = 0; i < 2016; i++) {
-    result = md5(result);
+    result = createHash('md5').update(result).digest('hex');
   }
 
   return result;
