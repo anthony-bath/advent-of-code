@@ -1,7 +1,7 @@
 import { read, write } from '../../utilities/io.js';
 import { flatten, rotateGrid, getUpdatedGrid } from './common.js';
 
-const [YEAR, DAY, PART] = [2017, 21, 1];
+const [YEAR, DAY, PART] = [2017, 21, 2];
 
 const rules = new Map();
 
@@ -40,7 +40,7 @@ let grid = [
   ['#', '#', '#'],
 ];
 
-const ITERATIONS = 5;
+const ITERATIONS = 18;
 
 for (let iteration = 0; iteration < ITERATIONS; iteration++) {
   if (size % 2 === 0) {
