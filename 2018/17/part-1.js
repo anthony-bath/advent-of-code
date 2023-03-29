@@ -4,7 +4,7 @@ const [YEAR, DAY, PART] = [2018, 17, 1];
 
 const expr = /(x|y)=(?<n1>\d+), (x|y)=(?<n2>\d+)..(?<n3>\d+)/;
 
-let [yMin, yMax, xMin, xMax] = [Infinity, -Infinity, Infinity, -Infinity];
+let [yMin, yMax, xMin, xMax] = [0, -Infinity, Infinity, -Infinity];
 const grid = new Map();
 
 read(YEAR, DAY, PART).forEach((line) => {
@@ -14,7 +14,6 @@ read(YEAR, DAY, PART).forEach((line) => {
     const y = Number(n1);
 
     if (y > yMax) yMax = y;
-    if (y < yMin) yMin = y;
 
     const x1 = Number(n2);
     const x2 = Number(n3);
@@ -30,7 +29,6 @@ read(YEAR, DAY, PART).forEach((line) => {
     const y1 = Number(n2);
     const y2 = Number(n3);
 
-    if (y1 < yMin) yMin = y1;
     if (y2 > yMax) yMax = y2;
   }
 
@@ -75,126 +73,214 @@ function count() {
   return result;
 }
 
+function canFlowLeft({ x, y }) {
+  if (grid.get(`${x - 1}|${y}`) === '#') {
+    return false;
+  }
+
+  // if (!['#', '~'].includes(grid.get(`${x - 1}|${y + 1}`))) {
+  //   return false;
+  // }
+
+  return true;
+}
+
+function canFlowRight({ x, y }) {
+  if (grid.get(`${x + 1}|${y}`) === '#') {
+    return false;
+  }
+
+  // if (!['#', '~'].includes(grid.get(`${x + 1}|${y + 1}`))) {
+  //   return false;
+  // }
+
+  return true;
+}
+
+function canFlowDown({ x, y }) {
+  if (['#', '~'].includes(grid.get(`${x}|${y + 1}`))) {
+    return false;
+  }
+
+  if (y > yMax) {
+    return false;
+  }
+
+  return true;
+}
+
 function update({ x, y }, symbol) {
   grid.set(`${x}|${y}`, symbol);
-
-  // console.log(yMin, yMax, xMin - 1, xMax + 1);
-  print();
-  // console.log(count());
-  // console.clear();
 }
 
-function canGoDown({ x, y }) {
-  return !grid.has(`${x}|${y + 1}`);
-}
-
-let current = { y: 0, x: 500 };
-const decisionPoints = [];
+let current = { x: 500, y: 0 };
+const path = [];
+const splitPoints = [];
 
 while (true) {
-  if (grid.size > 1000000) {
+  while (canFlowDown(current)) {
+    current.y++;
+    update(current, '|');
+    path.push({ ...current });
+  }
+
+  if (current.y >= yMax) {
+    print();
     break;
   }
 
-  while (!grid.has(`${current.x}|${current.y + 1}`) && current.y + 1 <= yMax) {
-    current.y++;
-    // decisionPoints.push({ ...current });
-    update(current, '|');
-  }
+  // Can no longer go down; search left and see if can end up going down again
+  let canGoDownOnLeft = false;
+  let search = { ...current };
+  const leftPath = [];
 
-  // If we are at yMax now, need to go back to the previous decision point and check right
-  // since we went left the first time
-  if (current.y === yMax) {
-    if (decisionPoints.length === 0) {
-      // we are done, no further decision points to consider
+  while (canFlowLeft(search)) {
+    search.x--;
+    leftPath.push({ ...search });
+
+    if (canFlowDown(search)) {
+      canGoDownOnLeft = true;
       break;
     }
+  }
 
-    current = decisionPoints.pop();
-    let canGoDownAgain = false;
-    const rightPath = [];
+  // Search right and see if can end up going down again on right
+  let canGoDownOnRight = false;
+  search = { ...current };
+  const rightPath = [];
 
-    while (!grid.has(`${current.x + 1}|${current.y}`)) {
-      current.x++;
-      rightPath.push({ ...current });
+  while (canFlowRight(search)) {
+    search.x++;
+    rightPath.push({ ...search });
 
-      // If we can now move down, we need to drop out and go down as far as we can
-      if (canGoDown(current)) {
-        canGoDownAgain = true;
-        break;
-      }
+    if (canFlowDown(search)) {
+      canGoDownOnRight = true;
+      break;
+    }
+  }
+
+  if (!canGoDownOnLeft && !canGoDownOnRight) {
+    // must be in a cavity, left and right must be at rest
+    for (const point of [...leftPath, ...rightPath]) {
+      update(point, '~');
     }
 
-    if (canGoDownAgain) {
-      for (const point of rightPath) {
+    update(current, '~');
+    current = path.pop();
+  } else {
+    // must be at a split point so water will not come to rest
+    if (!canGoDownOnLeft) {
+      for (const point of [...leftPath, ...rightPath]) {
         update(point, '|');
       }
-      continue;
-    } else {
-    }
-  } else {
-    // we have reached a decision point and will evaluate left first
-    decisionPoints.push({ ...current });
 
-    let canGoDownAgain = false;
-    const leftPath = [];
-
-    while (!grid.has(`${current.x - 1}|${current.y}`)) {
-      current.x--;
-      leftPath.push({ ...current });
-
-      if (canGoDown(current)) {
-        canGoDownAgain = true;
-        break;
+      current = rightPath.pop();
+    } else if (!canGoDownOnRight) {
+      for (const point of [...leftPath, ...rightPath]) {
+        update(point, '|');
       }
-    }
 
-    if (canGoDownAgain) {
+      current = leftPath.pop();
+    } else {
+      // can go down both ways so will need to come back
+      splitPoints.push({ rightPath });
+
       for (const point of leftPath) {
         update(point, '|');
       }
-      continue;
-    } else {
-      // can't go left any further so need to determine if going right
-      // leads to be able going down again. If it doesn't, then we are
-      // in a cavity and can mark points as at rest
 
-      current = decisionPoints.pop();
-      const decisionPoint = { ...current };
-      const rightPath = [];
-
-      while (!grid.has(`${current.x + 1}|${current.y}`)) {
-        current.x++;
-        rightPath.push({ ...current });
-
-        // If we can now move down, we need to drop out and go down as far as we can
-        if (canGoDown(current)) {
-          canGoDownAgain = true;
-          break;
-        }
-      }
-
-      if (canGoDownAgain) {
-        for (const point of [...leftPath, ...rightPath]) {
-          update(point, '|');
-        }
-
-        continue;
-      } else {
-        // can't go right any further so are in a cavity, mark points as
-        // at rest
-        for (const point of [...leftPath, ...rightPath]) {
-          update(point, '~');
-        }
-
-        current = decisionPoint;
-        update(current, '~');
-        current.y--;
-      }
+      current = leftPath.pop();
     }
   }
+
+  //print();
 }
 
 print();
+while (splitPoints.length) {
+  const { rightPath: spRigthPath } = splitPoints.shift();
+
+  for (const point of spRigthPath) {
+    update(point, '|');
+  }
+
+  current = spRigthPath.pop();
+
+  while (canFlowDown(current)) {
+    current.y++;
+    update(current, '|');
+    path.push({ ...current });
+  }
+
+  // Can no longer go down; search left and see if can end up going down again
+  let canGoDownOnLeft = false;
+  let search = { ...current };
+  const leftPath = [];
+
+  while (canFlowLeft(search)) {
+    search.x--;
+    leftPath.push({ ...search });
+
+    if (canFlowDown(search)) {
+      canGoDownOnLeft = true;
+      break;
+    }
+  }
+
+  if (current.y === yMax) {
+    break;
+  }
+
+  // Search right and see if can end up going down again on right
+  let canGoDownOnRight = false;
+  search = { ...current };
+  const rightPath = [];
+
+  while (canFlowRight(search)) {
+    search.x++;
+    rightPath.push({ ...search });
+
+    if (canFlowDown(search)) {
+      canGoDownOnRight = true;
+      break;
+    }
+  }
+
+  if (!canGoDownOnLeft && !canGoDownOnRight) {
+    // must be in a cavity, left and right must be at rest
+    for (const point of [...leftPath, ...rightPath]) {
+      update(point, '~');
+    }
+
+    update(current, '~');
+    current = path.pop();
+  } else {
+    // must be at a split point so water will not come to rest
+    if (!canGoDownOnLeft) {
+      for (const point of [...leftPath, ...rightPath]) {
+        update(point, '|');
+      }
+
+      current = rightPath.pop();
+    } else if (!canGoDownOnRight) {
+      for (const point of [...leftPath, ...rightPath]) {
+        update(point, '|');
+      }
+
+      current = leftPath.pop();
+    } else {
+      // can go down both ways so will need to come back
+      splitPoints.push({ ...current });
+
+      for (const point of leftPath) {
+        update(point, '|');
+      }
+
+      current = leftPath.pop();
+    }
+  }
+
+  print();
+}
 
 write(YEAR, DAY, PART, count());
