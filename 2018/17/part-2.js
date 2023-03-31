@@ -1,7 +1,7 @@
 import { read, write } from '../../utilities/io.js';
 import { flow, count, TYPE } from './common.js';
 
-const [YEAR, DAY, PART] = [2018, 17, 1];
+const [YEAR, DAY, PART] = [2018, 17, 2];
 
 const expr = /(x|y)=(?<n1>\d+), (x|y)=(?<n2>\d+)..(?<n3>\d+)/;
 
@@ -32,4 +32,4 @@ read(YEAR, DAY, PART).forEach((line) => {
 
 flow({ x: 500, y: 0 }, { grid, yMin, yMax });
 
-write(YEAR, DAY, PART, count([TYPE.WATER_AT_REST, TYPE.WATER_FLOWING], grid));
+write(YEAR, DAY, PART, count([TYPE.WATER_AT_REST], grid));
