@@ -41,7 +41,6 @@ for (const [source, list] of connections) {
 const ALL = Math.pow(2, valueByName.size) - 1;
 
 let longest = -Infinity;
-let count = 0;
 
 for (const location of valueByName.values()) {
   const queue = [{ location, visited: location, distance: 0 }];
@@ -50,7 +49,6 @@ for (const location of valueByName.values()) {
     const current = queue.shift();
 
     if (current.visited === ALL) {
-      count++;
       longest = Math.max(current.distance, longest);
       continue;
     }
@@ -58,8 +56,6 @@ for (const location of valueByName.values()) {
     const usefulConnections = connections
       .get(current.location)
       .filter((connection) => !(current.visited & connection.location));
-
-    if (usefulConnections.length === 0) continue;
 
     for (const { location, distance } of usefulConnections) {
       queue.push({
@@ -70,7 +66,5 @@ for (const location of valueByName.values()) {
     }
   }
 }
-
-console.log(count);
 
 write(YEAR, DAY, PART, longest);
