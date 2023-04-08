@@ -32,3 +32,21 @@ export class Point {
     return this.x === point.x && this.y === point.y;
   }
 }
+
+export function factors(num) {
+  const isEven = num % 2 === 0;
+  const max = Math.sqrt(num);
+  const inc = isEven ? 1 : 2;
+  const output = [1, num];
+
+  for (let curFactor = isEven ? 2 : 3; curFactor <= max; curFactor += inc) {
+    if (num % curFactor !== 0) continue;
+
+    output.push(curFactor);
+    const compliment = num / curFactor;
+
+    if (compliment !== curFactor) output.push(compliment);
+  }
+
+  return output;
+}
