@@ -1,9 +1,18 @@
 import { read, write } from '../../utilities/io.js';
 import { getOnNeighborCount } from './common.js';
 
-const [YEAR, DAY, PART] = [2015, 18, 1];
+const [YEAR, DAY, PART] = [2015, 18, 2];
 
 const grid = read(YEAR, DAY, PART).map((line) => line.split(''));
+
+const corners = [
+  [0, 0],
+  [99, 0],
+  [0, 99],
+  [99, 99],
+];
+
+corners.forEach(([x, y]) => (grid[y][x] = '#'));
 
 const STEPS = 100;
 
@@ -13,6 +22,8 @@ for (let step = 0; step < STEPS; step++) {
 
   for (let y = 0; y < 100; y++) {
     for (let x = 0; x < 100; x++) {
+      if (corners.some(([cx, cy]) => cx === x && cy === y)) continue;
+
       let onNeighbourCount = getOnNeighborCount(x, y, grid);
 
       if (grid[y][x] === '#' && ![2, 3].includes(onNeighbourCount)) {
