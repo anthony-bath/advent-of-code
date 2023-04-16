@@ -22,6 +22,10 @@ export function manhattan(p1, p2) {
   return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
 }
 
+export function manhattan3D(p1, p2) {
+  return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z);
+}
+
 export class Point {
   constructor(x, y) {
     this.x = Number(x);
@@ -30,6 +34,14 @@ export class Point {
 
   equals(point) {
     return this.x === point.x && this.y === point.y;
+  }
+}
+
+export class Point3D {
+  constructor(x, y, z) {
+    this.x = Number(x);
+    this.y = Number(y);
+    this.z = Number(z);
   }
 }
 
