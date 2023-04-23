@@ -31,6 +31,59 @@ const deltas = [
   [-1, 0],
 ];
 
+const neighborsByRowCol = new Map();
+
+for (let row = 0; row < SIZE; row++) {
+  for (let col = 0; col < SIZE; col++) {
+    if (row === MID && col === MID) continue;
+
+    const neighbors = [];
+
+    for (const [dc, dr] of deltas) {
+      const nr = row + dr;
+      const nc = col + dc;
+
+      if (nr === MID && nc === MID) {
+        // Center neighbor, will have 5 extra at +1 depth
+        if (row === MID - 1 || row === MID + 1) {
+          // Center is above or below
+          const r = row === MID - 1 ? 0 : SIZE - 1;
+
+          for (let c = 0; c < SIZE; c++) {
+            neighbors.push([1, r, c]);
+          }
+        } else {
+          // Center is right or left
+          const c = col === 1 ? 0 : SIZE - 1;
+
+          for (let r = 0; r < SIZE; r++) {
+            neighbors.push([1, r, c]);
+          }
+        }
+      } else {
+        if (nc === SIZE) {
+          // Right Neighbor at Depth -1
+          neighbors.push([-1, MID, MID + 1]);
+        } else if (nc === -1) {
+          // Left Neighbor at Depth -1
+          neighbors.push([-1, MID, MID - 1]);
+        } else if (nr === SIZE) {
+          // Below Neighbor at Depth -1
+          neighbors.push([-1, MID + 1, MID]);
+        } else if (nr === -1) {
+          // Above Neighbor at Depth -1
+          neighbors.push([-1, MID - 1, MID]);
+        } else {
+          // Same Depth Neighbor
+          neighbors.push([0, nr, nc]);
+        }
+      }
+    }
+
+    neighborsByRowCol.set(`${row}|${col}`, neighbors);
+  }
+}
+
 while (minute < DURATION) {
   const births = new Set();
   const deaths = new Set();
@@ -42,54 +95,9 @@ while (minute < DURATION) {
 
         let adjacentBugs = 0;
 
-        for (const [dc, dr] of deltas) {
-          const nr = row + dr;
-          const nc = col + dc;
-
-          if (nr === MID && nc === MID) {
-            // Center neighbor, will have 5 extra at +1 depth
-            if (row === MID - 1 || row === MID + 1) {
-              // Center is above or below
-              const r = row === MID - 1 ? 0 : SIZE - 1;
-
-              for (let c = 0; c < SIZE; c++) {
-                if (grid[depth + 1][r][c] === '#') {
-                  adjacentBugs++;
-                }
-              }
-            } else {
-              // Center is right or left
-              const c = col === 1 ? 0 : SIZE - 1;
-
-              for (let r = 0; r < SIZE; r++) {
-                if (grid[depth + 1][r][c] === '#') {
-                  adjacentBugs++;
-                }
-              }
-            }
-          } else {
-            let dd, r, c;
-
-            if (nc === SIZE) {
-              // Right Neighbor at Depth -1
-              [dd, r, c] = [-1, MID, MID + 1];
-            } else if (nc === -1) {
-              // Left Neighbor at Depth -1
-              [dd, r, c] = [-1, MID, MID - 1];
-            } else if (nr === SIZE) {
-              // Below Neighbor at Depth -1
-              [dd, r, c] = [-1, MID + 1, MID];
-            } else if (nr === -1) {
-              // Above Neighbor at Depth -1
-              [dd, r, c] = [-1, MID - 1, MID];
-            } else {
-              // Same Depth Neighbor
-              [dd, r, c] = [0, nr, nc];
-            }
-
-            if (grid[depth + dd][r][c] === '#') {
-              adjacentBugs++;
-            }
+        for (const [dd, r, c] of neighborsByRowCol.get(`${row}|${col}`)) {
+          if (grid[depth + dd][r][c] === '#') {
+            adjacentBugs++;
           }
         }
 
