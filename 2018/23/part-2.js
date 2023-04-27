@@ -1,15 +1,8 @@
 import { read, write } from '../../utilities/io.js';
-import { Point3D, manhattan3D } from '../../utilities/math.js';
-import { Box } from './common.js';
+import { Point3D } from '../../utilities/math.js';
+import { Box, Robot } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 23, 2];
-
-class Robot {
-  constructor(location, radius) {
-    this.location = location;
-    this.radius = radius;
-  }
-}
 
 let [minX, maxX, minY, maxY, minZ, maxZ] = [
   Infinity,
@@ -35,14 +28,31 @@ const robots = read(YEAR, DAY, PART).map((line) => {
   return new Robot(new Point3D(x, y, z), r);
 });
 
-let boxes = new Box(new Point3D(minX, minY, minZ), new Point3D(maxX, maxY, maxZ)).divide();
-let depth = 0;
+function byInRangeAndThenVolume(b1, b2) {
+  if (b1.inRangeCount === b2.inRangeCount) {
+    return b1.box.volume() - b2.box.volume();
+  }
 
-while (depth < 23) {
-  let best = -Infinity;
-  let bestBoxes = [];
+  return b2.inRangeCount - b1.inRangeCount;
+}
 
-  for (const box of boxes) {
+const queue = [
+  {
+    box: new Box(new Point3D(minX, minY, minZ), new Point3D(maxX, maxY, maxZ)),
+  },
+];
+
+let foundBox;
+
+while (true) {
+  const current = queue.shift();
+
+  if (current.box.volume() <= 1) {
+    foundBox = current.box;
+    break;
+  }
+
+  const divided = current.box.divide().map((box) => {
     let inRangeCount = 0;
 
     for (const robot of robots) {
@@ -51,38 +61,37 @@ while (depth < 23) {
       }
     }
 
-    if (inRangeCount > best) {
-      best = inRangeCount;
-      bestBoxes = [box];
-    } else if (inRangeCount === best) {
-      bestBoxes.push(box);
-    }
-  }
+    return { box, inRangeCount };
+  });
 
-  console.log(depth + 1, best, boxes.length, boxes[0].w * boxes[0].h * boxes[0].d);
-
-  boxes = bestBoxes.map((box) => box.divide()).flat();
-
-  depth++;
+  queue.push(...divided);
+  queue.sort(byInRangeAndThenVolume);
 }
 
-boxes.sort((b1, b2) => b1.minDistanceToOrigin() - b2.minDistanceToOrigin());
+let result = Infinity;
+let maxCount = -Infinity;
+const p1 = foundBox.points[0];
+const p2 = foundBox.points[26];
 
-let min = Infinity;
+for (let x = p1.x; x <= p2.x; x++) {
+  for (let y = p1.y; y <= p2.y; y++) {
+    for (let z = p1.z; z <= p2.z; z++) {
+      let inRangeCount = 0;
 
-for (let x = boxes[0].points[0].x; x <= boxes[0].points[26].x; x++) {
-  for (let y = boxes[0].points[0].y; y <= boxes[0].points[26].y; y++) {
-    for (let z = boxes[0].points[0].z; z <= boxes[0].points[26].z; z++) {
-      min = Math.min(min, manhattan3D({ x, y, z }, { x: 0, y: 0, z: 0 }));
+      for (const robot of robots) {
+        if (robot.inRangeOfPoint({ x, y, z })) {
+          inRangeCount++;
+        }
+      }
+
+      if (inRangeCount > maxCount) {
+        maxCount = inRangeCount;
+        result = x + y + z;
+      } else if (inRangeCount === maxCount) {
+        result = Math.min(result, x + y + z);
+      }
     }
   }
 }
 
-console.log(min);
-write(YEAR, DAY, PART, boxes[0].minDistanceToOrigin());
-
-// 131482463 - Too High
-// 130427867 - Too High
-// 129431514 - Too High
-// 112845906 - Wrong
-// 129573539 - Wrong
+write(YEAR, DAY, PART, result);
