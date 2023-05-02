@@ -1,4 +1,3 @@
-import { printGrid } from '../../utilities/grid.js';
 import { read, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 
