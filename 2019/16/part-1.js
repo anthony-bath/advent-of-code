@@ -44,6 +44,4 @@ for (let phase = 0; phase < PHASES; phase++) {
   }
 }
 
-console.log(nextSequence.slice(0, 8).join(''));
-
-write(YEAR, DAY, PART, '');
+write(YEAR, DAY, PART, nextSequence.slice(0, 8).join(''));
