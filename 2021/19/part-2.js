@@ -1,15 +1,10 @@
 import { write } from '../../utilities/io.js';
+import { manhattan3D } from '../../utilities/math.js';
 import { Transformation, loadScannersWithOverlapsCalculated, rotations } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 19, 1];
+const [YEAR, DAY, PART] = [2021, 19, 2];
 
 const scanners = loadScannersWithOverlapsCalculated(YEAR, DAY, PART);
-const allBeacons = new Set();
-
-for (const beacon of scanners[0].relativeBeacons) {
-  allBeacons.add(beacon.id);
-}
-
 const queue = [{ id: 0, transformations: [] }];
 const visited = {};
 
@@ -25,22 +20,8 @@ while (queue.length) {
 
   const scanner = scanners[current.id];
 
-  if (current.transformations.length > 0) {
-    let points = scanner.relativeBeacons.map((b) => ({ ...b }));
-
-    for (const transformation of current.transformations) {
-      const nextPoints = [];
-
-      for (const point of points) {
-        nextPoints.push(transformation.apply(point));
-      }
-
-      points = nextPoints;
-    }
-
-    for (const point of points) {
-      allBeacons.add(`${point.x}|${point.y}|${point.z}`);
-    }
+  for (const transformation of current.transformations) {
+    scanner.location = transformation.apply(scanner.location);
   }
 
   for (const overlappingScannerId of Object.keys(scanner.matchedDistances)) {
@@ -92,4 +73,13 @@ while (queue.length) {
   }
 }
 
-write(YEAR, DAY, PART, allBeacons.size);
+let maxDistance = -Infinity;
+
+for (const scanner1 of scanners) {
+  for (const scanner2 of scanners) {
+    if (scanner1 === scanner2) continue;
+    maxDistance = Math.max(maxDistance, manhattan3D(scanner1.location, scanner2.location));
+  }
+}
+
+write(YEAR, DAY, PART, maxDistance);
