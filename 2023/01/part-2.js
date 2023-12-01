@@ -23,17 +23,10 @@ const digitMap = {
   9: 9,
 };
 
-const expr = /\d|one|two|three|four|five|six|seven|eight|nine/g;
+const expr = /(?=(\d|one|two|three|four|five|six|seven|eight|nine))/g;
 
 const result = read(YEAR, DAY, PART).reduce((total, line) => {
-  let match;
-  const digits = [];
-
-  while ((match = expr.exec(line)) !== null) {
-    digits.push(match[0]);
-    expr.lastIndex = match.index + 1;
-  }
-
+  const digits = Array.from(line.matchAll(expr), (match) => match[1]);
   const first = digitMap[digits[0]];
   const last = digitMap[digits[digits.length - 1]];
 
