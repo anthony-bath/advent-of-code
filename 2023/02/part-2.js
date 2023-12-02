@@ -9,10 +9,7 @@ const total = read(YEAR, DAY, PART).reduce((total, game) => {
   let match;
 
   while ((match = expr.exec(game)?.groups)) {
-    const count = Number(match.count);
-    const color = match.color;
-
-    counts[color] = Math.max(count, counts[color]);
+    counts[match.color] = Math.max(Number(match.count), counts[match.color]);
   }
 
   return total + counts.red * counts.blue * counts.green;
