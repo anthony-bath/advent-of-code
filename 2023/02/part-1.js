@@ -8,32 +8,24 @@ const MAXES = {
   blue: 14,
 };
 
-const cubeExpr = /(?<count>\d+)\s(?<color>\w+)/;
-let total = 0;
+const expr = /(?<count>\d+)\s(?<color>\w+)/g;
 
-read(YEAR, DAY, PART).forEach((line) => {
-  const [gameLabel, game] = line.split(': ');
-  const id = Number(gameLabel.match(/\d+/g)[0]);
-
-  const reveals = game.split(';');
+const total = read(YEAR, DAY, PART).reduce((total, game) => {
+  const id = Number(game.match(/\d+/g)[0]);
   let possible = true;
+  let match;
 
-  for (const reveal of reveals) {
-    const cubes = reveal.split(', ');
+  while ((match = expr.exec(game)?.groups)) {
+    const color = match.color;
 
-    for (const cube of cubes) {
-      const { count, color } = cube.match(cubeExpr).groups;
-
-      if (Number(count) > MAXES[color]) {
-        possible = false;
-        break;
-      }
+    if (Number(match.count) > MAXES[color]) {
+      possible = false;
+      expr.lastIndex = 0;
+      break;
     }
-
-    if (!possible) break;
   }
 
-  total += possible ? id : 0;
-});
+  return total + (possible ? id : 0);
+}, 0);
 
 write(YEAR, DAY, PART, total);

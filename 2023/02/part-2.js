@@ -2,29 +2,20 @@ import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 2, 2];
 
-const cubeExpr = /(?<count>\d+)\s(?<color>\w+)/;
-let total = 0;
+const expr = /(?<count>\d+)\s(?<color>\w+)/g;
 
-read(YEAR, DAY, PART).forEach((line) => {
-  const [_, game] = line.split(': ');
-  const reveals = game.split(';');
+const total = read(YEAR, DAY, PART).reduce((total, game) => {
   const counts = { red: 0, green: 0, blue: 0 };
+  let match;
 
-  for (const reveal of reveals) {
-    const cubes = reveal.split(', ');
+  while ((match = expr.exec(game)?.groups)) {
+    const count = Number(match.count);
+    const color = match.color;
 
-    for (const cube of cubes) {
-      const match = cube.match(cubeExpr).groups;
-      const count = Number(match.count);
-      const color = match.color;
-
-      if (!counts[color] || count > counts[color]) {
-        counts[color] = count;
-      }
-    }
+    counts[color] = Math.max(count, counts[color]);
   }
 
-  total += Object.values(counts).reduce((product, count) => (product *= count), 1);
-});
+  return total + counts.red * counts.blue * counts.green;
+}, 0);
 
 write(YEAR, DAY, PART, total);
