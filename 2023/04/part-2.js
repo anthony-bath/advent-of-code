@@ -10,13 +10,13 @@ const count = read(YEAR, DAY, PART).reduce((count, card) => {
   const cardId = Number(numbers.shift());
   const winningNumbers = numbers.slice(0, WINNING_NUMBER_COUNT);
   const myNumbers = numbers.slice(WINNING_NUMBER_COUNT);
-  const matchedNumbers = myNumbers.filter((n) => winningNumbers.includes(n));
+  const matches = myNumbers.filter((n) => winningNumbers.includes(n)).length;
 
   if (!copiesByCardId[cardId]) {
     copiesByCardId[cardId] = 1;
   }
 
-  for (let nextId = cardId + 1; nextId <= cardId + matchedNumbers.length; nextId++) {
+  for (let nextId = cardId + 1; nextId <= cardId + matches; nextId++) {
     if (!copiesByCardId[nextId]) {
       copiesByCardId[nextId] = 1;
     }
