@@ -7,17 +7,14 @@ let lines = input!.components(separatedBy: .newlines)
 let H = lines.count
 let W = lines[0].count
 
-let symbol = #/[^0-9\.]/#
-
-func isSymbol(_ position: (x: Int, y: Int)) -> Bool {
+func isGear(_ position: (x: Int, y: Int)) -> Bool {
   let (x, y) = position
   guard y >= 0 && y < H && x >= 0 && x < W else { return false }
 
   let line = lines[y]
   let char = line[line.index(line.startIndex, offsetBy: x)]
-  let match = try? symbol.firstMatch(in: String(char))
 
-  return match != nil
+  return char == Character("*")
 }
 
 func getPositions(_ x: Int, _ y: Int, _ len: Int) -> [(x: Int, y: Int)] {
@@ -38,8 +35,20 @@ func getPositions(_ x: Int, _ y: Int, _ len: Int) -> [(x: Int, y: Int)] {
   return positions
 }
 
+var gears: [String: [Int]] = [:]
+
+func addPartToGear(_ position: (x: Int, y: Int), _ part: Int) {
+  let (x, y) = position
+  let key = "\(x)|\(y)"
+
+  if !gears.keys.contains(key) {
+    gears[key] = [part]
+  } else {
+    gears[key]!.append(part)
+  }
+}
+
 let partExpr = #/\d+/#
-var sum = 0
 
 for y in 0 ..< lines.count {
   let matches = lines[y].matches(of: partExpr)
@@ -51,12 +60,19 @@ for y in 0 ..< lines.count {
     let positions = getPositions(x, y, match.output.count)
 
     for position in positions {
-      if isSymbol(position) {
-        sum += part
-        break
+      if isGear(position) {
+        addPartToGear(position, part)
       }
     }
   }
 }
 
-print("2023 Day 3 Part 1: \(sum)")
+let sum = gears.values.reduce(0) { total, parts in
+  if parts.count == 2 {
+    return total + parts[0] * parts[1]
+  }
+
+  return total
+}
+
+print("2023 Day 3 Part 2: \(sum)")
