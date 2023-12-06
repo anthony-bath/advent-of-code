@@ -11,12 +11,9 @@ for (let i = 1; i < seedData.length; i += 2) {
   seedRanges.push({ min: seedData[i - 1], max: seedData[i - 1] + seedData[i] - 1 });
 }
 
-seedRanges.sort((a, b) => a.min - b.min);
-
 const mapLabel = /(?<source>\w+)-to-(?<destination>\w+)/;
 const maps = {};
 let currentSource;
-let currentDestination;
 
 for (const line of lines.slice(2)) {
   if (!line) continue;
@@ -24,9 +21,8 @@ for (const line of lines.slice(2)) {
   const label = line.match(mapLabel);
 
   if (label) {
-    const { source, destination } = label.groups;
+    const { source } = label.groups;
     currentSource = source;
-    currentDestination = destination;
 
     maps[currentSource] = [];
   } else {
@@ -40,58 +36,69 @@ for (const line of lines.slice(2)) {
   }
 }
 
-for (const key of Object.keys(maps)) {
-  maps[key].sort((a, b) => a.min - b.min);
-}
+const path = ['seed', 'soil', 'fertilizer', 'water', 'light', 'temperature', 'humidity'];
 
-function sumRanges(ranges) {
-  return ranges.reduce((sum, range) => sum + (range.max - range.min + 1), 0);
-}
+function getRanges(ranges, index) {
+  const sourceMaps = maps[path[index]];
+  const mappedRanges = [];
 
-function getRanges({ min, max }, source) {
-  const matchedRanges = maps[source].filter(
-    (m) => (min >= m.min && min <= m.max) || (max >= m.min && max <= m.max)
-  );
-
-  const ranges = [];
-
-  for (const sourceRange of matchedRanges) {
-    const start = Math.max(min, sourceRange.min);
-    const end = Math.min(max, sourceRange.max);
-
-    ranges.push({ min: start + sourceRange.offset, max: end + sourceRange.offset });
+  if (index === 4) {
+    debugger;
   }
 
-  if (ranges.length === 0) {
-    return [{ min, max }];
-  }
+  for (const { min, max } of ranges) {
+    const intersects = [];
 
-  ranges.sort((a, b) => a.min - b.min);
-
-  if (max - min + 1 !== sumRanges(ranges)) {
-    if (ranges[0].min > min) {
-      ranges.push({ min, max: ranges[0].min - 1 });
+    for (const map of sourceMaps) {
+      if (min >= map.min && max <= map.max) {
+        intersects.push(map);
+      } else if (min >= map.min && min <= map.max && max > map.max) {
+        intersects.push({ ...map, high: true });
+      } else if (min < map.min && max >= map.min && max <= map.max) {
+        intersects.push({ ...map, low: true });
+      }
     }
 
-    if (ranges[ranges.length - 1].max < max) {
-      ranges.push({ min: ranges[ranges.length - 1].max + 1, max });
+    if (intersects.length === 0) {
+      mappedRanges.push({ min, max });
+      continue;
     }
+
+    const newRanges = [];
+
+    for (const range of intersects) {
+      if (range.high) {
+        newRanges.push({ min: min + range.offset, max: range.max + range.offset });
+
+        if (intersects.length === 1) {
+          newRanges.push({ min: range.max + 1, max });
+        }
+      } else if (range.low) {
+        newRanges.push({ min: range.min + range.offset, max: max + range.offset });
+
+        if (intersects.length === 1) {
+          newRanges.push({ min: min, max: range.min - 1 });
+        }
+      } else {
+        newRanges.push({ min: min + range.offset, max: max + range.offset });
+      }
+    }
+
+    mappedRanges.push(...newRanges);
   }
 
-  return ranges;
+  if (index === path.length - 1) {
+    return mappedRanges;
+  }
+
+  return getRanges(mappedRanges, index + 1);
 }
 
-let locationRanges = [];
-
-for (const range of seedRanges) {
-  const soilRanges = getRanges(range, 'seed');
-  const fertilizerRanges = soilRanges.map((r) => getRanges(r, 'soil')).flat();
-  const waterRanges = fertilizerRanges.map((r) => getRanges(r, 'fertilizer')).flat();
-  const lightRanges = waterRanges.map((r) => getRanges(r, 'water')).flat();
-  const tempRanges = lightRanges.map((r) => getRanges(r, 'light')).flat();
-  const humRanges = tempRanges.map((r) => getRanges(r, 'temperature')).flat();
-
-  locationRanges = locationRanges.concat(humRanges.map((r) => getRanges(r, 'humidity')).flat());
-}
-
-write(YEAR, DAY, PART, locationRanges.sort((a, b) => a.min - b.min).shift().min);
+write(
+  YEAR,
+  DAY,
+  PART,
+  getRanges(seedRanges, 0)
+    .sort((a, b) => a.min - b.min)
+    .shift().min
+);
