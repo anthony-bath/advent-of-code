@@ -18,6 +18,12 @@ export function lcm(x, y, ...z) {
   return lcm((x * y) / gcd(x, y), ...z);
 }
 
+export function solveQuadratic(a, b, c) {
+  const root = Math.sqrt(b * b - 4 * a * c);
+
+  return [((-b + root) / 2) * a, ((-b - root) / 2) * a];
+}
+
 export function manhattan(p1, p2) {
   return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
 }
