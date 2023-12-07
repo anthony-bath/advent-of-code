@@ -1,17 +1,9 @@
 import { read, write } from '../../utilities/io.js';
-import { PlayerFactory, HandFactory, sortPlayers, classify } from './common.js';
+import { PlayerFactory, HandFactory, sortPlayers } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 7, 1];
 
-const valueByCard = {
-  A: 14,
-  K: 13,
-  Q: 12,
-  J: 11,
-  T: 10,
-};
-
-const handFactory = new HandFactory(valueByCard, classify(false));
+const handFactory = new HandFactory();
 const playerFactory = new PlayerFactory(handFactory);
 
 const winnings = read(YEAR, DAY, PART)

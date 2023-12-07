@@ -1,49 +1,17 @@
-export const HandType = {
-  FiveOfAKind: 7,
-  FourOfAKind: 6,
-  FullHouse: 5,
-  ThreeOfAKind: 4,
-  TwoPair: 3,
-  OnePair: 2,
-  HighCard: 1,
-};
-
-export class Card {
-  label;
-  value;
-
-  constructor(label, valueByCard) {
-    this.label = label;
-
-    if (!(label in valueByCard)) {
-      this.value = Number(label);
-    } else {
-      this.value = valueByCard[label];
-    }
-  }
-}
-
-export class Hand {
-  cards;
-  classification;
-
-  constructor(cards) {
-    this.cards = cards;
-  }
-
-  setClassification(classifier) {
-    this.classification = classifier(this.cards);
-    return this;
-  }
-}
-
 export class HandFactory {
   valueByCard;
   classifier;
 
-  constructor(valueByCard, classifier) {
-    this.valueByCard = valueByCard;
-    this.classifier = classifier;
+  constructor(useJokers = false) {
+    this.valueByCard = {
+      A: 14,
+      K: 13,
+      Q: 12,
+      J: useJokers ? 1 : 11,
+      T: 10,
+    };
+
+    this.classifier = classify(useJokers);
   }
 
   createHand(cardData) {
@@ -63,16 +31,6 @@ export class PlayerFactory {
   createPlayer(cardData, bid) {
     const hand = this.handFactory.createHand(cardData);
     return new Player(hand, Number(bid));
-  }
-}
-
-export class Player {
-  hand;
-  bid;
-
-  constructor(hand, bid) {
-    this.hand = hand;
-    this.bid = bid;
   }
 }
 
@@ -100,7 +58,56 @@ export function sortPlayers(p1, p2) {
   }
 }
 
-export function classify(useJokers) {
+const HandType = {
+  FiveOfAKind: 7,
+  FourOfAKind: 6,
+  FullHouse: 5,
+  ThreeOfAKind: 4,
+  TwoPair: 3,
+  OnePair: 2,
+  HighCard: 1,
+};
+
+class Card {
+  label;
+  value;
+
+  constructor(label, valueByCard) {
+    this.label = label;
+
+    if (!(label in valueByCard)) {
+      this.value = Number(label);
+    } else {
+      this.value = valueByCard[label];
+    }
+  }
+}
+
+class Hand {
+  cards;
+  classification;
+
+  constructor(cards) {
+    this.cards = cards;
+  }
+
+  setClassification(classifier) {
+    this.classification = classifier(this.cards);
+    return this;
+  }
+}
+
+class Player {
+  hand;
+  bid;
+
+  constructor(hand, bid) {
+    this.hand = hand;
+    this.bid = bid;
+  }
+}
+
+function classify(useJokers) {
   return (cards) => {
     const countByCard = {};
 
@@ -112,40 +119,39 @@ export function classify(useJokers) {
       }
     }
 
-    const values = Object.values(countByCard).sort((a, b) => b - a);
     const jokers = useJokers ? countByCard['J'] ?? 0 : 0;
 
+    if (jokers) {
+      delete countByCard['J'];
+    }
+
+    const values = Object.values(countByCard).sort((a, b) => b - a);
+    values[0] += jokers;
+
     switch (Object.keys(countByCard).length) {
+      case 0:
       case 1:
         return HandType.FiveOfAKind;
 
       case 2:
         if (values[0] === 4) {
-          return jokers ? HandType.FiveOfAKind : HandType.FourOfAKind;
+          return HandType.FourOfAKind;
         } else {
-          return jokers ? HandType.FiveOfAKind : HandType.FullHouse;
+          return HandType.FullHouse;
         }
 
       case 3:
         if (values[0] === 3) {
-          return jokers ? HandType.FourOfAKind : HandType.ThreeOfAKind;
+          return HandType.ThreeOfAKind;
         } else {
-          switch (jokers) {
-            case 0:
-              return HandType.TwoPair;
-
-            case 1:
-              return HandType.FullHouse;
-
-            case 2:
-              return HandType.FourOfAKind;
-          }
+          return HandType.TwoPair;
         }
+
       case 4:
-        return jokers ? HandType.ThreeOfAKind : HandType.OnePair;
+        return HandType.OnePair;
 
       case 5:
-        return jokers ? HandType.OnePair : HandType.HighCard;
+        return HandType.HighCard;
     }
   };
 }
