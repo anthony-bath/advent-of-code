@@ -1,11 +1,11 @@
-export const CLASSIFICATION_TYPE = {
-  FIVE_OF_A_KIND: 7,
-  FOUR_OF_A_KIND: 6,
-  FULL_HOUSE: 5,
-  THREE_OF_A_KIND: 4,
-  TWO_PAIR: 3,
-  ONE_PAIR: 2,
-  HIGH_CARD: 1,
+export const HandType = {
+  FiveOfAKind: 7,
+  FourOfAKind: 6,
+  FullHouse: 5,
+  ThreeOfAKind: 4,
+  TwoPair: 3,
+  OnePair: 2,
+  HighCard: 1,
 };
 
 export class Card {
@@ -76,10 +76,6 @@ export class Player {
   }
 }
 
-/**
- * @param {Player} p1
- * @param {Player} p2
- */
 export function sortPlayers(p1, p2) {
   const p1Classification = p1.hand.classification;
   const p2Classification = p2.hand.classification;
@@ -104,116 +100,52 @@ export function sortPlayers(p1, p2) {
   }
 }
 
-export function classify1(cards) {
-  const countByCard = {};
+export function classify(useJokers) {
+  return (cards) => {
+    const countByCard = {};
 
-  for (const card of cards) {
-    if (!(card.label in countByCard)) {
-      countByCard[card.label] = 1;
-    } else {
-      countByCard[card.label]++;
+    for (const card of cards) {
+      if (!(card.label in countByCard)) {
+        countByCard[card.label] = 1;
+      } else {
+        countByCard[card.label]++;
+      }
     }
-  }
 
-  let classificationType;
-  const keys = Object.keys(countByCard);
-  const values = Object.values(countByCard).sort((a, b) => b - a);
+    const values = Object.values(countByCard).sort((a, b) => b - a);
+    const jokers = useJokers ? countByCard['J'] ?? 0 : 0;
 
-  switch (keys.length) {
-    case 1:
-      classificationType = CLASSIFICATION_TYPE.FIVE_OF_A_KIND;
-      break;
+    switch (Object.keys(countByCard).length) {
+      case 1:
+        return HandType.FiveOfAKind;
 
-    case 2:
-      if (values[0] === 4) {
-        classificationType = CLASSIFICATION_TYPE.FOUR_OF_A_KIND;
-      } else {
-        classificationType = CLASSIFICATION_TYPE.FULL_HOUSE;
-      }
-      break;
-
-    case 3:
-      if (values[0] === 3) {
-        classificationType = CLASSIFICATION_TYPE.THREE_OF_A_KIND;
-      } else {
-        classificationType = CLASSIFICATION_TYPE.TWO_PAIR;
-      }
-      break;
-
-    case 4:
-      classificationType = CLASSIFICATION_TYPE.ONE_PAIR;
-      break;
-
-    case 5:
-      classificationType = CLASSIFICATION_TYPE.HIGH_CARD;
-      break;
-  }
-
-  return classificationType;
-}
-
-export function classify2(cards) {
-  const countByCard = {};
-
-  for (const card of cards) {
-    if (!(card.label in countByCard)) {
-      countByCard[card.label] = 1;
-    } else {
-      countByCard[card.label]++;
-    }
-  }
-
-  let classificationType;
-  const keys = Object.keys(countByCard);
-  const values = Object.values(countByCard).sort((a, b) => b - a);
-  const jokers = countByCard['J'] ?? 0;
-
-  switch (keys.length) {
-    case 1:
-      classificationType = CLASSIFICATION_TYPE.FIVE_OF_A_KIND;
-      break;
-
-    case 2:
-      if (values[0] === 4) {
-        classificationType = jokers
-          ? CLASSIFICATION_TYPE.FIVE_OF_A_KIND
-          : CLASSIFICATION_TYPE.FOUR_OF_A_KIND;
-      } else {
-        classificationType = jokers
-          ? CLASSIFICATION_TYPE.FIVE_OF_A_KIND
-          : CLASSIFICATION_TYPE.FULL_HOUSE;
-      }
-      break;
-
-    case 3:
-      if (values[0] === 3) {
-        classificationType = jokers
-          ? CLASSIFICATION_TYPE.FOUR_OF_A_KIND
-          : CLASSIFICATION_TYPE.THREE_OF_A_KIND;
-      } else {
-        switch (jokers) {
-          case 0:
-            classificationType = CLASSIFICATION_TYPE.TWO_PAIR;
-            break;
-          case 1:
-            classificationType = CLASSIFICATION_TYPE.FULL_HOUSE;
-            break;
-          case 2:
-            classificationType = CLASSIFICATION_TYPE.FOUR_OF_A_KIND;
+      case 2:
+        if (values[0] === 4) {
+          return jokers ? HandType.FiveOfAKind : HandType.FourOfAKind;
+        } else {
+          return jokers ? HandType.FiveOfAKind : HandType.FullHouse;
         }
-      }
-      break;
 
-    case 4:
-      classificationType = jokers
-        ? CLASSIFICATION_TYPE.THREE_OF_A_KIND
-        : CLASSIFICATION_TYPE.ONE_PAIR;
-      break;
+      case 3:
+        if (values[0] === 3) {
+          return jokers ? HandType.FourOfAKind : HandType.ThreeOfAKind;
+        } else {
+          switch (jokers) {
+            case 0:
+              return HandType.TwoPair;
 
-    case 5:
-      classificationType = jokers ? CLASSIFICATION_TYPE.ONE_PAIR : CLASSIFICATION_TYPE.HIGH_CARD;
-      break;
-  }
+            case 1:
+              return HandType.FullHouse;
 
-  return classificationType;
+            case 2:
+              return HandType.FourOfAKind;
+          }
+        }
+      case 4:
+        return jokers ? HandType.ThreeOfAKind : HandType.OnePair;
+
+      case 5:
+        return jokers ? HandType.OnePair : HandType.HighCard;
+    }
+  };
 }
