@@ -42,10 +42,6 @@ function getRanges(ranges, index) {
   const sourceMaps = maps[path[index]];
   const mappedRanges = [];
 
-  if (index === 4) {
-    debugger;
-  }
-
   for (const { min, max } of ranges) {
     const intersects = [];
 
@@ -66,21 +62,21 @@ function getRanges(ranges, index) {
 
     const newRanges = [];
 
-    for (const range of intersects) {
-      if (range.high) {
-        newRanges.push({ min: min + range.offset, max: range.max + range.offset });
+    for (const intersect of intersects) {
+      if (intersect.high) {
+        newRanges.push({ min: min + intersect.offset, max: intersect.max + intersect.offset });
 
         if (intersects.length === 1) {
-          newRanges.push({ min: range.max + 1, max });
+          newRanges.push({ min: intersect.max + 1, max });
         }
-      } else if (range.low) {
-        newRanges.push({ min: range.min + range.offset, max: max + range.offset });
+      } else if (intersect.low) {
+        newRanges.push({ min: intersect.min + intersect.offset, max: max + intersect.offset });
 
         if (intersects.length === 1) {
-          newRanges.push({ min: min, max: range.min - 1 });
+          newRanges.push({ min: min, max: intersect.min - 1 });
         }
       } else {
-        newRanges.push({ min: min + range.offset, max: max + range.offset });
+        newRanges.push({ min: min + intersect.offset, max: max + intersect.offset });
       }
     }
 
