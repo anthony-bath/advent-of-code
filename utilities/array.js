@@ -52,3 +52,12 @@ export function getCombinations(array) {
 export function sum(array) {
   return array.reduce((total, current) => total + current, 0);
 }
+
+export function differences(array) {
+  const output = [];
+
+  for (let i = 1; i < array.length; i++) {
+    output.push(array[i] - array[i - 1]);
+  }
+  return output;
+}
