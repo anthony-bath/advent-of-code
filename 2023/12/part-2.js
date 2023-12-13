@@ -43,9 +43,9 @@ const total = read(YEAR, DAY, PART).reduce((total, line) => {
   const [arrangement, springList] = line.split(' ');
   const groups = springList.match(/\d+/g).map((n) => Number(n));
   const unfoldedGroups = Array(5).fill(groups).flat();
-  const unfoledArrangement = Array(5).fill(arrangement).join('?');
+  const unfoldedArrangement = Array(5).fill(arrangement).join('?');
 
-  return total + count(unfoledArrangement, unfoldedGroups);
+  return total + count(unfoldedArrangement, unfoldedGroups);
 }, 0);
 
 write(YEAR, DAY, PART, total);
