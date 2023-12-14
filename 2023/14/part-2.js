@@ -27,7 +27,6 @@ function cycle() {
 
 const cache = {};
 const loadByCycle = [];
-const loads = [];
 
 let cycles = 0;
 let offset;
@@ -47,7 +46,6 @@ while (true) {
   } else {
     cache[key] = cycles;
     loadByCycle[cycles] = load;
-    loads.push(load);
   }
 }
 

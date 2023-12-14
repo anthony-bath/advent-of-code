@@ -4,7 +4,6 @@ export function loadData(year, day, part) {
   let [yMax, xMax] = [-Infinity, -Infinity];
   const blockersByColumn = {};
   const blockersByRow = {};
-
   const allStones = [];
 
   read(year, day, part).forEach((line, y) => {
