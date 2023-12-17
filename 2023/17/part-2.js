@@ -19,13 +19,6 @@ const queue = [
     stepsInCurrentDirection: 1,
     direction: DIR.RIGHT,
   },
-  {
-    x: 0,
-    y: 0,
-    heatLoss: 0,
-    stepsInCurrentDirection: 1,
-    direction: DIR.DOWN,
-  },
 ];
 
 while (queue.length) {
