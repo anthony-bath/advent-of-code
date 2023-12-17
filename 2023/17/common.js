@@ -13,8 +13,8 @@ export const deltas = [
 ];
 
 export function key(current) {
-  const { x, y, direction, stepsInCurrentDirection } = current;
-  return `${x}|${y}|${direction}|${stepsInCurrentDirection}`;
+  const { x, y, direction, steps } = current;
+  return `${x}|${y}|${direction}|${steps}`;
 }
 
 export function insertIntoSortedQueue(queue, state) {
