@@ -46,9 +46,10 @@ struct Day18: AdventDay {
       let distance = Int(dist, radix: 16)!
       let dirIndex = "0123".firstIndex(of: Character("\(dir)"))!
       let (dx, dy) = deltas[String("RDLU"[dirIndex])]!
+      let (x, y) = points.last!
 
       perimeter += distance
-      points.append((points.last!.0 + dx * distance, points.last!.1 + dy * distance))
+      points.append((x + dx * distance, y + dy * distance))
     }
 
     return 1 + perimeter / 2 + shoelace(points: points)
