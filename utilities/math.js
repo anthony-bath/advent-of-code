@@ -24,6 +24,18 @@ export function solveQuadratic(a, b, c) {
   return [((-b + root) / 2) * a, ((-b - root) / 2) * a];
 }
 
+export function shoelace(points) {
+  let sum = 0;
+
+  for (let i = 0; i < points.length - 1; i++) {
+    const [x1, y1] = points[i];
+    const [x2, y2] = points[i + 1];
+    sum += x1 * y2 - x2 * y1;
+  }
+
+  return Math.abs(sum / 2);
+}
+
 export function manhattan(p1, p2) {
   return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
 }
