@@ -53,6 +53,10 @@ export function sum(array) {
   return array.reduce((total, current) => total + current, 0);
 }
 
+export function product(array) {
+  return array.reduce((total, current) => total * current, 1);
+}
+
 export function differences(array) {
   const output = [];
 
