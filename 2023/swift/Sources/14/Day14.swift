@@ -1,6 +1,6 @@
 import Algorithms
 
-// TODO: Improve performance as Part 2runs quite slow
+// TODO: Improve performance as Part 2 runs quite slow
 
 struct Day14: AdventDay {
   var data: String
@@ -168,9 +168,6 @@ struct Day14: AdventDay {
         loadByCycle[cycles] = load
       }
     }
-
-    print("Offset: \(offset)")
-    print("Length: \(length)")
 
     let remainingCycles = (1_000_000_000 - offset) % length
 
