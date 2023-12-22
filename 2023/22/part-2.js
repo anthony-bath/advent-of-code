@@ -14,18 +14,15 @@ for (const brick1 of bricks) {
   // Disintegrate Brick
   brick1.updateSpace(space, '.');
 
-  const movedBricks = new Set();
-
   for (const brick2 of bricks) {
     if (brick1 === brick2) continue;
 
     if (drop(brick2, space)) {
-      movedBricks.add(brick2);
+      fallCount++;
       brick2.reset();
     }
   }
 
-  fallCount += movedBricks.size;
   space = [...clone.map((z) => z.map((y) => y.map((x) => x)))];
 }
 
