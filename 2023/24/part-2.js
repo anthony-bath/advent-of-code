@@ -7,17 +7,17 @@ const hailstones = read(YEAR, DAY, PART).map((line) => line.match(/-?\d+/g).map(
 
 async function solve() {
   const { Context } = await init();
-  const { Solver, Int } = new Context('main');
+  const { Solver, Real } = new Context('main');
   const solver = new Solver();
 
-  let x = Int.const('x');
-  let y = Int.const('y');
-  let z = Int.const('z');
-  let vx = Int.const('vx');
-  let vy = Int.const('vy');
-  let vz = Int.const('vz');
+  let x = Real.const('x');
+  let y = Real.const('y');
+  let z = Real.const('z');
+  let vx = Real.const('vx');
+  let vy = Real.const('vy');
+  let vz = Real.const('vz');
 
-  const t = [0, 1, 2].map((i) => Int.const(`t${i}`));
+  const t = [0, 1, 2].map((i) => Real.const(`t${i}`));
 
   hailstones.slice(0, 3).forEach(([hx, hy, hz, hvx, hvy, hvz], i) => {
     solver.add(t[i].mul(hvx).add(hx).sub(x).sub(t[i].mul(vx)).eq(0));
@@ -34,5 +34,5 @@ async function solve() {
   return solver.model().eval(x.add(y).add(z)).value();
 }
 
-write(YEAR, DAY, PART, await solve());
+write(YEAR, DAY, PART, Number((await solve()).numerator));
 process.exit(); //seems to be some issue with z3-solver keeping the process alive
