@@ -44,7 +44,7 @@ struct Day22: AdventDay {
     )
 
     for brick in bricks {
-      drop(brick, &space)
+      let _ = drop(brick, &space)
       brick.storeRest()
     }
 
@@ -117,7 +117,28 @@ struct Day22: AdventDay {
   }
 
   func part2() -> Any {
-    0
+    var (bricks, space) = getData()
+    let clone = space.map { $0.map { $0.map { $0 } } }
+    var fallCount = 0
+
+    for brick1 in bricks {
+      brick1.updateSpace(&space, type: ".")
+
+      for brick2 in bricks {
+        if brick1 === brick2 {
+          continue
+        }
+
+        if drop(brick2, &space) {
+          fallCount += 1
+          brick2.reset()
+        }
+      }
+
+      space = clone.map { $0.map { $0.map { $0 } } }
+    }
+
+    return fallCount
   }
 }
 
