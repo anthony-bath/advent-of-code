@@ -69,10 +69,8 @@ for (const [x, y] of junctions) {
 }
 
 const seen = new Set();
-let callCount = 0;
 
 function dfs([sx, sy]) {
-  console.log(callCount++);
   if (sx === ex && sy === ey) return 0;
 
   let max = -Infinity;
