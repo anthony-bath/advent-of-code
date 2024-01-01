@@ -73,36 +73,21 @@ struct Day23: AdventDay {
           continue
         }
 
-        if let dirs = dirs {
-          for (dx, dy) in dirs[grid[sy][sx]]! {
-            let nx = sx + dx
-            let ny = sy + dy
-            let nkey = "\(nx),\(ny)"
+        let dxdy = dirs?[grid[sy][sx]] ?? deltas
 
-            if nx < 0 || nx >= grid[0].count || ny < 0 || ny >= grid
-              .count || grid[ny][nx] == "#" || seen.contains(nkey)
-            {
-              continue
-            }
+        for (dx, dy) in dxdy {
+          let nx = sx + dx
+          let ny = sy + dy
+          let nkey = "\(nx),\(ny)"
 
-            seen.insert(nkey)
-            stack.append((nx, ny, dist + 1))
+          if nx < 0 || nx >= grid[0].count || ny < 0 || ny >= grid
+            .count || grid[ny][nx] == "#" || seen.contains(nkey)
+          {
+            continue
           }
-        } else {
-          for (dx, dy) in deltas {
-            let nx = x + dx
-            let ny = y + dy
-            let nkey = "\(nx),\(ny)"
 
-            if nx < 0 || nx >= grid[0].count || ny < 0 || ny >= grid
-              .count || grid[ny][nx] == "#" || seen.contains(nkey)
-            {
-              continue
-            }
-
-            seen.insert(nkey)
-            stack.append((nx, ny, dist + 1))
-          }
+          seen.insert(nkey)
+          stack.append((nx, ny, dist + 1))
         }
       }
     }
@@ -145,6 +130,36 @@ struct Day23: AdventDay {
   }
 
   func part2() -> Any {
-    0
+    let grid = getGrid()
+    let graph = buildGraph(grid: grid, dirs: nil)
+    let ex = grid[0].count - 2
+    let ey = grid.count - 1
+    var seen = Set<String>()
+
+    func dfs(_ x: Int, _ y: Int) -> Int {
+      if x == ex, y == ey {
+        return 0
+      }
+
+      var maxDistance = Int.min
+
+      for (key, distance) in graph["\(x),\(y)"]! {
+        if seen.contains(key) {
+          continue
+        }
+
+        seen.insert(key)
+        let coords = key.split(separator: ",").map { Int($0)! }
+        let nx = coords[0]
+        let ny = coords[1]
+
+        maxDistance = max(maxDistance, distance + dfs(nx, ny))
+        seen.remove(key)
+      }
+
+      return maxDistance
+    }
+
+    return dfs(1, 0)
   }
 }
