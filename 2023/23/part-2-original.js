@@ -38,10 +38,9 @@ for (let y = 0; y < H; y++) {
   }
 }
 
-const coordsByBit = new Map(junctions.map((junction, i) => [BigInt(2 ** i), junction]));
-const graph = new Map(junctions.map((_, i) => [BigInt(2 ** i), new Map()]));
+const graph = new Map(junctions.map((junction) => [junction.join(','), new Map()]));
 
-for (const [bit, [x, y]] of coordsByBit) {
+for (const [x, y] of junctions) {
   const stack = [[x, y, 0]];
   const key = `${x},${y}`;
   const seen = new Set([key]);
@@ -49,10 +48,11 @@ for (const [bit, [x, y]] of coordsByBit) {
   while (stack.length) {
     const [sx, sy, distance] = stack.pop();
 
-    const junction = junctions.findIndex(([x, y]) => x === sx && y === sy);
+    const junction = junctions.find(([x, y]) => x === sx && y === sy);
 
-    if (distance > 0 && junction !== -1) {
-      graph.get(bit).set(BigInt(2 ** junction), distance);
+    if (distance > 0 && junction) {
+      const [jx, jy] = junction;
+      graph.get(key).set(`${jx},${jy}`, distance);
       continue;
     }
 
@@ -68,22 +68,23 @@ for (const [bit, [x, y]] of coordsByBit) {
   }
 }
 
-let seen = 0n;
+const seen = new Set();
 
-function dfs(bit) {
-  if (bit === 2n) return 0;
+function dfs([sx, sy]) {
+  if (sx === ex && sy === ey) return 0;
 
   let max = -Infinity;
 
-  for (const [jBit, distance] of graph.get(bit)) {
-    if (seen & jBit) continue;
+  for (const [key, distance] of graph.get(`${sx},${sy}`)) {
+    if (seen.has(key)) continue;
 
-    seen |= jBit;
-    max = Math.max(max, dfs(jBit) + distance);
-    seen ^= jBit;
+    seen.add(key);
+    const [nx, ny] = key.split(',').map(Number);
+    max = Math.max(max, dfs([nx, ny]) + distance);
+    seen.delete(key);
   }
 
   return max;
 }
 
-write(YEAR, DAY, PART, dfs(1n));
+write(YEAR, DAY, PART, dfs(start));
