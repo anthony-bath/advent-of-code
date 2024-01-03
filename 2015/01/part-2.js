@@ -2,15 +2,19 @@ import { read, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 1, 2];
 
-let floor = 0;
-let result = null;
+export function part2() {
+  let floor = 0;
+  let result = null;
 
-read(YEAR, DAY, PART, { splitBy: '' }).forEach((p, i) => {
-  floor += p === '(' ? 1 : -1;
+  read(YEAR, DAY, PART, { splitBy: '' }).forEach((p, i) => {
+    floor += p === '(' ? 1 : -1;
 
-  if (floor === -1 && !result) {
-    result = i;
-  }
-});
+    if (floor === -1 && !result) {
+      result = i;
+    }
+  });
 
-write(YEAR, DAY, PART, result + 1);
+  return result + 1;
+}
+
+write(YEAR, DAY, PART, part2());
