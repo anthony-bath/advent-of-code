@@ -1,20 +1,17 @@
-import { read, write } from '../../utilities/io.js';
 import { createHash } from 'node:crypto';
 
-const [YEAR, DAY, PART] = [2015, 4, 2];
+export function part2(data) {
+  let num = 0;
 
-const input = read(YEAR, DAY, PART, { splitBy: null });
+  while (true) {
+    const value = createHash('md5').update(`${data}${num}`).digest('hex');
 
-let num = 0;
+    if (value.startsWith('000000')) {
+      break;
+    }
 
-while (true) {
-  const value = createHash('md5').update(`${input}${num}`).digest('hex');
-
-  if (value.startsWith('000000')) {
-    break;
+    num++;
   }
 
-  num++;
+  return num;
 }
-
-write(YEAR, DAY, PART, num);

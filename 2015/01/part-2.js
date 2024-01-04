@@ -1,12 +1,8 @@
-import { read, write } from '../../utilities/io.js';
-
-const [YEAR, DAY, PART] = [2015, 1, 2];
-
-export function part2() {
+export function part2(data) {
   let floor = 0;
   let result = null;
 
-  read(YEAR, DAY, PART, { splitBy: '' }).forEach((p, i) => {
+  data.split('').forEach((p, i) => {
     floor += p === '(' ? 1 : -1;
 
     if (floor === -1 && !result) {
@@ -16,5 +12,3 @@ export function part2() {
 
   return result + 1;
 }
-
-write(YEAR, DAY, PART, part2());

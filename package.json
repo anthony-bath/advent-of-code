@@ -11,7 +11,7 @@
   "author": "Anthony Bath",
   "license": "ISC",
   "scripts": {
-    "test": "node --experimental-vm-modules node_modules/jest/bin/jest.js --silent"
+    "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js"
   },
   "bugs": {
     "url": "https://github.com/anthony-bath/advent-of-code/issues"

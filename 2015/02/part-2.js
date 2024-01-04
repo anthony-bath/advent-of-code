@@ -1,17 +1,13 @@
-import { read, write } from '../../utilities/io.js';
+export function part2(data) {
+  const expr = /\d+/g;
 
-const [YEAR, DAY, PART] = [2015, 2, 2];
+  return data.split('\n').reduce((totalArea, dimensions) => {
+    const [l, w, h] = dimensions.match(expr).map((n) => Number(n));
 
-const expr = /\d+/g;
+    const p1 = 2 * (l + w);
+    const p2 = 2 * (l + h);
+    const p3 = 2 * (w + h);
 
-const result = read(YEAR, DAY, PART).reduce((totalArea, dimensions) => {
-  const [l, w, h] = dimensions.match(expr).map((n) => Number(n));
-
-  const p1 = 2 * (l + w);
-  const p2 = 2 * (l + h);
-  const p3 = 2 * (w + h);
-
-  return totalArea + l * w * h + Math.min(p1, p2, p3);
-}, 0);
-
-write(YEAR, DAY, PART, result);
+    return totalArea + l * w * h + Math.min(p1, p2, p3);
+  }, 0);
+}
