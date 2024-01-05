@@ -2,10 +2,10 @@ import { read } from './io.js';
 
 const year = process.argv[2];
 const day = process.argv[3];
-const test = process.argv[4] ?? false;
+const test = process.env.npm_config_t;
 
 if (!year || !day) {
-  console.log('Usage: node day-creator.js <year> <day> <test?>');
+  console.log('Usage: node day-runner.js <year> <day> -t?');
   process.exit(1);
 }
 
