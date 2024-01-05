@@ -1,18 +1,16 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2(data) {
+  let result = 0;
 
-const [YEAR, DAY, PART] = [2015, 8, 2];
+  data.split('\n').forEach((line) => {
+    const initial = line.length;
 
-let result = 0;
+    line = line.replace(/\\/g, '\\\\');
+    line = line.replace(/"/g, '\\"');
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const initial = line.length;
+    const final = 2 + line.length;
 
-  line = line.replace(/\\/g, '\\\\');
-  line = line.replace(/"/g, '\\"');
+    result += final - initial;
+  });
 
-  const final = 2 + line.length;
-
-  result += final - initial;
-});
-
-write(YEAR, DAY, PART, result);
+  return result;
+}

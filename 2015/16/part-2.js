@@ -1,21 +1,20 @@
-import { readOld, write } from '../../utilities/io.js';
 import { Sue, targetSue } from './common.js';
 
-const [YEAR, DAY, PART] = [2015, 16, 2];
+export function part2(data) {
+  const sues = [];
 
-const sues = [];
+  data.split('\n').forEach((line) => {
+    const [idPart, ...traitList] = line.match(/(\w+\s\d+:|\w+:\s\d+)/g);
+    const id = Number(idPart.match(/\d+/));
+    const traits = new Map();
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [idPart, ...traitList] = line.match(/(\w+\s\d+:|\w+:\s\d+)/g);
-  const id = Number(idPart.match(/\d+/));
-  const traits = new Map();
+    traitList.forEach((entry) => {
+      const [trait, value] = entry.split(': ');
+      traits.set(trait, Number(value));
+    });
 
-  traitList.forEach((entry) => {
-    const [trait, value] = entry.split(': ');
-    traits.set(trait, Number(value));
+    sues.push(new Sue(id, traits));
   });
 
-  sues.push(new Sue(id, traits));
-});
-
-write(YEAR, DAY, PART, sues.find((sue) => sue.equals2(targetSue)).id);
+  return sues.find((sue) => sue.equals2(targetSue)).id;
+}

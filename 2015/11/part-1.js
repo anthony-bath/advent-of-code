@@ -1,23 +1,22 @@
-import { readOld, write } from '../../utilities/io.js';
 import { increment, hasBadLetters, hasSequence, hasTwoDoubles } from './common.js';
 
-const [YEAR, DAY, PART] = [2015, 11, 1];
+export function part1(data) {
+  const currentPassword = data.split('').map((c) => c.charCodeAt(0));
+  const nextPasswords = [];
 
-const currentPassword = readOld(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
-const nextPasswords = [];
+  do {
+    increment(currentPassword);
 
-do {
-  increment(currentPassword);
+    if (
+      hasBadLetters(currentPassword) ||
+      !hasSequence(currentPassword) ||
+      !hasTwoDoubles(currentPassword)
+    ) {
+      continue;
+    } else {
+      nextPasswords.push(currentPassword.map((c) => String.fromCharCode(c)).join(''));
+    }
+  } while (nextPasswords.length < 1);
 
-  if (
-    hasBadLetters(currentPassword) ||
-    !hasSequence(currentPassword) ||
-    !hasTwoDoubles(currentPassword)
-  ) {
-    continue;
-  } else {
-    nextPasswords.push(currentPassword.map((c) => String.fromCharCode(c)).join(''));
-  }
-} while (nextPasswords.length < 1);
-
-write(YEAR, DAY, PART, nextPasswords.pop());
+  return nextPasswords.pop();
+}

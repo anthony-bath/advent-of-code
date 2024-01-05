@@ -1,21 +1,18 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1(data) {
+  const expr = /(\d)\1{0,}/g;
 
-const [YEAR, DAY, PART] = [2015, 10, 1];
+  function lookAndSay(sequence) {
+    return sequence
+      .match(expr)
+      .map((match) => `${match.length}${match[0]}`)
+      .join('');
+  }
 
-const input = readOld(YEAR, DAY, PART, { splitBy: null });
-const expr = /(\d)\1{0,}/g;
+  let sequence = data;
 
-function lookAndSay(sequence) {
-  return sequence
-    .match(expr)
-    .map((match) => `${match.length}${match[0]}`)
-    .join('');
+  for (let i = 0; i < 40; i++) {
+    sequence = lookAndSay(sequence);
+  }
+
+  return sequence.length;
 }
-
-let sequence = input;
-
-for (let i = 0; i < 40; i++) {
-  sequence = lookAndSay(sequence);
-}
-
-write(YEAR, DAY, PART, sequence.length);

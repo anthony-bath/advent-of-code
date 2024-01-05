@@ -1,6 +1,15 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1(data) {
+  const reindeers = [];
 
-const [YEAR, DAY, PART] = [2015, 14, 1];
+  data.split('\n').forEach((line) => {
+    const [name] = line.split(' ');
+    const [speed, travelTime, restTime] = line.match(/\d+/g).map((n) => Number(n));
+
+    reindeers.push(new Reindeer(name, speed, travelTime, restTime));
+  });
+
+  return Math.max(...reindeers.map((reindeer) => reindeer.distanceTraveled(2503)));
+}
 
 class Reindeer {
   constructor(name, speed, travelTime, restTime) {
@@ -21,14 +30,3 @@ class Reindeer {
     );
   }
 }
-
-const reindeers = [];
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [name] = line.split(' ');
-  const [speed, travelTime, restTime] = line.match(/\d+/g).map((n) => Number(n));
-
-  reindeers.push(new Reindeer(name, speed, travelTime, restTime));
-});
-
-write(YEAR, DAY, PART, Math.max(...reindeers.map((reindeer) => reindeer.distanceTraveled(2503))));
