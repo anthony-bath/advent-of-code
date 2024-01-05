@@ -23,7 +23,7 @@ export function readOld(year, day, part, { test = false, splitBy = EOL } = {}) {
   return splitBy !== null ? data.split(splitBy) : data;
 }
 
-export function read2(year, day, { test = false } = {}) {
+export function read(year, day, { test = false } = {}) {
   return fs.readFileSync(
     `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input.txt`,
     'utf-8'

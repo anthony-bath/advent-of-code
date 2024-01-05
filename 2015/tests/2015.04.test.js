@@ -1,8 +1,8 @@
-import { read2 } from '../../utilities/io.js';
+import { read } from '../../utilities/io.js';
 import { part1 } from '../04/part-1.js';
 import { part2 } from '../04/part-2.js';
 
-const data = read2(2015, 4);
+const data = read(2015, 4);
 
 describe('2015 Day 4', () => {
   it('Part 1', () => {
