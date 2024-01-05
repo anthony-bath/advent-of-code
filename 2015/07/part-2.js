@@ -1,15 +1,15 @@
-import { readOld, write } from '../../utilities/io.js';
 import { Wire } from './common.js';
+import { part1 } from './part-1.js';
 
-const [YEAR, DAY, PART] = [2015, 7, 2];
+export function part2(data) {
+  const wires = new Map();
 
-const wires = new Map();
+  data.split('\n').forEach((line) => {
+    const [input, output] = line.split(' -> ');
+    wires.set(output, new Wire(output, input.split(' ')));
+  });
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [input, output] = line.split(' -> ');
-  wires.set(output, new Wire(output, input.split(' ')));
-});
+  wires.get('b').signal = part1(data);
 
-wires.get('b').signal = 46065; // Part 1 Solution
-
-write(YEAR, DAY, PART, wires.get('a').output(wires));
+  return wires.get('a').output(wires);
+}

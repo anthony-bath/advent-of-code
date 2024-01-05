@@ -1,16 +1,14 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2(data) {
+  const double = /([a-z][a-z]).*\1/;
+  const triple = /([a-z])[a-z]\1/;
 
-const [YEAR, DAY, PART] = [2015, 5, 2];
+  let niceCount = 0;
 
-const double = /([a-z][a-z]).*\1/;
-const triple = /([a-z])[a-z]\1/;
+  data.split('\n').forEach((string) => {
+    if (double.test(string) && triple.test(string)) {
+      niceCount++;
+    }
+  });
 
-let niceCount = 0;
-
-readOld(YEAR, DAY, PART).forEach((string) => {
-  if (double.test(string) && triple.test(string)) {
-    niceCount++;
-  }
-});
-
-write(YEAR, DAY, PART, niceCount);
+  return niceCount;
+}

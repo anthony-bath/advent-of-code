@@ -1,22 +1,20 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1(data) {
+  const delta = { v: [0, 1], '^': [0, -1], '<': [-1, 0], '>': [1, 0] };
+  const presentsByCoord = { '0|0': 1 };
+  let [x, y] = [0, 0];
 
-const [YEAR, DAY, PART] = [2015, 3, 1];
+  data.split('').forEach((dir) => {
+    const [dx, dy] = delta[dir];
+    x += dx;
+    y += dy;
+    const nextKey = `${x}|${y}`;
 
-const delta = { v: [0, 1], '^': [0, -1], '<': [-1, 0], '>': [1, 0] };
-const presentsByCoord = { '0|0': 1 };
-let [x, y] = [0, 0];
+    if (!(nextKey in presentsByCoord)) {
+      presentsByCoord[nextKey] = 1;
+    } else {
+      presentsByCoord[nextKey]++;
+    }
+  });
 
-readOld(YEAR, DAY, PART, { splitBy: '' }).forEach((dir) => {
-  const [dx, dy] = delta[dir];
-  x += dx;
-  y += dy;
-  const nextKey = `${x}|${y}`;
-
-  if (!(nextKey in presentsByCoord)) {
-    presentsByCoord[nextKey] = 1;
-  } else {
-    presentsByCoord[nextKey]++;
-  }
-});
-
-write(YEAR, DAY, PART, Object.keys(presentsByCoord).length);
+  return Object.keys(presentsByCoord).length;
+}

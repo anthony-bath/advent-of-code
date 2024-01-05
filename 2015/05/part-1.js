@@ -1,17 +1,15 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1(data) {
+  const vowels = /[aeiou]/g;
+  const double = /([a-z])\1/;
+  const ignore = /(ab|cd|pq|xy)/;
 
-const [YEAR, DAY, PART] = [2015, 5, 1];
+  let niceCount = 0;
 
-const vowels = /[aeiou]/g;
-const double = /([a-z])\1/;
-const ignore = /(ab|cd|pq|xy)/;
+  data.split('\n').forEach((string) => {
+    if (string.match(vowels)?.length >= 3 && double.test(string) && !ignore.test(string)) {
+      niceCount++;
+    }
+  });
 
-let niceCount = 0;
-
-readOld(YEAR, DAY, PART).forEach((string) => {
-  if (string.match(vowels)?.length >= 3 && double.test(string) && !ignore.test(string)) {
-    niceCount++;
-  }
-});
-
-write(YEAR, DAY, PART, niceCount);
+  return niceCount;
+}
