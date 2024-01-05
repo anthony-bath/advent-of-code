@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { commands } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 16, 1];
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 
 let result = 0;
 

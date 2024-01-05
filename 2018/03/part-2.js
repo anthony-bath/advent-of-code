@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 3, 2];
 
 const claims = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [id, x, y, w, h] = line.match(/\d+/g).map((n) => Number(n));
   claims.push({ id, x1: x, y1: y, x2: x + w - 1, y2: y + h - 1 });
 });

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 6, 1];
 
-const fish = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+const fish = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 const DAYS = 80;
 

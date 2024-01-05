@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { init } from 'z3-solver';
 
 const [YEAR, DAY, PART] = [2023, 24, 2];
 
-const hailstones = read(YEAR, DAY, PART).map((line) => line.match(/-?\d+/g).map(Number));
+const hailstones = readOld(YEAR, DAY, PART).map((line) => line.match(/-?\d+/g).map(Number));
 
 async function solve() {
   const { Context } = await init();

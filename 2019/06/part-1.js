@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 6, 1];
 
 const directOrbitsByObject = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [orbitee, orbiter] = line.split(')');
   directOrbitsByObject.set(orbiter, orbitee);
 });

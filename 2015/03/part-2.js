@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 3, 2];
 
@@ -7,7 +7,7 @@ const presentsByCoord = { '0|0': 2 };
 const santas = { [true]: [0, 0], [false]: [0, 0] };
 let flip = true;
 
-read(YEAR, DAY, PART, { splitBy: '' }).forEach((dir) => {
+readOld(YEAR, DAY, PART, { splitBy: '' }).forEach((dir) => {
   const [dx, dy] = delta[dir];
   const [x, y] = santas[flip];
   const nextX = x + dx;

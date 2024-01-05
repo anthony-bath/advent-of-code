@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 13, 2];
 
-const [_, buses] = read(YEAR, DAY, PART);
+const [_, buses] = readOld(YEAR, DAY, PART);
 const offsets = [];
 
 buses.split(',').forEach((bus, index) => {

@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { checksum, fillDisk } from './common.js';
 
 const [YEAR, DAY, PART] = [2016, 16, 2];
 
 const SIZE = 35651584;
-const input = read(YEAR, DAY, PART, { splitBy: null });
+const input = readOld(YEAR, DAY, PART, { splitBy: null });
 
 let data = fillDisk(input, SIZE);
 

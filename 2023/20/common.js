@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 export const PULSE = {
   LOW: 0,
@@ -11,7 +11,7 @@ export class Network {
   broadcaster;
 
   constructor(year, day, part) {
-    read(year, day, part).forEach((line) => {
+    readOld(year, day, part).forEach((line) => {
       const [input, output] = line.split(' -> ');
       const outputs = output.split(', ');
 

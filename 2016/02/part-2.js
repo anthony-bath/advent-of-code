@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 2, 2];
 
-const inputs = read(YEAR, DAY, PART).map((line) => line.split(''));
+const inputs = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const keypad = [
   [null, null, 1, null, null],

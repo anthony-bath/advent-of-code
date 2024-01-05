@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 21, 1];
 
 const jobByMonkey = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [monkey, job] = line.split(': ');
   jobByMonkey.set(monkey, /\d+/.test(job) ? Number(job) : job);
 });

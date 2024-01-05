@@ -1,9 +1,9 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 10];
 
 export function loadCycles(part) {
-  const instructions = read(YEAR, DAY, part);
+  const instructions = readOld(YEAR, DAY, part);
   const cycles = [];
 
   for (const instruction of instructions) {

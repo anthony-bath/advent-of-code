@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 5, 1];
 
-const doorId = read(YEAR, DAY, PART, { splitBy: null });
+const doorId = readOld(YEAR, DAY, PART, { splitBy: null });
 const passwordChars = [];
 let num = 0;
 

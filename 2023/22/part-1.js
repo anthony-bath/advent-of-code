@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { canDrop, getData } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 22, 1];
 
-let { bricks, space } = getData(read(YEAR, DAY, PART));
+let { bricks, space } = getData(readOld(YEAR, DAY, PART));
 
 let canDistintegrateCount = 0;
 

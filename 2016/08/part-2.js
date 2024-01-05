@@ -1,5 +1,5 @@
 import { printGrid } from '../../utilities/grid.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 8, 2];
 
@@ -12,7 +12,7 @@ function rotate(array, distance) {
   return [...array.slice(-distance), ...array.slice(0, array.length - distance)];
 }
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [a, b] = line.match(/\d+/g).map((n) => Number(n));
 
   if (line.startsWith('rect')) {

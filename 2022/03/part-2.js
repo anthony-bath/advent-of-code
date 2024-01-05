@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { generatePriorityMap } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 3, 2];
@@ -7,7 +7,7 @@ const priorityMap = generatePriorityMap();
 const groups = [];
 let currentGroup = [];
 
-read(YEAR, DAY, PART).forEach((rucksack) => {
+readOld(YEAR, DAY, PART).forEach((rucksack) => {
   currentGroup.push(rucksack);
 
   if (currentGroup.length === 3) {

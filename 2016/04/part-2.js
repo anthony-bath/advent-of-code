@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 4, 2];
 
@@ -6,7 +6,7 @@ const sectorExpression = new RegExp('\\d+', 'g');
 
 let result = null;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (result) {
     return;
   }

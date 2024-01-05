@@ -1,9 +1,9 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 8, 1];
 
-const input = read(YEAR, DAY, PART, { splitBy: ' ' }).map((n) => Number(n));
+const input = readOld(YEAR, DAY, PART, { splitBy: ' ' }).map((n) => Number(n));
 
 const metadata = [];
 

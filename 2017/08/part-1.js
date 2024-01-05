@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { ops } from './common.js';
 
 const [YEAR, DAY, PART] = [2017, 8, 1];
 
 const registers = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [change, condition] = line.split(' if ');
   const [updateRegister, updateOperation, updateValue] = change.split(' ');
   const [conditionRegister, conditionOperation, conditionValue] = condition.split(' ');

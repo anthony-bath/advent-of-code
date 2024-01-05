@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Point3D } from '../../utilities/math.js';
 import { Box, Robot } from './common.js';
 
@@ -13,7 +13,7 @@ let [minX, maxX, minY, maxY, minZ, maxZ] = [
   -Infinity,
 ];
 
-const robots = read(YEAR, DAY, PART).map((line) => {
+const robots = readOld(YEAR, DAY, PART).map((line) => {
   const [x, y, z, r] = line.match(/-?\d+/g).map((n) => Number(n));
 
   minX = Math.min(minX, x);

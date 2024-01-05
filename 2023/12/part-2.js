@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 12, 1];
 
@@ -39,7 +39,7 @@ function count(arrangement, groups) {
 
 const cache = {};
 
-const total = read(YEAR, DAY, PART).reduce((total, line) => {
+const total = readOld(YEAR, DAY, PART).reduce((total, line) => {
   const [arrangement, springList] = line.split(' ');
   const groups = springList.match(/\d+/g).map((n) => Number(n));
   const unfoldedGroups = Array(5).fill(groups).flat();

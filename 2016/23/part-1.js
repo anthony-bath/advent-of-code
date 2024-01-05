@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { execute } from './common.js';
 
 const [YEAR, DAY, PART] = [2016, 23, 1];
@@ -10,7 +10,7 @@ const registers = new Map([
   ['d', 0],
 ]);
 
-const instructions = read(YEAR, DAY, PART).map((line) => line.split(' '));
+const instructions = readOld(YEAR, DAY, PART).map((line) => line.split(' '));
 
 execute(instructions, registers);
 

@@ -1,11 +1,11 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 export function loadData(year, day, part) {
   const emptyRows = [];
   const emptyCols = [];
   const galaxies = [];
 
-  const grid = read(year, day, part).map((line, y) => {
+  const grid = readOld(year, day, part).map((line, y) => {
     let hasGalaxies = false;
     const row = line.split('');
 

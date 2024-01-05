@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 10, 1];
 
-const joltages = read(YEAR, DAY, PART)
+const joltages = readOld(YEAR, DAY, PART)
   .map((n) => Number(n))
   .sort((a, b) => a - b);
 

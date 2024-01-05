@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 19, 2];
 
 const inverseTransformations = {};
 let molecule;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (!line) return;
 
   if (line.includes('=>')) {

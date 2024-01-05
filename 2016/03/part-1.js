@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 3, 1];
 
 let possibleCount = 0;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [a, b, c] = line
     .trim()
     .split(/\s+/)

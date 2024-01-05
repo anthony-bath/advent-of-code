@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 18, 1];
 
-const map = read(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
+const map = readOld(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
 
 const W = map[0].length;
 const H = map.length;

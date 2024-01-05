@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { fill } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 17, 1];
 
-const input = read(YEAR, DAY, PART)
+const input = readOld(YEAR, DAY, PART)
   .map((n) => Number(n))
   .sort((a, b) => b - a);
 

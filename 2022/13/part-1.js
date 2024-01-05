@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 13, 1];
 
@@ -42,7 +42,7 @@ function compare(left, right) {
   }
 }
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 
 const orderedIndices = [];
 let pairNumber = 1;

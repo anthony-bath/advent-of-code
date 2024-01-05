@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 24, 1];
 
@@ -11,7 +11,7 @@ class Component {
   }
 }
 
-const components = read(YEAR, DAY, PART).map(
+const components = readOld(YEAR, DAY, PART).map(
   (line) => new Component(line.split('/').map((n) => Number(n)))
 );
 

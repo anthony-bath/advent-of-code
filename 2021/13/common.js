@@ -1,9 +1,9 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 13];
 
 export const loadData = (part) => {
-  const input = read(YEAR, DAY, part);
+  const input = readOld(YEAR, DAY, part);
 
   let xMax = 0;
   let yMax = 0;

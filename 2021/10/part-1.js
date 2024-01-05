@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 10, 1];
 
-const lines = read(YEAR, DAY, PART).map((l) => l.trim().split(''));
+const lines = readOld(YEAR, DAY, PART).map((l) => l.trim().split(''));
 
 const BRACKETS = new Map([
   ['(', ')'],

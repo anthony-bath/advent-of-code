@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 7];
 
@@ -6,7 +6,7 @@ export function loadDirectories(part) {
   const allDirectories = [];
   let currentDirectory;
 
-  read(YEAR, DAY, part).forEach((line) => {
+  readOld(YEAR, DAY, part).forEach((line) => {
     const [p1, p2, p3] = line.split(' ');
 
     switch (p1) {

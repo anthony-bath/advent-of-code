@@ -1,8 +1,8 @@
-import { output, read, write } from '../../utilities/io.js';
+import { output, readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 18, 1];
 
-const maze = read(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
+const maze = readOld(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
 
 const W = maze[0].length;
 const H = maze.length;

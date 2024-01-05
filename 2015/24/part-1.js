@@ -1,10 +1,10 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { shortestSum } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 24, 1];
 
-const weights = read(YEAR, DAY, PART)
+const weights = readOld(YEAR, DAY, PART)
   .map((n) => Number(n))
   .sort((a, b) => b - a);
 

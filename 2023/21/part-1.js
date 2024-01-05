@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 21, 1];
 
-const grid = read(YEAR, DAY, PART).map((line) => line.split(''));
+const grid = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 let start;
 

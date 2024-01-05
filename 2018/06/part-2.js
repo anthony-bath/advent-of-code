@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Point, manhattan } from '../../utilities/math.js';
 import { sum } from '../../utilities/array.js';
 
@@ -6,7 +6,7 @@ const [YEAR, DAY, PART] = [2018, 6, 2];
 
 let [minX, maxX, minY, maxY] = [Infinity, -Infinity, Infinity, -Infinity];
 
-const points = read(YEAR, DAY, PART).map((line) => {
+const points = readOld(YEAR, DAY, PART).map((line) => {
   const [x, y] = line.split(', ').map((n) => Number(n));
 
   if (x < minX) {

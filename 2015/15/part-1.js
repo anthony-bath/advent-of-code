@@ -1,12 +1,12 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { CookieTrait } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 15, 1];
 
 const traits = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const factors = line.match(/-?\d+/g).map((n) => Number(n));
 
   if (traits.length === 0) {

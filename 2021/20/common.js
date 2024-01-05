@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 20, 1];
 
@@ -6,7 +6,7 @@ export const loadData = (part) => {
   let algo = [];
   const image = [];
 
-  read(YEAR, DAY, part).forEach((line, i) => {
+  readOld(YEAR, DAY, part).forEach((line, i) => {
     if (i === 0) {
       algo = line.trim().split('');
     } else if (i > 1) {

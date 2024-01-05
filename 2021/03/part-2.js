@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 3, 2];
 
-const data = read(YEAR, DAY, PART).map((x) => x.trim());
+const data = readOld(YEAR, DAY, PART).map((x) => x.trim());
 
 function getResultData(inputData, valueFunc) {
   let bitCounts = getBitCounts(inputData);

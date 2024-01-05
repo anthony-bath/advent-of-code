@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 9, 2];
 
 const grid = [];
 
-read(YEAR, DAY, PART).forEach((row) =>
+readOld(YEAR, DAY, PART).forEach((row) =>
   grid.push(
     row
       .trim()

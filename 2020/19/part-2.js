@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 19, 2];
 
 const rules = new Map();
 const messages = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (!line) return;
   if (/^\d/.test(line)) {
     const [number, rule] = line.split(': ');

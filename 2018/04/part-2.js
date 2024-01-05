@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 4, 2];
 
 const entries = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const timestamp = line.substring(1, 17);
   const [, time] = timestamp.split(' ');
   const [, minute] = time.split(':').map((n) => Number(n));

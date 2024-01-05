@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Moon, sum } from './common.js';
 import { pairs } from '../../utilities/array.js';
 
@@ -6,7 +6,7 @@ const [YEAR, DAY, PART] = [2019, 12, 1];
 
 const moons = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const position = line.match(/-?\d+/g).map((n) => Number(n));
   moons.push(new Moon(position));
 });

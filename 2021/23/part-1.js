@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { manhattan } from '../../utilities/math.js';
 
 const [YEAR, DAY, PART] = [2021, 23, 1];
 
 const amphipods = [];
 
-read(YEAR, DAY, PART).forEach((line, y) => {
+readOld(YEAR, DAY, PART).forEach((line, y) => {
   const row = line.split('');
 
   for (let x = 0; x < row.length; x++) {

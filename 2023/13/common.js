@@ -1,10 +1,10 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 export function getGrids(year, day, part) {
   const grids = [];
   let currentGrid;
 
-  read(year, day, part).forEach((line) => {
+  readOld(year, day, part).forEach((line) => {
     if (!line) {
       grids.push(currentGrid);
       currentGrid = null;

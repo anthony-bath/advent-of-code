@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 13, 1];
 
 const layers = new Map();
 let MAX_LAYER = -Infinity;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [layer, depth] = line.split(': ').map((n) => Number(n));
   layers.set(layer, depth);
 

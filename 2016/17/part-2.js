@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 17, 2];
 
-const passcode = read(YEAR, DAY, PART, { splitBy: null });
+const passcode = readOld(YEAR, DAY, PART, { splitBy: null });
 
 function key({ x, y, path }) {
   return `${x}|${y}|${path.join('')}`;

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 17, 1];
 
-const steps = Number(read(YEAR, DAY, PART, { splitBy: null }));
+const steps = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
 
 class Node {
   constructor(value, next) {

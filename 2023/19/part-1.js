@@ -1,9 +1,9 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 19, 1];
 
-const lines = read(YEAR, DAY, PART);
+const lines = readOld(YEAR, DAY, PART);
 const workflows = new Map();
 const parts = [];
 let parsingParts = false;

@@ -1,9 +1,9 @@
 import { differences } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 9, 2];
 
-const result = read(YEAR, DAY, PART).reduce((total, line) => {
+const result = readOld(YEAR, DAY, PART).reduce((total, line) => {
   const rows = [line.split(' ').map((n) => Number(n))];
   let diffs = differences(rows[0]);
 

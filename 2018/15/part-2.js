@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import crypto from 'crypto';
 
 const [YEAR, DAY, PART] = [2018, 15, 1];
@@ -64,7 +64,7 @@ class Unit {
 
 let units = [];
 
-const map = read(YEAR, DAY, PART).map((line, y) => {
+const map = readOld(YEAR, DAY, PART).map((line, y) => {
   const row = line.split('');
 
   for (const [x, type] of row.entries()) {

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 5, 2];
 
-const polymer = read(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
+const polymer = readOld(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
 
 function react(polymer) {
   let index = 1;

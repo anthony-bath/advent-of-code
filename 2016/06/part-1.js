@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 6, 1];
 
 const positionData = [...Array(8).keys()].map((_) => ({}));
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const parts = line.split('');
 
   for (const [position, letter] of parts.entries()) {

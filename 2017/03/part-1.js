@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 3, 1];
 
-const location = Number(read(YEAR, DAY, PART));
+const location = Number(readOld(YEAR, DAY, PART));
 
 let sideLength = Math.ceil(Math.sqrt(location));
 

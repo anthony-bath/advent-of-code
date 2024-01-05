@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 7, 2];
 
@@ -26,7 +26,7 @@ class Program {
 
 const programs = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [program, children] = line.split(' -> ');
   const [name] = program.split(' ');
   const weight = program.match(/\d+/g)[0];

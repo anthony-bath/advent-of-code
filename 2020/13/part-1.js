@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 13, 1];
 
-const [timestampString, schedule] = read(YEAR, DAY, PART);
+const [timestampString, schedule] = readOld(YEAR, DAY, PART);
 
 const buses = schedule
   .split(',')

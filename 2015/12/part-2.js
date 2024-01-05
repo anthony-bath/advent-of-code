@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 12, 2];
 
-const input = JSON.parse(read(YEAR, DAY, PART, { splitBy: null }));
+const input = JSON.parse(readOld(YEAR, DAY, PART, { splitBy: null }));
 
 function searchArray(arr) {
   let sum = 0;

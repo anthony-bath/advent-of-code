@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 18, 2];
 
-const input = read(YEAR, DAY, PART, { splitBy: '' });
+const input = readOld(YEAR, DAY, PART, { splitBy: '' });
 
 const TRAP_PATTERNS = ['^^.', '.^^', '^..', '..^'];
 const TARGET_ROWS = 400000;

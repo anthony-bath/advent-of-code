@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 12, 2];
 
 const pots = new Map();
 const rules = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (!line) return;
   if (line.startsWith('initial')) {
     const [, , data] = line.split(' ');

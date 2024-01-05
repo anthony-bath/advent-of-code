@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { DAMAGE_TYPE, GROUP_TYPE, Group, simulate } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 24, 1];
@@ -8,7 +8,7 @@ const expr =
 
 const groups = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (!line || line.startsWith('Immune') || line.startsWith('Infection')) return;
 
   const [_, count, hp, modifiers, baseDamage, damageType, initiative] = line.match(expr);

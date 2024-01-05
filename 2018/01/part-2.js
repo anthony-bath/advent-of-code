@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 1, 2];
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 
 const seen = {};
 let result;

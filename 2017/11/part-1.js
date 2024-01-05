@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 11, 1];
 
@@ -13,7 +13,7 @@ const deltas = {
 
 let [q, s, r] = [0, 0, 0];
 
-read(YEAR, DAY, PART, { splitBy: ',' }).forEach((move) => {
+readOld(YEAR, DAY, PART, { splitBy: ',' }).forEach((move) => {
   const [dq, ds, dr] = deltas[move];
   [q, s, r] = [q + dq, s + ds, r + dr];
 });

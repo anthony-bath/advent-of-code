@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 17, 2];
 
-const [[x1, x2], [y1, y2]] = read(YEAR, DAY, PART, { splitBy: null })
+const [[x1, x2], [y1, y2]] = readOld(YEAR, DAY, PART, { splitBy: null })
   .replace(/[^\.,-\d]/g, '')
   .split(',')
   .map((v) => v.split('..').map((n) => Number(n)));

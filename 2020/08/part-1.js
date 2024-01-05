@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 8, 1];
 
-const instructions = read(YEAR, DAY, PART).map((instruction) => {
+const instructions = readOld(YEAR, DAY, PART).map((instruction) => {
   const [operation, value] = instruction.split(' ');
   return [operation, operation === 'nop' ? 0 : Number(value)];
 });

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 2, 2];
 
-const boxes = read(YEAR, DAY, PART).map((line) => line.split(''));
+const boxes = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 let result = null;
 

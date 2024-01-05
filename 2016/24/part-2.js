@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 24, 2];
 
 const maze = [];
 const targets = {};
 
-read(YEAR, DAY, PART).forEach((line, y) => {
+readOld(YEAR, DAY, PART).forEach((line, y) => {
   const points = line.split('');
 
   for (const [x, point] of points.entries()) {

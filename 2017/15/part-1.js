@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 15, 1];
 
-let [a, b] = read(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/g)[0]));
+let [a, b] = readOld(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/g)[0]));
 
 const ROUNDS = 40000000;
 let round = 0;

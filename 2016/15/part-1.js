@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 15, 1];
 
 const expr = /\d+/g;
 
-const discs = read(YEAR, DAY, PART).map((line) => {
+const discs = readOld(YEAR, DAY, PART).map((line) => {
   const [id, positions, _, startPosition] = line.match(expr).map((n) => Number(n));
   return { id, positions, startPosition };
 });

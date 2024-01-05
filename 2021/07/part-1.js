@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 7, 1];
 
-const positions = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+const positions = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 const maxPos = Math.max(...positions);
 let fuelByPosition = Array(maxPos + 1).fill(0);

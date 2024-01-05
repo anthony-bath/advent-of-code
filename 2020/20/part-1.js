@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 20, 1];
 
@@ -20,7 +20,7 @@ class Tile {
   }
 }
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 const tiles = [];
 
 for (let i = 0; i < input.length; i += 12) {

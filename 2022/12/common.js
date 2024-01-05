@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 12];
 
@@ -7,7 +7,7 @@ export function loadData(part) {
   let end;
   const lowPoints = [];
 
-  const grid = read(YEAR, DAY, part).map((line, rowIndex) => {
+  const grid = readOld(YEAR, DAY, part).map((line, rowIndex) => {
     const row = line.split('');
     const startX = row.indexOf('S');
 

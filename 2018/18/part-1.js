@@ -1,9 +1,9 @@
 import { printGrid } from '../../utilities/grid.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 18, 1];
 
-const land = read(YEAR, DAY, PART).map((line) => line.split(''));
+const land = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const ACRE_TYPE = {
   OPEN: '.',

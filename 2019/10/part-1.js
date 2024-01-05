@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Point, Line } from './common.js';
 
 const [YEAR, DAY, PART] = [2019, 10, 1];
 
 const asteroids = [];
 
-read(YEAR, DAY, PART).forEach((line, y) =>
+readOld(YEAR, DAY, PART).forEach((line, y) =>
   line.split('').forEach((cell, x) => {
     if (cell === '#') asteroids.push(new Point(x, y));
   })

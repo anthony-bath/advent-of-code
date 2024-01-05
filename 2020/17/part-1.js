@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 17, 1];
 
 const actives = new Set();
 
-read(YEAR, DAY, PART).forEach((line, y) => {
+readOld(YEAR, DAY, PART).forEach((line, y) => {
   line.split('').forEach((cubeState, x) => {
     if (cubeState === '#') {
       actives.add(`${x}|${y}|0`);

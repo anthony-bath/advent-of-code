@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 14, 2];
 
-const salt = read(YEAR, DAY, PART, { splitBy: null });
+const salt = readOld(YEAR, DAY, PART, { splitBy: null });
 
 const keys = [];
 const hashes = {};

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 1, 2];
 
-const masses = read(YEAR, DAY, PART).map((m) => Number(m));
+const masses = readOld(YEAR, DAY, PART).map((m) => Number(m));
 let result = 0;
 
 while (masses.length) {

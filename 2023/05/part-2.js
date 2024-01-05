@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 5, 2];
 
-const lines = read(YEAR, DAY, PART);
+const lines = readOld(YEAR, DAY, PART);
 
 const seedData = lines[0].match(/\d+/g).map((n) => Number(n));
 const seedRanges = [];

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 5, 1];
 
-const maze = read(YEAR, DAY, PART).map((n) => Number(n));
+const maze = readOld(YEAR, DAY, PART).map((n) => Number(n));
 
 let location = 0;
 let steps = 0;

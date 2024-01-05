@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 16, 1];
 
-const sequence = read(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
+const sequence = readOld(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
 
 const basePattern = [0, 1, 0, -1];
 const patternsByPosition = new Map();

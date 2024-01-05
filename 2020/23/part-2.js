@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 23, 2];
 
@@ -10,7 +10,7 @@ class Node {
   }
 }
 
-const input = read(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
+const input = readOld(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
 const cups = [];
 
 cups[input[0]] = new Node(input[0]);

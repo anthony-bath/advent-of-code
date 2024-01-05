@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 15, 1];
 
@@ -17,7 +17,7 @@ class Sensor {
 
 const beacons = {};
 
-const sensors = read(YEAR, DAY, PART).map((line) => {
+const sensors = readOld(YEAR, DAY, PART).map((line) => {
   const [sx, sy, bx, by] = line.match(digits).map((n) => parseInt(n));
 
   if (by === SEARCH_Y) {

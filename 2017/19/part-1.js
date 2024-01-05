@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 19, 2];
 
-const layout = read(YEAR, DAY, PART).map((line) => line.split(''));
+const layout = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const DIR = {
   NORTH: 0,

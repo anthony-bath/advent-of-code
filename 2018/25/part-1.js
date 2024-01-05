@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 25, 1];
 
@@ -20,7 +20,7 @@ class Point4D {
   }
 }
 
-const points = read(YEAR, DAY, PART).map(
+const points = readOld(YEAR, DAY, PART).map(
   (line) => new Point4D(line.match(/-?\d+/g).map((n) => Number(n)))
 );
 

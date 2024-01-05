@@ -1,11 +1,11 @@
 import { printTextGrid } from '../../utilities/grid.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 10, 1];
 
 const particles = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [x, y, xv, yv] = line.match(/-?\d+/g).map((n) => Number(n));
   particles.push({ x, y, xv, yv });
 });

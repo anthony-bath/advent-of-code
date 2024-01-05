@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 11, 2];
 
-let grid = read(YEAR, DAY, PART).map((row) =>
+let grid = readOld(YEAR, DAY, PART).map((row) =>
   row
     .trim()
     .split('')

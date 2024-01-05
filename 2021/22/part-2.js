@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 // NB. May require --max-old-space-size=8192 to run
 
@@ -8,7 +8,7 @@ const X_VALUES = [];
 const Y_VALUES = [];
 const Z_VALUES = [];
 
-const instructions = read(YEAR, DAY, PART).map((line) => {
+const instructions = readOld(YEAR, DAY, PART).map((line) => {
   const range = line.match(/-?\d+/g).map((n) => Number(n));
   let [x1, x2, y1, y2, z1, z2] = range;
 

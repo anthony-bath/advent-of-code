@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Elf, NORTH_MOVES, SOUTH_MOVES, WEST_MOVES, EAST_MOVES, ALL_MOVES } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 23, 2];
 
 const elves = [];
 
-read(YEAR, DAY, PART).forEach((line, y) => {
+readOld(YEAR, DAY, PART).forEach((line, y) => {
   line.split('').forEach((cell, x) => {
     if (cell === '.') return;
     elves.push(new Elf([x, y]));

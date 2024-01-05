@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 2, 1];
 
@@ -10,7 +10,7 @@ const MAXES = {
 
 const expr = /(?<count>\d+)\s(?<color>\w+)/g;
 
-const total = read(YEAR, DAY, PART).reduce((total, game) => {
+const total = readOld(YEAR, DAY, PART).reduce((total, game) => {
   const id = Number(game.match(/\d+/g)[0]);
   let possible = true;
   let match;

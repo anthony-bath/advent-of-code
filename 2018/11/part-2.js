@@ -1,9 +1,9 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 11, 2];
 
-const gridSerialNumber = Number(read(YEAR, DAY, PART));
+const gridSerialNumber = Number(readOld(YEAR, DAY, PART));
 
 const SIZE = 300;
 const grid = [];

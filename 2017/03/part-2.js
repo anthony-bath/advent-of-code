@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 3, 1];
 
-const targetValue = Number(read(YEAR, DAY, PART));
+const targetValue = Number(readOld(YEAR, DAY, PART));
 
 const coords = new Map();
 

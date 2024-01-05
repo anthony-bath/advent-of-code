@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 
 const [YEAR, DAY, PART] = [2019, 2, 2];
 
 const TARGET = 19690720;
 
-const input = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+const input = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 let noun;
 let verb;

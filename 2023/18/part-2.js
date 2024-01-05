@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { shoelace } from '../../utilities/math.js';
 
 const [YEAR, DAY, PART] = [2023, 18, 2];
@@ -7,7 +7,7 @@ const expr = /\(#(?<dist>[a-f0-9]{5})(?<dir>\d)\)/;
 let totalSteps = 0;
 let points = [[0, 0]];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { dist, dir } = line.match(expr).groups;
   const distance = parseInt(dist, 16);
   const [x, y] = points[points.length - 1];

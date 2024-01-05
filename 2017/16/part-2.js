@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 16, 2];
 
-const moves = read(YEAR, DAY, PART, { splitBy: ',' });
+const moves = readOld(YEAR, DAY, PART, { splitBy: ',' });
 let programs = Array.from({ length: 16 }).map((_, i) => String.fromCharCode(i + 97));
 
 function swap(l1, l2) {

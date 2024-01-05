@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 8, 1];
 
@@ -7,7 +7,7 @@ const HEIGHT = 6;
 
 const layers = {};
 
-read(YEAR, DAY, PART, { splitBy: '' }).forEach((pixel, i) => {
+readOld(YEAR, DAY, PART, { splitBy: '' }).forEach((pixel, i) => {
   const layer = Math.floor(i / (WIDTH * HEIGHT));
 
   if (!layers[layer]) {

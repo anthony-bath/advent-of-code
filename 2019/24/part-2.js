@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 24, 2];
 
-const tile = read(YEAR, DAY, PART).map((line) => line.split(''));
+const tile = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const SIZE = tile.length;
 const MID = Math.floor(SIZE / 2);

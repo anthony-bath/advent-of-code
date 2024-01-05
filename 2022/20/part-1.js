@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { moveNodeForward, moveNodeBackward, getValues, Node } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 20, 1];
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 const nodes = input.map((value) => new Node(Number(value)));
 
 const LENGTH = nodes.length;

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 19, 2];
 
-const lines = read(YEAR, DAY, PART);
+const lines = readOld(YEAR, DAY, PART);
 const workflows = new Map();
 const expr = /(?<name>\w+)\{(?<ruleList>.*)\}/;
 const indexByProperty = { x: 0, m: 1, a: 2, s: 3 };

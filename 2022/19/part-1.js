@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 19, 1];
 
@@ -12,7 +12,7 @@ const TYPE = {
   GEODE: 3,
 };
 
-const blueprints = read(YEAR, DAY, PART).map((line) => {
+const blueprints = readOld(YEAR, DAY, PART).map((line) => {
   const {
     id,
     oreRobotOreCost,

@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 9, 2];
 
 const TARGET = 556543474; //part-1 result
 
-const input = read(YEAR, DAY, PART).map((n) => Number(n));
+const input = readOld(YEAR, DAY, PART).map((n) => Number(n));
 
 let sum = input[0] + input[1];
 let start = 0;

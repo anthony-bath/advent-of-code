@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 16, 2];
 
-const fullPacket = read(YEAR, DAY, PART, { splitBy: null });
+const fullPacket = readOld(YEAR, DAY, PART, { splitBy: null });
 
 const bitsByHex = new Map([
   ['0', '0000'],

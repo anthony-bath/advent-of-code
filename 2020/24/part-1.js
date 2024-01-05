@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 24, 1];
 
@@ -15,7 +15,7 @@ const deltas = {
 
 const tiles = new Set();
 
-read(YEAR, DAY, PART).forEach((path) => {
+readOld(YEAR, DAY, PART).forEach((path) => {
   const moves = path.match(expr);
   let [x, y] = [0, 0];
 

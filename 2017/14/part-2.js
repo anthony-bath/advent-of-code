@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { knotHash } from './common.js';
 
 const [YEAR, DAY, PART] = [2017, 14, 1];
 
-const lengths = [...read(YEAR, DAY, PART, { splitBy: null }).trim()]
+const lengths = [...readOld(YEAR, DAY, PART, { splitBy: null }).trim()]
   .map((c) => c.charCodeAt(0))
   .concat('-'.charCodeAt(0));
 

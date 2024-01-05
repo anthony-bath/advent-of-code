@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 6, 2];
 
-const banks = read(YEAR, DAY, PART, { splitBy: '\t' }).map((n) => Number(n));
+const banks = readOld(YEAR, DAY, PART, { splitBy: '\t' }).map((n) => Number(n));
 
 const seen = {};
 let cycles = 0;

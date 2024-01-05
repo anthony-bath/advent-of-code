@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 1, 1];
 
@@ -26,7 +26,7 @@ let x = 0;
 let y = 0;
 let dir = DIR.NORTH;
 
-read(YEAR, DAY, PART, { splitBy: ', ' }).forEach((movement) => {
+readOld(YEAR, DAY, PART, { splitBy: ', ' }).forEach((movement) => {
   const turn = movement.substring(0, 1);
   const steps = Number(movement.slice(1));
 

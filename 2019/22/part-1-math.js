@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { modInv, modPow } from 'bigint-crypto-utils';
 
 // Following along with tutorial at https://codeforces.com/blog/entry/72593
 
 const [YEAR, DAY, PART] = [2019, 22, 1];
 
-const lcfs = read(YEAR, DAY, PART).map((line) => {
+const lcfs = readOld(YEAR, DAY, PART).map((line) => {
   if (line.startsWith('deal with')) {
     return [BigInt(Number(line.match(/-?\d+/))), 0n];
   } else if (line.startsWith('deal into')) {

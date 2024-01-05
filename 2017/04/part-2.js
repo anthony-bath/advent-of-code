@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 4, 2];
 
@@ -12,7 +12,7 @@ function isAnagram(word1, word2) {
 
 let validCount = 0;
 
-read(YEAR, DAY, PART).forEach((passphrase) => {
+readOld(YEAR, DAY, PART).forEach((passphrase) => {
   const words = passphrase.split(' ');
 
   let isValid = true;

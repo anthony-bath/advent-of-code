@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 5];
 
@@ -7,7 +7,7 @@ export const loadData = (part) => {
   let yMax = 0;
   const lines = [];
 
-  read(YEAR, DAY, part).forEach((row) => {
+  readOld(YEAR, DAY, part).forEach((row) => {
     const [start, end] = row.split(' -> ');
     const [x1, y1] = start.split(',').map((n) => parseInt(n));
     const [x2, y2] = end.split(',').map((n) => parseInt(n));

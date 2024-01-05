@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 6, 1];
 
@@ -6,7 +6,7 @@ const grid = Array(1000)
   .fill()
   .map(() => Array(1000).fill(false));
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [x1, y1, x2, y2] = line.match(/\d+/g).map((n) => Number(n));
 
   for (let x = x1; x <= x2; x++) {

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 20, 2];
 
-const ranges = read(YEAR, DAY, PART).map((line) => {
+const ranges = readOld(YEAR, DAY, PART).map((line) => {
   const [start, end] = line.split('-').map((n) => Number(n));
   return { start, end };
 });

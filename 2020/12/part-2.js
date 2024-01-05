@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 12, 2];
 
@@ -9,7 +9,7 @@ const expr = /(?<instruction>[NSEWFLR])(?<amount>\d+)/;
 const ship = { x: X_START, y: Y_START };
 const waypoint = { x: 10, y: -1 };
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   let { instruction, amount } = line.match(expr).groups;
   amount = Number(amount);
 

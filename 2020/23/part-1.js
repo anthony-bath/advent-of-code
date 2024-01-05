@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 23, 1];
 
-let cups = read(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
+let cups = readOld(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
 
 const MOVES = 100;
 let index = 0;

@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { GAME_DATA } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 22, 1];
 
-const [bossHealth, bossDamage] = read(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/)));
+const [bossHealth, bossDamage] = readOld(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/)));
 
 const {
   PLAYER_HEALTH,

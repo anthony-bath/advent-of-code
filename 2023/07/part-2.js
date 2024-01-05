@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { PlayerFactory, HandFactory, sortPlayers } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 7, 2];
@@ -6,7 +6,7 @@ const [YEAR, DAY, PART] = [2023, 7, 2];
 const handFactory = new HandFactory(true);
 const playerFactory = new PlayerFactory(handFactory);
 
-const winnings = read(YEAR, DAY, PART)
+const winnings = readOld(YEAR, DAY, PART)
   .map((line) => {
     const [cardData, bid] = line.split(' ');
     return playerFactory.createPlayer(cardData.split(''), bid);

@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 9, 2];
 
-const input = read(YEAR, DAY, PART, { splitBy: '' });
+const input = readOld(YEAR, DAY, PART, { splitBy: '' });
 
 function getDecompressedLength(input) {
   if (input.indexOf('(') === -1) {

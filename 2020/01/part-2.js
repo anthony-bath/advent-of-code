@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 1, 2];
 
-const numbers = read(YEAR, DAY, PART).map((n) => parseInt(n, 10));
+const numbers = readOld(YEAR, DAY, PART).map((n) => parseInt(n, 10));
 
 function findTwoNumbersToSum(target, array) {
   for (const number of array) {

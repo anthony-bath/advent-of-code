@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 12, 1];
 
@@ -11,7 +11,7 @@ class Program {
 
 const programs = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [id, childrenIdsRaw] = line.split(' <-> ');
   const childrenIds = childrenIdsRaw.split(', ').map((n) => Number(n));
 

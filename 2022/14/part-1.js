@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 14, 1];
 
@@ -10,7 +10,7 @@ const AIR = '.';
 
 const cave = [...Array(HEIGHT)].map((_) => Array(WIDTH).fill(AIR));
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const points = line.split(' -> ').map((coords) => {
     const [x, y] = coords.split(',').map((n) => parseInt(n, 10));
     return { x, y };

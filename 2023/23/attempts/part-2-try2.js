@@ -1,9 +1,9 @@
 import { printGrid } from '../../../utilities/grid.js';
-import { output, read, write } from '../../../utilities/io.js';
+import { output, readOld, write } from '../../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 23, 2];
 
-const grid = read(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
+const grid = readOld(YEAR, DAY, PART, { test: true }).map((line) => line.split(''));
 const W = grid[0].length;
 const H = grid.length;
 

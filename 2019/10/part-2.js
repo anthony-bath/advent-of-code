@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Point, Line } from './common.js';
 
 const [YEAR, DAY, PART] = [2019, 10, 2];
@@ -6,7 +6,7 @@ const [YEAR, DAY, PART] = [2019, 10, 2];
 const lines = [];
 const station = new Point(17, 22); // Part 1 Solution
 
-read(YEAR, DAY, PART).forEach((line, y) =>
+readOld(YEAR, DAY, PART).forEach((line, y) =>
   line.split('').forEach((cell, x) => {
     if (x === station.x && y === station.y) return;
     if (cell === '#') {

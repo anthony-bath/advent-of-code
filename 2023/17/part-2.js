@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { DIR, deltas, key, insertIntoSortedQueue } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 17, 2];
 
-const grid = read(YEAR, DAY, PART).map((line) => line.split('').map((n) => Number(n)));
+const grid = readOld(YEAR, DAY, PART).map((line) => line.split('').map((n) => Number(n)));
 
 const W = grid[0].length;
 const H = grid.length;

@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2018, 13];
 
@@ -133,7 +133,7 @@ export class Cart {
 export function loadData(part) {
   let carts = [];
 
-  const track = read(YEAR, DAY, part).map((line, y) => {
+  const track = readOld(YEAR, DAY, part).map((line, y) => {
     const parts = line.split('');
 
     for (let x = 0; x < parts.length; x++) {

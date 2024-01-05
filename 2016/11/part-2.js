@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 11, 1];
 
-const input = read(YEAR, DAY, PART);
+const input = readOld(YEAR, DAY, PART);
 
 const expr = /(\w+ generator|\w+-compatible microchip)/g;
 const data = [];

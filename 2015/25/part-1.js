@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 25, 1];
 
-let [row, col] = read(YEAR, DAY, PART, { splitBy: null })
+let [row, col] = readOld(YEAR, DAY, PART, { splitBy: null })
   .match(/\d+/g)
   .map((n) => Number(n));
 

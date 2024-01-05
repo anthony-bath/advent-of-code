@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 19, 2];
 
-const n = Number(read(YEAR, DAY, PART, { splitBy: null }));
+const n = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
 
 class Elf {
   constructor(id, prev) {

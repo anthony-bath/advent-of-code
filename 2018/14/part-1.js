@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Recipe, advance } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 14, 1];
 
-const RECIPE_COUNT = Number(read(YEAR, DAY, PART));
+const RECIPE_COUNT = Number(readOld(YEAR, DAY, PART));
 
 const recipes = [new Recipe(3), new Recipe(7)];
 let one = recipes[0];

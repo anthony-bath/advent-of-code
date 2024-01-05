@@ -1,12 +1,12 @@
 import { printGrid } from '../../utilities/grid.js';
-import { output, read, write } from '../../utilities/io.js';
+import { output, readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 18, 1];
 
 let position = { x: 0, y: 0 };
 let [xMin, xMax, yMin, yMax] = [0, 0, 0, 0];
 
-const instructions = read(YEAR, DAY, PART).map((line) => {
+const instructions = readOld(YEAR, DAY, PART).map((line) => {
   const [direction, distanceString] = line.split(' ');
   const distance = Number(distanceString);
 

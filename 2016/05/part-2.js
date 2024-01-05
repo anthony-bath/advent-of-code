@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { createHash } from 'node:crypto';
 
 const [YEAR, DAY, PART] = [2016, 5, 2];
 
-const doorId = read(YEAR, DAY, PART, { splitBy: null });
+const doorId = readOld(YEAR, DAY, PART, { splitBy: null });
 const passwordChars = new Map();
 const positions = [...Array(8).keys()];
 

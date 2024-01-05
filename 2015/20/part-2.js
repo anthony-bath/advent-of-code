@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { factors } from '../../utilities/math.js';
 
 const [YEAR, DAY, PART] = [2015, 20, 2];
 
-const input = Number(read(YEAR, DAY, PART, { splitBy: null }));
+const input = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
 
 let houseNumber = 0;
 let presents = 0;

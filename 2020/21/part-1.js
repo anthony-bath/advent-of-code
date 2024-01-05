@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 21, 1];
 
@@ -15,7 +15,7 @@ const recipes = [];
 const possibleIngredientsByAllergen = new Map();
 const safeIngredients = new Set();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { ingredientList, allergenList } = line.match(expr).groups;
   const ingredients = ingredientList.split(' ');
   const allergens = allergenList.split(', ');

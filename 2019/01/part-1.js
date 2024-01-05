@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 1, 1];
 
-const result = read(YEAR, DAY, PART).reduce(
+const result = readOld(YEAR, DAY, PART).reduce(
   (fuel, mass) => fuel + (Math.floor(Number(mass) / 3) - 2),
   0
 );

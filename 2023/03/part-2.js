@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { getPositions } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 3, 2];
 
-const rows = read(YEAR, DAY, PART);
+const rows = readOld(YEAR, DAY, PART);
 const H = rows.length;
 const W = rows[0].length;
 

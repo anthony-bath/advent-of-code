@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 1, 1];
 
 let currentElfTotal = 0;
 let currentMax = -Infinity;
 
-read(YEAR, DAY, PART).forEach((carryValue) => {
+readOld(YEAR, DAY, PART).forEach((carryValue) => {
   if (!carryValue) {
     if (currentElfTotal > currentMax) {
       currentMax = currentElfTotal;

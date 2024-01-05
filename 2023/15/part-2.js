@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { hash } from './common.js';
 
 const [YEAR, DAY, PART] = [2023, 15, 2];
@@ -9,7 +9,7 @@ const boxes = Array(256)
 
 const expr = /(?<label>\w+).(?<foc>\d?)/;
 
-read(YEAR, DAY, PART, { splitBy: ',' }).forEach((step) => {
+readOld(YEAR, DAY, PART, { splitBy: ',' }).forEach((step) => {
   const { label, foc } = step.match(expr).groups;
   const boxNumber = hash(label);
 

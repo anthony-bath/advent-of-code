@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 9, 1];
 
@@ -7,7 +7,7 @@ const expr = /(?<source>\w+) to (?<destination>\w+) = (?<distance>\d+)/;
 const valueByName = new Map();
 const connections = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { source, destination, distance } = line.match(expr).groups;
   const connection = { location: destination, distance: Number(distance) };
   const reciprocalConnection = { location: source, distance: Number(distance) };

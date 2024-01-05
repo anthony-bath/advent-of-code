@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { flatten, rotateGrid, getUpdatedGrid } from './common.js';
 
 const [YEAR, DAY, PART] = [2017, 21, 1];
 
 const rules = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [input, output] = line.split(' => ');
   const inputData = input.split('/').map((row) => row.split(''));
   const outputData = output.split('/').map((row) => row.split(''));

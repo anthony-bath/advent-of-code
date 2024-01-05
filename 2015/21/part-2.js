@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { loadouts, simulate } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 21, 2];
 
-const bossStats = read(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/)));
+const bossStats = readOld(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/)));
 
 loadouts.sort((a, b) => b.cost - a.cost);
 let result = null;

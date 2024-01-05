@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 4, 1];
 
-const [start, end] = read(YEAR, DAY, PART, { splitBy: '-' }).map((n) => Number(n));
+const [start, end] = readOld(YEAR, DAY, PART, { splitBy: '-' }).map((n) => Number(n));
 
 // Negative Lookbehind & Negative Lookhead
 // Only matches adjacent numbers if the number immediately before or after is not the same

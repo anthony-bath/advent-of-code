@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Knot } from './common.js';
 
 const [YEAR, DAY, PART] = [2022, 9, 2];
 
-const directions = read(YEAR, DAY, PART)
+const directions = readOld(YEAR, DAY, PART)
   .map((line) => {
     const [direction, distance] = line.split(' ');
     return direction.repeat(parseInt(distance)).split('');

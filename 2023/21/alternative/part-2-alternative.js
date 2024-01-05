@@ -1,10 +1,10 @@
 // Followed the solution from https://www.youtube.com/watch?v=9UOMZSL0JTg
 
-import { read, write } from '../../../utilities/io.js';
+import { readOld, write } from '../../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 21, 2];
 
-const grid = read(YEAR, DAY, PART).map((line) => line.split(''));
+const grid = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 const SIZE = grid.length;
 
 let start;

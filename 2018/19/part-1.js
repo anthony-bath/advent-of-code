@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { commandsByName } from '../16/common.js';
 
 const [YEAR, DAY, PART] = [2018, 19, 1];
@@ -6,7 +6,7 @@ const [YEAR, DAY, PART] = [2018, 19, 1];
 let IP_REGISTER;
 const instructions = [];
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (line.startsWith('#')) {
     IP_REGISTER = Number(line.match(/\d+/));
   } else {

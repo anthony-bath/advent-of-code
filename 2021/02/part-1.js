@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 2, 1];
 
-const data = read(YEAR, DAY, PART).map((row) => {
+const data = readOld(YEAR, DAY, PART).map((row) => {
   const [direction, amount] = row.split(' ');
   return [direction, Number(amount)];
 });

@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { increment, hasBadLetters, hasSequence, hasTwoDoubles } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 11, 1];
 
-const currentPassword = read(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
+const currentPassword = readOld(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
 const nextPasswords = [];
 
 do {

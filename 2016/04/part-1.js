@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 4, 1];
 
@@ -13,7 +13,7 @@ function checksumSort([l1, c1], [l2, c2]) {
   return l1 < l2 ? -1 : 1;
 }
 
-const result = read(YEAR, DAY, PART).reduce((sum, line) => {
+const result = readOld(YEAR, DAY, PART).reduce((sum, line) => {
   const parts = line.split('-');
   const last = parts.pop();
   const sector = Number(last.match(sectorExpression)[0]);

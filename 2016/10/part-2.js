@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 10, 2];
 
@@ -34,7 +34,7 @@ const valueExpr = /\d+/g;
 const instructionExpr =
   /bot (?<source>\d+) gives low to (?<lowTarget>(bot|output)) (?<lowTargetNumber>\d+) and high to (?<highTarget>(bot|output)) (?<highTargetNumber>\d+)/;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   if (line.startsWith('value')) {
     const [n1, n2] = line.match(valueExpr).map((n) => Number(n));
 

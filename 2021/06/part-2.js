@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 6, 2];
 
 const fishCountByAge = Array(9).fill(0);
 
-read(YEAR, DAY, PART, { splitBy: ',' }).forEach((n) => fishCountByAge[n]++);
+readOld(YEAR, DAY, PART, { splitBy: ',' }).forEach((n) => fishCountByAge[n]++);
 
 const DAYS = 256;
 

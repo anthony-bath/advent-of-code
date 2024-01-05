@@ -1,9 +1,9 @@
 import { printGrid } from '../../utilities/grid.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 18, 1];
 
-const input = read(YEAR, DAY, PART, { splitBy: '' });
+const input = readOld(YEAR, DAY, PART, { splitBy: '' });
 
 const trapPatterns = ['^^.', '.^^', '^..', '..^'];
 

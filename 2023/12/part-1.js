@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 12, 1];
 
@@ -23,7 +23,7 @@ function generateCombinations(str) {
   return combinations;
 }
 
-const count = read(YEAR, DAY, PART).reduce((count, line) => {
+const count = readOld(YEAR, DAY, PART).reduce((count, line) => {
   const [arrangement, springList] = line.split(' ');
   const springCounts = springList.match(/\d+/g);
 

@@ -1,9 +1,9 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 4];
 
 export const loadData = (part) => {
-  const input = read(YEAR, DAY, part);
+  const input = readOld(YEAR, DAY, part);
   const numbers = input[0].split(',').map((x) => Number(x));
 
   const boards = [];

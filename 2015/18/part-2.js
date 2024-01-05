@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { getOnNeighborCount } from './common.js';
 
 const [YEAR, DAY, PART] = [2015, 18, 2];
 
-const grid = read(YEAR, DAY, PART).map((line) => line.split(''));
+const grid = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const corners = [
   [0, 0],

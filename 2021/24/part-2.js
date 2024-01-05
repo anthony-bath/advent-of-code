@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 24, 2];
 
-read(YEAR, DAY, PART);
+readOld(YEAR, DAY, PART);
 
 let type1 = Array(7).fill(1);
 

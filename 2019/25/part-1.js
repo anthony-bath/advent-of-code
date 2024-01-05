@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 import { getCombinations } from '../../utilities/array.js';
 
 const [YEAR, DAY, PART] = [2019, 25, 1];
 
-const program = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+const program = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 function toASCIICommand(text) {
   return [...text.split('').map((c) => c.charCodeAt(0)), 10];

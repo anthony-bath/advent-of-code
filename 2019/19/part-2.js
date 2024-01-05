@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 
 const [YEAR, DAY, PART] = [2019, 19, 2];
 
-const program = read(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+const program = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
 
 function scan(x, y) {
   return execute({ pointer: 0, program: [...program], relativeBase: 0 }, [x, y]);

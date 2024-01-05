@@ -1,9 +1,9 @@
 import { pairs } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 24, 1];
 
-const hailstones = read(YEAR, DAY, PART).map((line) => line.match(/-?\d+/g).map(Number));
+const hailstones = readOld(YEAR, DAY, PART).map((line) => line.match(/-?\d+/g).map(Number));
 const combinations = pairs(hailstones);
 
 const MIN_POS = 200000000000000;

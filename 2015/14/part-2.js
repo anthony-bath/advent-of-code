@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 14, 2];
 
@@ -29,7 +29,7 @@ class Reindeer {
 
 const reindeers = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const [name] = line.split(' ');
   const [speed, travelTime, restTime] = line.match(/\d+/g).map((n) => Number(n));
 

@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 export function loadData(year, day, part) {
   let [yMax, xMax] = [-Infinity, -Infinity];
@@ -6,7 +6,7 @@ export function loadData(year, day, part) {
   const blockersByRow = {};
   const allStones = [];
 
-  read(year, day, part).forEach((line, y) => {
+  readOld(year, day, part).forEach((line, y) => {
     const row = line.split('');
 
     for (let x = 0; x < line.length; x++) {

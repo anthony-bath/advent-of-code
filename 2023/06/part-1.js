@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { solveQuadratic } from '../../utilities/math.js';
 
 const [YEAR, DAY, PART] = [2023, 6, 1];
 
-const lines = read(YEAR, DAY, PART);
+const lines = readOld(YEAR, DAY, PART);
 const times = lines[0].match(/\d+/g).map((n) => Number(n));
 const distances = lines[1].match(/\d+/g).map((n) => Number(n));
 

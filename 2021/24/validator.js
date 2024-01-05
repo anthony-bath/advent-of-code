@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 24, 3];
 
-const instructions = read(YEAR, DAY, PART);
+const instructions = readOld(YEAR, DAY, PART);
 const inputs = (62911941716111)
   .toString()
   .split('')

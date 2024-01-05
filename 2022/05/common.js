@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 5];
 
@@ -12,7 +12,7 @@ export function loadData(part) {
   const instructions = [];
   let parsedData = false;
 
-  read(YEAR, DAY, part).forEach((line) => {
+  readOld(YEAR, DAY, part).forEach((line) => {
     if (!line) return;
     if (!parsedData && line === END_DATA) {
       parsedData = true;

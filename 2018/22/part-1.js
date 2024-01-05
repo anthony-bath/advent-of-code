@@ -1,9 +1,9 @@
 import { sum } from '../../utilities/array.js';
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 22, 1];
 
-const [depth, [tx, ty]] = read(YEAR, DAY, PART).map((line) => {
+const [depth, [tx, ty]] = readOld(YEAR, DAY, PART).map((line) => {
   if (line.startsWith('depth')) {
     return Number(line.match(/\d+/));
   } else {

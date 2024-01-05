@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 11];
 
@@ -86,7 +86,7 @@ class Item {
 }
 
 export function loadMonkeys(part) {
-  const input = read(YEAR, DAY, part);
+  const input = readOld(YEAR, DAY, part);
 
   const numberExpr = new RegExp(/\d+/g);
   const monkeys = [];

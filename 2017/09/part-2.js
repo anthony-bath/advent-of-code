@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 9, 2];
 
 const expr = /(!.)/g;
 
-const input = read(YEAR, DAY, PART, { splitBy: null }).replaceAll(expr, '').split('');
+const input = readOld(YEAR, DAY, PART, { splitBy: null }).replaceAll(expr, '').split('');
 
 let inGarbage = false;
 let count = 0;

@@ -1,4 +1,4 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 15];
 
@@ -7,7 +7,7 @@ const DIMENSION = 100;
 export const loadData = (part) => {
   const partialGrid = [];
 
-  read(YEAR, DAY, part).forEach((row) =>
+  readOld(YEAR, DAY, part).forEach((row) =>
     partialGrid.push(
       row
         .trim()

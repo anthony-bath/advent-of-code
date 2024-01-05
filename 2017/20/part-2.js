@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 20, 2];
 
-let particles = read(YEAR, DAY, PART).map((line, id) => {
+let particles = readOld(YEAR, DAY, PART).map((line, id) => {
   const [px, py, pz, vx, vy, vz, ax, ay, az] = line.match(/-?\d+/g).map((n) => Number(n));
   return { px, py, pz, vx, vy, vz, ax, ay, az, id };
 });

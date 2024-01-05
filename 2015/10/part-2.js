@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 10, 1];
 
-const input = read(YEAR, DAY, PART, { splitBy: null });
+const input = readOld(YEAR, DAY, PART, { splitBy: null });
 const expr = /(\d)\1{0,}/g;
 
 function lookAndSay(sequence) {

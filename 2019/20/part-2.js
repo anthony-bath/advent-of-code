@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 20, 2];
 
-const maze = read(YEAR, DAY, PART).map((line) => line.split(''));
+const maze = readOld(YEAR, DAY, PART).map((line) => line.split(''));
 
 const portalPointsByLabel = {};
 const portalExpr = /[A-Z]/;

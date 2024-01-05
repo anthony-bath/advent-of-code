@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 8, 1];
 
-const lines = read(YEAR, DAY, PART);
+const lines = readOld(YEAR, DAY, PART);
 const directions = lines[0].split('');
 
 const expr = /(?<node>\w{3}) = \((?<L>\w{3}), (?<R>\w{3})\)/;

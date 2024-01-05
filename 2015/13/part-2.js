@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2015, 13, 2];
 
@@ -7,7 +7,7 @@ const expr =
 
 const people = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { person, type, diff, next } = line.match(expr).groups;
 
   if (!people.has(person)) {

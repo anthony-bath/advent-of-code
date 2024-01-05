@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Point3D, manhattan3D } from '../../utilities/math.js';
 
 const [YEAR, DAY, PART] = [2018, 23, 1];
@@ -10,7 +10,7 @@ class Robot {
   }
 }
 
-const robots = read(YEAR, DAY, PART)
+const robots = readOld(YEAR, DAY, PART)
   .map((line) => {
     const [x, y, z, r] = line.match(/-?\d+/g).map((n) => Number(n));
     return new Robot(new Point3D(x, y, z), r);

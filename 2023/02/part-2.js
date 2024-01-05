@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 2, 2];
 
 const expr = /(?<count>\d+)\s(?<color>\w+)/g;
 
-const total = read(YEAR, DAY, PART).reduce((total, game) => {
+const total = readOld(YEAR, DAY, PART).reduce((total, game) => {
   const counts = { red: 0, green: 0, blue: 0 };
   let match;
 

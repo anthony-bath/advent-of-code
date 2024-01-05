@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2021, 22, 1];
 
-const input = read(YEAR, DAY, PART).slice(0, 20);
+const input = readOld(YEAR, DAY, PART).slice(0, 20);
 
 const reactor = Array(100)
   .fill(0)

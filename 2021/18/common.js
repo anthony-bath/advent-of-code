@@ -1,9 +1,9 @@
-import { read } from '../../utilities/io.js';
+import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2021, 18];
 
 export const loadData = (part) => {
-  const fishData = read(YEAR, DAY, part).map((line) => JSON.parse(line.trim()));
+  const fishData = readOld(YEAR, DAY, part).map((line) => JSON.parse(line.trim()));
   return fishData.map((data) => new Fish(data, 1));
 };
 

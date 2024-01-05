@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2022, 4, 1];
 
-const overlappingPairCount = read(YEAR, DAY, PART).reduce((count, ranges) => {
+const overlappingPairCount = readOld(YEAR, DAY, PART).reduce((count, ranges) => {
   const [r1, r2] = ranges.split(',');
   const [r1Start, r1End] = r1.split('-').map((n) => parseInt(n));
   const [r2Start, r2End] = r2.split('-').map((n) => parseInt(n));

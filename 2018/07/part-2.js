@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 7, 2];
 
 const steps = {};
 const expr = /Step (?<dependency>[A-Z]) must be finished before step (?<step>[A-Z]) can begin/;
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { dependency, step } = line.match(expr).groups;
 
   if (!steps[dependency]) {

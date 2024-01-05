@@ -1,10 +1,10 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2017, 22, 2];
 
 const grid = new Map();
 
-read(YEAR, DAY, PART).forEach((line, y) => {
+readOld(YEAR, DAY, PART).forEach((line, y) => {
   line.split('').map((cell, x) => grid.set(`${x}|${y}`, cell));
 });
 

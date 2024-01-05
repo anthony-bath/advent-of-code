@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { Recipe, advance } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 14, 2];
 
-const scoreSequence = read(YEAR, DAY, PART)[0];
+const scoreSequence = readOld(YEAR, DAY, PART)[0];
 
 const start = Number(scoreSequence.at(0));
 const end = Number(scoreSequence.slice(-1));

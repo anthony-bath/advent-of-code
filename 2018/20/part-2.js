@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { getData } from './common.js';
 
 const [YEAR, DAY, PART] = [2018, 20, 2];
 
-const input = read(YEAR, DAY, PART, { splitBy: null }).replace(/[\^\$]/g, '');
+const input = readOld(YEAR, DAY, PART, { splitBy: null }).replace(/[\^\$]/g, '');
 const { map, xMin, xMax, yMin, yMax } = getData(input);
 
 const deltas = [

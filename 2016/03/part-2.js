@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2016, 3, 2];
 
-const values = read(YEAR, DAY, PART).map((line) => {
+const values = readOld(YEAR, DAY, PART).map((line) => {
   return line
     .trim()
     .split(/\s+/)

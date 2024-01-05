@@ -1,11 +1,11 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 4, 2];
 const WINNING_NUMBER_COUNT = 10;
 
 const copiesByCardId = {};
 
-const count = read(YEAR, DAY, PART).reduce((count, card) => {
+const count = readOld(YEAR, DAY, PART).reduce((count, card) => {
   const numbers = card.match(/\d+/g);
   const cardId = Number(numbers.shift());
   const winningNumbers = numbers.slice(0, WINNING_NUMBER_COUNT);

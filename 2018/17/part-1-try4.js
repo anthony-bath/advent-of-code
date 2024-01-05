@@ -1,4 +1,4 @@
-import { output, read, write } from '../../utilities/io.js';
+import { output, readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 17, 1];
 
@@ -7,7 +7,7 @@ const expr = /(x|y)=(?<n1>\d+), (x|y)=(?<n2>\d+)..(?<n3>\d+)/;
 let [yMin, yMax, xMin, xMax] = [0, -Infinity, Infinity, -Infinity];
 const grid = new Map();
 
-read(YEAR, DAY, PART).forEach((line) => {
+readOld(YEAR, DAY, PART).forEach((line) => {
   const { n1, n2, n3 } = line.match(expr).groups;
 
   if (line.startsWith('y')) {

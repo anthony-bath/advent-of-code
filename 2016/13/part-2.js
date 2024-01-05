@@ -1,9 +1,9 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 import { getLocationType } from './common.js';
 
 const [YEAR, DAY, PART] = [2016, 13, 1];
 
-const offset = Number(read(YEAR, DAY, PART, { splitBy: null }));
+const offset = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
 
 const deltas = [
   [1, 0],

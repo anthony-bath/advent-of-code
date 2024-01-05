@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2023, 1, 1];
 
-const result = read(YEAR, DAY, PART).reduce((total, line) => {
+const result = readOld(YEAR, DAY, PART).reduce((total, line) => {
   const digits = line.match(/\d/g);
 
   if (digits.length === 1) {

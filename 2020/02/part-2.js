@@ -1,8 +1,8 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2020, 2, 2];
 
-const validCount = read(YEAR, DAY, PART).reduce((count, line) => {
+const validCount = readOld(YEAR, DAY, PART).reduce((count, line) => {
   const [range, req, password] = line.split(' ');
   const [position1, position2] = range.split('-').map((n) => parseInt(n));
   const requirement = req.replace(':', '');

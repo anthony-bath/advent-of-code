@@ -1,4 +1,4 @@
-import { read, write } from '../../utilities/io.js';
+import { readOld, write } from '../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2019, 22, 1];
 
@@ -26,7 +26,7 @@ function dealN(deck, n) {
   return dealt;
 }
 
-read(YEAR, DAY, PART).forEach((instruction) => {
+readOld(YEAR, DAY, PART).forEach((instruction) => {
   if (instruction.startsWith('cut')) {
     const [_, n] = instruction.split(' ');
     cutN(deck, Number(n));
