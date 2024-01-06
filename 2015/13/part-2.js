@@ -1,10 +1,10 @@
-export function part2(data) {
+export function part2({ lines }) {
   const expr =
     /(?<person>\w+) would (?<type>(gain|lose)) (?<diff>\d+) happiness units by sitting next to (?<next>\w+)./;
 
   const people = new Map();
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const { person, type, diff, next } = line.match(expr).groups;
 
     if (!people.has(person)) {

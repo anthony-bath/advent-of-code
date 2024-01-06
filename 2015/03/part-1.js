@@ -1,4 +1,4 @@
-export function part1(data) {
+export function part1({ data }) {
   const delta = { v: [0, 1], '^': [0, -1], '<': [-1, 0], '>': [1, 0] };
   const presentsByCoord = { '0|0': 1 };
   let [x, y] = [0, 0];

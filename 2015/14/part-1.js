@@ -1,7 +1,7 @@
-export function part1(data) {
+export function part1({ lines }) {
   const reindeers = [];
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const [name] = line.split(' ');
     const [speed, travelTime, restTime] = line.match(/\d+/g).map((n) => Number(n));
 

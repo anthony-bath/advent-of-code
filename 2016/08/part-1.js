@@ -1,4 +1,4 @@
-export function part1(data) {
+export function part1({ data }) {
   const WIDTH = 50;
   const HEIGHT = 6;
 

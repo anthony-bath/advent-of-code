@@ -1,23 +1,18 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  let [row, col] = data.match(/\d+/g).map((n) => Number(n));
+  let positionValue = ((row - 1) * row) / 2 + 1;
+  let colOffsetStart = row + 1;
 
-const [YEAR, DAY, PART] = [2015, 25, 1];
+  for (let i = 0; i < col - 1; i++) {
+    positionValue += colOffsetStart++;
+  }
 
-let [row, col] = readOld(YEAR, DAY, PART, { splitBy: null })
-  .match(/\d+/g)
-  .map((n) => Number(n));
+  let result = 20151125;
 
-let positionValue = ((row - 1) * row) / 2 + 1;
-let colOffsetStart = row + 1;
+  for (let value = 2; value <= positionValue; value++) {
+    result *= 252533;
+    result %= 33554393;
+  }
 
-for (let i = 0; i < col - 1; i++) {
-  positionValue += colOffsetStart++;
+  return result;
 }
-
-let result = 20151125;
-
-for (let value = 2; value <= positionValue; value++) {
-  result *= 252533;
-  result %= 33554393;
-}
-
-write(YEAR, DAY, PART, result);

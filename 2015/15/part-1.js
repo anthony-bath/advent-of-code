@@ -1,10 +1,10 @@
 import { sum } from '../../utilities/array.js';
 import { CookieTrait } from './common.js';
 
-export function part1(data) {
+export function part1({ lines }) {
   const traits = [];
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const factors = line.match(/-?\d+/g).map((n) => Number(n));
 
     if (traits.length === 0) {

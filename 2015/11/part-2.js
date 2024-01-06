@@ -1,6 +1,6 @@
 import { increment, hasBadLetters, hasSequence, hasTwoDoubles } from './common.js';
 
-export function part2(data) {
+export function part2({ data }) {
   const currentPassword = data.split('').map((c) => c.charCodeAt(0));
   const nextPasswords = [];
 

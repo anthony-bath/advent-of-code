@@ -1,6 +1,6 @@
 import { printGrid } from '../../utilities/grid.js';
 
-export function part2(data) {
+export function part2({ data }) {
   const WIDTH = 50;
   const HEIGHT = 6;
 

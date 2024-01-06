@@ -1,9 +1,9 @@
-export function part2(data) {
+export function part2({ lines }) {
   const grid = Array(1000)
     .fill()
     .map(() => Array(1000).fill(0));
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const [x1, y1, x2, y2] = line.match(/\d+/g).map((n) => Number(n));
 
     for (let x = x1; x <= x2; x++) {

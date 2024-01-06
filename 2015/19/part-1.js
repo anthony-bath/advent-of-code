@@ -1,47 +1,45 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const transformations = {};
+  let molecule;
 
-const [YEAR, DAY, PART] = [2015, 19, 1];
+  lines.forEach((line) => {
+    if (!line) return;
 
-const transformations = {};
-let molecule;
+    if (line.includes('=>')) {
+      const [source, transformed] = line.split(' => ');
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  if (!line) return;
+      if (!(source in transformations)) {
+        transformations[source] = [];
+      }
 
-  if (line.includes('=>')) {
-    const [source, transformed] = line.split(' => ');
-
-    if (!(source in transformations)) {
-      transformations[source] = [];
+      transformations[source].push(transformed);
+    } else {
+      molecule = line;
     }
+  });
 
-    transformations[source].push(transformed);
-  } else {
-    molecule = line;
-  }
-});
+  let possibles = new Set();
 
-let possibles = new Set();
+  for (const source in transformations) {
+    const possibleTransformations = transformations[source];
 
-for (const source in transformations) {
-  const possibleTransformations = transformations[source];
+    for (const possibleTransformation of possibleTransformations) {
+      let copy = molecule;
+      const expr = new RegExp(source, 'g');
 
-  for (const possibleTransformation of possibleTransformations) {
-    let copy = molecule;
-    const expr = new RegExp(source, 'g');
+      let match;
 
-    let match;
+      while ((match = expr.exec(copy))) {
+        const transformed = `${copy.substring(
+          0,
+          match.index
+        )}${possibleTransformation}${copy.substring(match.index + source.length)}`;
 
-    while ((match = expr.exec(copy))) {
-      const transformed = `${copy.substring(
-        0,
-        match.index
-      )}${possibleTransformation}${copy.substring(match.index + source.length)}`;
-
-      possibles.add(transformed);
-      copy = molecule;
+        possibles.add(transformed);
+        copy = molecule;
+      }
     }
   }
+
+  return possibles.size;
 }
-
-write(YEAR, DAY, PART, possibles.size);

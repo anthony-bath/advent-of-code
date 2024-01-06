@@ -1,10 +1,10 @@
-export function part2(data) {
+export function part2({ lines }) {
   const double = /([a-z][a-z]).*\1/;
   const triple = /([a-z])[a-z]\1/;
 
   let niceCount = 0;
 
-  data.split('\n').forEach((string) => {
+  lines.forEach((string) => {
     if (double.test(string) && triple.test(string)) {
       niceCount++;
     }

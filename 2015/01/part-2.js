@@ -1,4 +1,4 @@
-export function part2(data) {
+export function part2({ data }) {
   let floor = 0;
   let result = null;
 

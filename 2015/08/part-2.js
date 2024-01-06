@@ -1,7 +1,7 @@
-export function part2(data) {
+export function part2({ lines }) {
   let result = 0;
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const initial = line.length;
 
     line = line.replace(/\\/g, '\\\\');

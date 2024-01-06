@@ -1,9 +1,9 @@
 import { Sue, targetSue } from './common.js';
 
-export function part2(data) {
+export function part2({ lines }) {
   const sues = [];
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const [idPart, ...traitList] = line.match(/(\w+\s\d+:|\w+:\s\d+)/g);
     const id = Number(idPart.match(/\d+/));
     const traits = new Map();

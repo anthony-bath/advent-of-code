@@ -10,21 +10,41 @@
 - https://adventofcode.com/2016
 - https://adventofcode.com/2015
 
-Solutions can be ran via:
+Daily solutions can be ran via:
 
 ```
-node yyyy/dd/part-x
+npm run day yyyy dd [-t]
 ```
 
 where
 
-- yyyy is the 4 digit year
-- dd is the 2 digit day
-- x is 1 or 2 for each part of the problem, e.g.:
+- `yyyy` is the 4 digit year
+- `dd` is the 1 or 2 digit day
+- `-t` optionally for running with test input
+
+e.g.:
 
 ```
-node 2022/01/part-1
-node 2020/02/part-2
+npm run day 2022 1
+npm run day 2020 18
 ```
 
-Output will be generated in an `output-n.txt` file in the days directory. Input for each day is included in `input*.txt` files in the respective days directory, but is specific to my AoC login.
+Days can be created with:
+
+```
+npm run create yyyy dd
+```
+
+where
+
+- `yyyy` is the 4 digit year
+- `dd` is the 1 or 2 digit day
+
+e.g.:
+
+```
+npm run create 2023 3
+npm run create 2024 24
+```
+
+Input for each day is included in `input.txt` files in the respective days directory, but is specific to my AoC login.

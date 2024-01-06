@@ -1,10 +1,10 @@
-export function part2(data) {
+export function part2({ lines }) {
   const expr = /(?<source>\w+) to (?<destination>\w+) = (?<distance>\d+)/;
 
   const valueByName = new Map();
   const connections = new Map();
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const { source, destination, distance } = line.match(expr).groups;
     const connection = { location: destination, distance: Number(distance) };
     const reciprocalConnection = { location: source, distance: Number(distance) };

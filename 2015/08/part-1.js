@@ -1,7 +1,7 @@
-export function part1(data) {
+export function part1({ lines }) {
   let result = 0;
 
-  data.split('\n').forEach((line) => {
+  lines.forEach((line) => {
     const initial = line.length;
     line = line.substring(1, line.length - 1);
 

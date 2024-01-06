@@ -1,4 +1,4 @@
-export function part2(data) {
+export function part2({ data }) {
   const delta = { v: [0, 1], '^': [0, -1], '<': [-1, 0], '>': [1, 0] };
   const presentsByCoord = { '0|0': 2 };
   const santas = { [true]: [0, 0], [false]: [0, 0] };

@@ -1,4 +1,4 @@
-export function part2(data) {
+export function part2({ data }) {
   const input = JSON.parse(data);
 
   function searchArray(arr) {

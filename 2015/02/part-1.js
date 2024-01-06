@@ -1,7 +1,7 @@
-export function part1(data) {
+export function part1({ lines }) {
   const expr = /\d+/g;
 
-  return data.split('\n').reduce((totalArea, dimensions) => {
+  return lines.reduce((totalArea, dimensions) => {
     const [l, w, h] = dimensions.match(expr).map((n) => Number(n));
 
     const s1 = l * w;

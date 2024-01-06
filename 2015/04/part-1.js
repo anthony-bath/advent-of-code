@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto';
 
-export function part1(data) {
+export function part1({ data }) {
   let num = 0;
 
   while (true) {

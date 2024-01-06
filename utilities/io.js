@@ -23,11 +23,15 @@ export function readOld(year, day, part, { test = false, splitBy = EOL } = {}) {
   return splitBy !== null ? data.split(splitBy) : data;
 }
 
-export function read(year, day, { test = false } = {}) {
-  return fs.readFileSync(
+export function loadInput(year, day, { test = false } = {}) {
+  const data = fs.readFileSync(
     `./${year}/${day.toString().padStart(2, '0')}/${test ? 'test' : ''}input.txt`,
     'utf-8'
   );
+
+  const lines = data.split(EOL);
+
+  return { data, lines };
 }
 
 export function output(content) {

@@ -1,4 +1,4 @@
-export function part2(data) {
+export function part2({ data }) {
   const expr = /(\d)\1{0,}/g;
 
   function lookAndSay(sequence) {
