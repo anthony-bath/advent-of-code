@@ -1,60 +1,59 @@
-import { readOld, write } from '../../utilities/io.js';
 import { getLocationType } from './common.js';
 
-const [YEAR, DAY, PART] = [2016, 13, 1];
+export function part1({ data }) {
+  const offset = Number(data);
 
-const offset = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
+  const deltas = [
+    [1, 0],
+    [0, 1],
+    [0, -1],
+    [-1, 0],
+  ];
 
-const deltas = [
-  [1, 0],
-  [0, 1],
-  [0, -1],
-  [-1, 0],
-];
+  function bfs(state, goalX, goalY) {
+    const visited = [];
+    const map = [];
+    const queue = [state];
 
-function bfs(state, goalX, goalY) {
-  const visited = [];
-  const map = [];
-  const queue = [state];
+    const { x, y } = state;
 
-  const { x, y } = state;
-
-  if (!visited[y]) {
-    visited[y] = [];
-  }
-
-  visited[y][x] = 1;
-
-  while (queue.length) {
-    const current = queue.shift();
-
-    if (current.x === goalX && current.y === goalY) {
-      return current.steps;
+    if (!visited[y]) {
+      visited[y] = [];
     }
 
-    for (const [dx, dy] of deltas) {
-      const nextY = current.y + dy;
-      const nextX = current.x + dx;
+    visited[y][x] = 1;
 
-      if (nextX < 0 || nextY < 0) continue;
-      if (visited[nextY] && visited[nextY][nextX]) continue;
+    while (queue.length) {
+      const current = queue.shift();
 
-      if (!map[nextY]) {
-        map[nextY] = [];
-        visited[nextY] = [];
+      if (current.x === goalX && current.y === goalY) {
+        return current.steps;
       }
 
-      visited[nextY][nextX] = 1;
+      for (const [dx, dy] of deltas) {
+        const nextY = current.y + dy;
+        const nextX = current.x + dx;
 
-      if (!map[nextY][nextX]) {
-        map[nextY][nextX] = getLocationType(nextX, nextY, offset);
-      }
+        if (nextX < 0 || nextY < 0) continue;
+        if (visited[nextY] && visited[nextY][nextX]) continue;
 
-      if (map[nextY][nextX] === '.') {
-        queue.push({ x: nextX, y: nextY, steps: current.steps + 1 });
+        if (!map[nextY]) {
+          map[nextY] = [];
+          visited[nextY] = [];
+        }
+
+        visited[nextY][nextX] = 1;
+
+        if (!map[nextY][nextX]) {
+          map[nextY][nextX] = getLocationType(nextX, nextY, offset);
+        }
+
+        if (map[nextY][nextX] === '.') {
+          queue.push({ x: nextX, y: nextY, steps: current.steps + 1 });
+        }
       }
     }
   }
+
+  return bfs({ x: 1, y: 1, steps: 0 }, 31, 39);
 }
-
-write(YEAR, DAY, PART, bfs({ x: 1, y: 1, steps: 0 }, 31, 39));

@@ -1,31 +1,16 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getPositionData } from './common.js';
 
-const [YEAR, DAY, PART] = [2016, 6, 2];
+export function part2({ lines }) {
+  const positionData = getPositionData(lines);
+  const result = [];
 
-const positionData = [...Array(8).keys()].map((_) => ({}));
+  for (const data of positionData) {
+    const [letter] = Object.entries(data)
+      .sort(([, c1], [, c2]) => c2 - c1)
+      .pop();
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const parts = line.split('');
-
-  for (const [position, letter] of parts.entries()) {
-    const data = positionData[position];
-
-    if (!(letter in data)) {
-      data[letter] = 1;
-    } else {
-      data[letter]++;
-    }
+    result.push(letter);
   }
-});
 
-const result = [];
-
-for (const data of positionData) {
-  const [letter] = Object.entries(data)
-    .sort(([, c1], [, c2]) => c2 - c1)
-    .pop();
-
-  result.push(letter);
+  return result.join('');
 }
-
-write(YEAR, DAY, PART, result.join(''));

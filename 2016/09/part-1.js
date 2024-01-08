@@ -1,37 +1,35 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const input = data.split('');
+  const output = [];
 
-const [YEAR, DAY, PART] = [2016, 9, 1];
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === '(') {
+      const marker = [];
 
-const input = readOld(YEAR, DAY, PART, { splitBy: '' });
-const output = [];
+      while (input[i] !== ')') {
+        marker.push(input[i++]);
+      }
 
-for (let i = 0; i < input.length; i++) {
-  if (input[i] === '(') {
-    const marker = [];
+      i++;
 
-    while (input[i] !== ')') {
-      marker.push(input[i++]);
+      const [charCount, repeatCount] = marker
+        .join('')
+        .match(/\d+/g)
+        .map((n) => Number(n));
+
+      const chars = input
+        .slice(i, i + charCount)
+        .join('')
+        .repeat(repeatCount)
+        .split('');
+
+      output.push(...chars);
+
+      i += charCount - 1;
+    } else {
+      output.push(input[i]);
     }
-
-    i++;
-
-    const [charCount, repeatCount] = marker
-      .join('')
-      .match(/\d+/g)
-      .map((n) => Number(n));
-
-    const chars = input
-      .slice(i, i + charCount)
-      .join('')
-      .repeat(repeatCount)
-      .split('');
-
-    output.push(...chars);
-
-    i += charCount - 1;
-  } else {
-    output.push(input[i]);
   }
-}
 
-write(YEAR, DAY, PART, output.length);
+  return output.length;
+}

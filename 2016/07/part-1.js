@@ -1,34 +1,29 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const pattern = /([a-z])((?!\1).)\2\1/g;
 
-const [YEAR, DAY, PART] = [2016, 7, 1];
+  return lines.reduce((count, line) => {
+    const pairs = [];
+    const stack = [];
 
-const pattern = /([a-z])((?!\1).)\2\1/g;
-let count = 0;
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const pairs = [];
-  const stack = [];
-
-  for (let i = 0; i < line.length; i++) {
-    if (line[i] === '[') stack.push(i);
-    else if (line[i] === ']') {
-      pairs.push({ start: stack.pop(), end: i });
+    for (let i = 0; i < line.length; i++) {
+      if (line[i] === '[') stack.push(i);
+      else if (line[i] === ']') {
+        pairs.push({ start: stack.pop(), end: i });
+      }
     }
-  }
 
-  const matches = line.match(pattern);
+    const matches = line.match(pattern);
 
-  if (matches) {
+    if (!matches) return count;
+
     for (const match of matches) {
       const index = line.indexOf(match);
 
       if (pairs.some((pair) => index >= pair.start && index <= pair.end)) {
-        return;
+        return count;
       }
     }
 
-    count++;
-  }
-});
-
-write(YEAR, DAY, PART, count);
+    return count + 1;
+  }, 0);
+}
