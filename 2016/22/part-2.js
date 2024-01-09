@@ -1,66 +1,64 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const WIDTH = 30;
+  const HEIGHT = 35;
 
-const [YEAR, DAY, PART] = [2016, 22, 2];
+  const grid = Array(HEIGHT)
+    .fill()
+    .map(() =>
+      Array(WIDTH)
+        .fill()
+        .map(() => [])
+    );
 
-const WIDTH = 30;
-const HEIGHT = 35;
+  const expr = /\d+/g;
 
-const grid = Array(HEIGHT)
-  .fill()
-  .map(() =>
-    Array(WIDTH)
-      .fill()
-      .map(() => [])
-  );
+  lines.forEach((line) => {
+    const matches = line.match(expr);
 
-const expr = /\d+/g;
+    if (matches) {
+      const [x, y, size, used, avail] = matches.map((n) => Number(n));
+      grid[y][x] = used === 0 ? '_' : used > 400 ? '#' : '.';
+    }
+  });
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const matches = line.match(expr);
+  const state = { x: 4, y: 25, steps: 0 };
+  const queue = [state];
+  const visited = { [`4|25`]: 1 };
+  const deltas = [
+    [0, -1],
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+  ];
 
-  if (matches) {
-    const [x, y, size, used, avail] = matches.map((n) => Number(n));
-    grid[y][x] = used === 0 ? '_' : used > 400 ? '#' : '.';
-  }
-});
+  let distance = null;
 
-const state = { x: 4, y: 25, steps: 0 };
-const queue = [state];
-const visited = { [`4|25`]: 1 };
-const deltas = [
-  [0, -1],
-  [1, 0],
-  [-1, 0],
-  [0, 1],
-];
+  while (queue.length) {
+    const current = queue.shift();
 
-let distance = null;
+    if (current.x === WIDTH - 2 && current.y === 0) {
+      distance = current.steps;
+      break;
+    }
 
-while (queue.length) {
-  const current = queue.shift();
+    for (const [dx, dy] of deltas) {
+      const nextX = current.x + dx;
+      const nextY = current.y + dy;
 
-  if (current.x === WIDTH - 2 && current.y === 0) {
-    distance = current.steps;
-    break;
-  }
+      if (nextX < 0 || nextX >= WIDTH || nextY < 0 || nextY >= HEIGHT) continue;
 
-  for (const [dx, dy] of deltas) {
-    const nextX = current.x + dx;
-    const nextY = current.y + dy;
+      const nextKey = `${nextX}|${nextY}`;
 
-    if (nextX < 0 || nextX >= WIDTH || nextY < 0 || nextY >= HEIGHT) continue;
-
-    const nextKey = `${nextX}|${nextY}`;
-
-    if (!visited[nextKey] && grid[nextY][nextX] === '.') {
-      queue.push({ x: nextX, y: nextY, steps: current.steps + 1 });
-      visited[nextKey] = 1;
+      if (!visited[nextKey] && grid[nextY][nextX] === '.') {
+        queue.push({ x: nextX, y: nextY, steps: current.steps + 1 });
+        visited[nextKey] = 1;
+      }
     }
   }
+
+  // Distance to move the empty drive to left of the goal
+  //   + 5 moves per node to get to the top left
+  //   + 1 more move for the final transfer
+
+  return distance + 5 * (WIDTH - 2) + 1;
 }
-
-// Distance to move the empty drive to left of the goal
-//   + 5 moves per node to get to the top left
-//   + 1 more move for the final transfer
-
-write(YEAR, DAY, PART, distance + 5 * (WIDTH - 2) + 1);

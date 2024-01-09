@@ -1,24 +1,22 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const ranges = lines.map((line) => {
+    const [start, end] = line.split('-').map((n) => Number(n));
+    return { start, end };
+  });
 
-const [YEAR, DAY, PART] = [2016, 20, 2];
+  ranges.sort((a, b) => a.start - b.start);
 
-const ranges = readOld(YEAR, DAY, PART).map((line) => {
-  const [start, end] = line.split('-').map((n) => Number(n));
-  return { start, end };
-});
+  const MAX = 4294967295;
 
-ranges.sort((a, b) => a.start - b.start);
+  let allowedCount = 0;
+  let currentMax = 0;
 
-const MAX = 4294967295;
+  for (const range of ranges) {
+    allowedCount += Math.max(0, range.start - currentMax - 1);
+    currentMax = Math.max(currentMax, range.end);
+  }
 
-let allowedCount = 0;
-let currentMax = 0;
+  allowedCount += Math.max(0, MAX - currentMax);
 
-for (const range of ranges) {
-  allowedCount += Math.max(0, range.start - currentMax - 1);
-  currentMax = Math.max(currentMax, range.end);
+  return allowedCount;
 }
-
-allowedCount += Math.max(0, MAX - currentMax);
-
-write(YEAR, DAY, PART, allowedCount);

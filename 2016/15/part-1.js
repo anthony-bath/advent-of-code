@@ -1,24 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const expr = /\d+/g;
 
-const [YEAR, DAY, PART] = [2016, 15, 1];
+  const discs = lines.map((line) => {
+    const [id, positions, _, startPosition] = line.match(expr).map((n) => Number(n));
+    return { id, positions, startPosition };
+  });
 
-const expr = /\d+/g;
+  let time = 1;
 
-const discs = readOld(YEAR, DAY, PART).map((line) => {
-  const [id, positions, _, startPosition] = line.match(expr).map((n) => Number(n));
-  return { id, positions, startPosition };
-});
+  while (true) {
+    if (
+      discs.every(
+        ({ id, positions, startPosition }) => (time + id + startPosition) % positions === 0
+      )
+    ) {
+      break;
+    }
 
-let time = 1;
-
-while (true) {
-  if (
-    discs.every(({ id, positions, startPosition }) => (time + id + startPosition) % positions === 0)
-  ) {
-    break;
+    time++;
   }
 
-  time++;
+  return time;
 }
-
-write(YEAR, DAY, PART, time);

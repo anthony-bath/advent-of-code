@@ -1,35 +1,31 @@
-import { printGrid } from '../../utilities/grid.js';
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const input = data.split('');
+  const trapPatterns = ['^^.', '.^^', '^..', '..^'];
 
-const [YEAR, DAY, PART] = [2016, 18, 1];
+  let safeCount = input.filter((t) => t === '.').length;
+  const rows = [input];
+  let prevRowIndex = 0;
 
-const input = readOld(YEAR, DAY, PART, { splitBy: '' });
+  while (rows.length < 40) {
+    const nextRow = [];
+    const prevRow = rows[prevRowIndex];
 
-const trapPatterns = ['^^.', '.^^', '^..', '..^'];
+    for (let tile = 0; tile < prevRow.length; tile++) {
+      const left = tile - 1 >= 0 ? prevRow[tile - 1] : '.';
+      const center = prevRow[tile];
+      const right = tile + 1 < prevRow.length ? prevRow[tile + 1] : '.';
 
-let safeCount = input.filter((t) => t === '.').length;
-const rows = [input];
-let prevRowIndex = 0;
-
-while (rows.length < 40) {
-  const nextRow = [];
-  const prevRow = rows[prevRowIndex];
-
-  for (let tile = 0; tile < prevRow.length; tile++) {
-    const left = tile - 1 >= 0 ? prevRow[tile - 1] : '.';
-    const center = prevRow[tile];
-    const right = tile + 1 < prevRow.length ? prevRow[tile + 1] : '.';
-
-    if (trapPatterns.includes(`${left}${center}${right}`)) {
-      nextRow.push('^');
-    } else {
-      safeCount++;
-      nextRow.push('.');
+      if (trapPatterns.includes(`${left}${center}${right}`)) {
+        nextRow.push('^');
+      } else {
+        safeCount++;
+        nextRow.push('.');
+      }
     }
+
+    rows.push(nextRow);
+    prevRowIndex++;
   }
 
-  rows.push(nextRow);
-  prevRowIndex++;
+  return safeCount;
 }
-
-write(YEAR, DAY, PART, safeCount);

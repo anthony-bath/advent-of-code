@@ -1,15 +1,13 @@
-import { readOld, write } from '../../utilities/io.js';
 import { checksum, fillDisk } from './common.js';
 
-const [YEAR, DAY, PART] = [2016, 16, 1];
+export function part1({ data }) {
+  const SIZE = 272;
 
-const SIZE = 272;
-const input = readOld(YEAR, DAY, PART, { splitBy: null });
+  let diskData = fillDisk(data, SIZE);
 
-let data = fillDisk(input, SIZE);
+  while (diskData.length % 2 === 0) {
+    diskData = checksum(diskData);
+  }
 
-while (data.length % 2 === 0) {
-  data = checksum(data);
+  return diskData.join('');
 }
-
-write(YEAR, DAY, PART, data.join(''));
