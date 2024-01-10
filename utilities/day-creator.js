@@ -33,15 +33,17 @@ if (!fs.existsSync(part1Js)) {
   );
 }
 
-const part2Js = path.join(dayDir, 'part-2.js');
+if (day !== '25') {
+  const part2Js = path.join(dayDir, 'part-2.js');
 
-if (!fs.existsSync(part2Js)) {
-  fs.writeFileSync(
-    part2Js,
-    `export function part2({ lines, data }) {
+  if (!fs.existsSync(part2Js)) {
+    fs.writeFileSync(
+      part2Js,
+      `export function part2({ lines, data }) {
   return 0;
 }`
-  );
+    );
+  }
 }
 
 const inputTxt = path.join(dayDir, 'input.txt');
@@ -59,25 +61,38 @@ if (!fs.existsSync(testsDir)) {
 const testJs = path.join(testsDir, `${year}.${dayPadded}.test.js`);
 
 if (!fs.existsSync(testJs)) {
-  fs.writeFileSync(
-    testJs,
-    `import { loadInput } from '../../utilities/io.js';
-import { part1 } from '../${dayPadded}/part-1.js';
-import { part2 } from '../${dayPadded}/part-2.js';
+  let templateLines = [
+    "import { loadInput } from '../../utilities/io.js';",
+    `import { part1 } from '../${dayPadded}/part-1.js';`,
+  ];
 
-const { lines, data } = loadInput(${year}, ${day});
-let grid;
+  if (day !== '25') {
+    templateLines.push(`import { part2 } from '../${dayPadded}/part-2.js';`);
+  }
 
-describe('${year} Day ${day}', () => {
-  beforeEach(() => (grid = lines.map((line) => line.split(''))));
+  templateLines = templateLines.concat([
+    '',
+    `const { lines, data } = loadInput(${year}, ${day});`,
+    'let grid;',
+    '',
+    `describe('${year} Day ${day}', () => {`,
+    "  beforeEach(() => (grid = lines.map((line) => line.split(''))));",
+    '',
+    "  it('Part 1', () => {",
+    '    expect(part1({ lines, grid, data })).toBe(0);',
+    '  });',
+  ]);
 
-  it('Part 1', () => {
-    expect(part1({ lines, grid, data })).toBe(0);
-  });
+  if (day !== '25') {
+    templateLines = templateLines.concat([
+      '',
+      "  it('Part 2', () => {",
+      '    expect(part2({ lines, grid, data })).toBe(0);',
+      '  });',
+    ]);
+  }
 
-  it('Part 2', () => {
-    expect(part2({ lines, grid, data })).toBe(0);
-  });
-});`
-  );
+  templateLines.push('});');
+
+  fs.writeFileSync(testJs, templateLines.join('\n'));
 }
