@@ -1,7 +1,3 @@
-import { readOld, write } from '../../utilities/io.js';
-
-const [YEAR, DAY, PART] = [2017, 7, 2];
-
 class Program {
   constructor(name, weight, childNames) {
     this.name = name;
@@ -22,22 +18,6 @@ class Program {
       Object.values(this.children).reduce((sum, child) => sum + child.totalWeight(), 0)
     );
   }
-}
-
-const programs = new Map();
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [program, children] = line.split(' -> ');
-  const [name] = program.split(' ');
-  const weight = program.match(/\d+/g)[0];
-
-  programs.set(name, new Program(name, weight, children && children.split(', ')));
-});
-
-for (const program of programs.values()) {
-  program.childNames.forEach((childName) => {
-    program.addChild(programs.get(childName));
-  });
 }
 
 function evaluate(node) {
@@ -84,19 +64,39 @@ function getDiff(weights) {
   return commonWeight - soloWeight;
 }
 
-let node = [...programs.values()].filter((program) => program.parent === null).pop();
-let weight = null;
+export function part2({ lines }) {
+  const programs = new Map();
 
-while (true) {
-  const result = evaluate(node);
+  lines.forEach((line) => {
+    const [program, children] = line.split(' -> ');
+    const [name] = program.split(' ');
+    const weight = program.match(/\d+/g)[0];
 
-  if (result) {
-    node = programs.get(result[0]);
-  } else {
-    const offset = getDiff(Object.values(node.parent.children).map((child) => child.totalWeight()));
-    weight = node.weight + offset;
-    break;
+    programs.set(name, new Program(name, weight, children && children.split(', ')));
+  });
+
+  for (const program of programs.values()) {
+    program.childNames.forEach((childName) => {
+      program.addChild(programs.get(childName));
+    });
   }
-}
 
-write(YEAR, DAY, PART, weight);
+  let node = [...programs.values()].filter((program) => program.parent === null).pop();
+  let weight = null;
+
+  while (true) {
+    const result = evaluate(node);
+
+    if (result) {
+      node = programs.get(result[0]);
+    } else {
+      const offset = getDiff(
+        Object.values(node.parent.children).map((child) => child.totalWeight())
+      );
+      weight = node.weight + offset;
+      break;
+    }
+  }
+
+  return weight;
+}

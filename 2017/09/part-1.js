@@ -1,28 +1,22 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const input = data.replaceAll(/(!.)/g, '').split('');
 
-const [YEAR, DAY, PART] = [2017, 9, 1];
+  let inGarbage = false;
+  let depth = 0;
+  let score = 0;
 
-const expr = /(!.)/g;
-
-const input = readOld(YEAR, DAY, PART, { splitBy: null, test: true })
-  .replaceAll(expr, '')
-  .split('');
-
-let inGarbage = false;
-let depth = 0;
-let score = 0;
-
-for (const item of input) {
-  if (item === '{' && !inGarbage) {
-    depth++;
-  } else if (item === '<' && !inGarbage) {
-    inGarbage = true;
-  } else if (item === '>' && inGarbage) {
-    inGarbage = false;
-  } else if (item === '}' && !inGarbage) {
-    score += depth;
-    depth--;
+  for (const item of input) {
+    if (item === '{' && !inGarbage) {
+      depth++;
+    } else if (item === '<' && !inGarbage) {
+      inGarbage = true;
+    } else if (item === '>' && inGarbage) {
+      inGarbage = false;
+    } else if (item === '}' && !inGarbage) {
+      score += depth;
+      depth--;
+    }
   }
-}
 
-write(YEAR, DAY, PART, score);
+  return score;
+}

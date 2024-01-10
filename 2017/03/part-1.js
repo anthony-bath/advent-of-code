@@ -1,21 +1,19 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const location = Number(data);
 
-const [YEAR, DAY, PART] = [2017, 3, 1];
+  let sideLength = Math.ceil(Math.sqrt(location));
 
-const location = Number(readOld(YEAR, DAY, PART));
+  if (sideLength % 2 === 0) {
+    sideLength++;
+  }
 
-let sideLength = Math.ceil(Math.sqrt(location));
+  const bottomCenter = sideLength * sideLength - Math.floor(sideLength / 2);
+  const centers = [...Array(4).keys()].map((i) => bottomCenter - i * (sideLength - 1));
+  const centerDiffs = centers.map((center) => Math.abs(location - center));
+  const distance = Math.floor(sideLength / 2);
 
-if (sideLength % 2 === 0) {
-  sideLength++;
+  return distance + Math.min(...centerDiffs);
 }
-
-const bottomCenter = sideLength * sideLength - Math.floor(sideLength / 2);
-const centers = [...Array(4).keys()].map((i) => bottomCenter - i * (sideLength - 1));
-const centerDiffs = centers.map((center) => Math.abs(location - center));
-const distance = Math.floor(sideLength / 2);
-
-write(YEAR, DAY, PART, distance + Math.min(...centerDiffs));
 
 //1   => 2-9      (3)
 //2   => 10-25    (5)

@@ -1,28 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const input = data.replaceAll(/(!.)/g, '').split('');
 
-const [YEAR, DAY, PART] = [2017, 9, 2];
+  let inGarbage = false;
+  let count = 0;
 
-const expr = /(!.)/g;
+  for (const item of input) {
+    if (inGarbage && item !== '>') {
+      count++;
+      continue;
+    }
 
-const input = readOld(YEAR, DAY, PART, { splitBy: null }).replaceAll(expr, '').split('');
+    if (item === '<') {
+      inGarbage = true;
+      continue;
+    }
 
-let inGarbage = false;
-let count = 0;
-
-for (const item of input) {
-  if (inGarbage && item !== '>') {
-    count++;
-    continue;
+    if (item === '>') {
+      inGarbage = false;
+    }
   }
 
-  if (item === '<') {
-    inGarbage = true;
-    continue;
-  }
-
-  if (item === '>') {
-    inGarbage = false;
-  }
+  return count;
 }
-
-write(YEAR, DAY, PART, count);

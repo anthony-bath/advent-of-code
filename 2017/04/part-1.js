@@ -1,27 +1,25 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  let validCount = 0;
 
-const [YEAR, DAY, PART] = [2017, 4, 1];
+  lines.forEach((passphrase) => {
+    const words = passphrase.split(' ');
 
-let validCount = 0;
+    const lookup = {};
+    let isValid = true;
 
-readOld(YEAR, DAY, PART).forEach((passphrase) => {
-  const words = passphrase.split(' ');
-
-  const lookup = {};
-  let isValid = true;
-
-  for (const word of words) {
-    if (!lookup[word]) {
-      lookup[word] = 1;
-    } else {
-      isValid = false;
-      break;
+    for (const word of words) {
+      if (!lookup[word]) {
+        lookup[word] = 1;
+      } else {
+        isValid = false;
+        break;
+      }
     }
-  }
 
-  if (isValid) {
-    validCount++;
-  }
-});
+    if (isValid) {
+      validCount++;
+    }
+  });
 
-write(YEAR, DAY, PART, validCount);
+  return validCount;
+}

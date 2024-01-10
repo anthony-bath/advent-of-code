@@ -1,31 +1,27 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  return lines.reduce((sum, line) => {
+    const nums = line.split('\t').map((n) => Number(n));
 
-const [YEAR, DAY, PART] = [2017, 2, 2];
+    let result = null;
 
-const checksum = readOld(YEAR, DAY, PART).reduce((sum, line) => {
-  const nums = line.split('\t').map((n) => Number(n));
+    for (const num1 of nums) {
+      for (const num2 of nums) {
+        if (num1 === num2) continue;
 
-  let result = null;
+        result = Math.max(num1, num2) / Math.min(num1, num2);
 
-  for (const num1 of nums) {
-    for (const num2 of nums) {
-      if (num1 === num2) continue;
+        if (!Number.isInteger(result)) {
+          result = null;
+        } else {
+          break;
+        }
+      }
 
-      result = Math.max(num1, num2) / Math.min(num1, num2);
-
-      if (!Number.isInteger(result)) {
-        result = null;
-      } else {
+      if (result) {
         break;
       }
     }
 
-    if (result) {
-      break;
-    }
-  }
-
-  return sum + result;
-}, 0);
-
-write(YEAR, DAY, PART, checksum);
+    return sum + result;
+  }, 0);
+}

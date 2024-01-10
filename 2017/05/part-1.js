@@ -1,17 +1,15 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const maze = lines.map(Number);
 
-const [YEAR, DAY, PART] = [2017, 5, 1];
+  let location = 0;
+  let steps = 0;
 
-const maze = readOld(YEAR, DAY, PART).map((n) => Number(n));
+  while (location < maze.length) {
+    const offset = maze[location];
+    maze[location]++;
+    location += offset;
+    steps++;
+  }
 
-let location = 0;
-let steps = 0;
-
-while (location < maze.length) {
-  const offset = maze[location];
-  maze[location]++;
-  location += offset;
-  steps++;
+  return steps;
 }
-
-write(YEAR, DAY, PART, steps);

@@ -1,15 +1,13 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const input = data.split('').map((n) => Number(n));
 
-const [YEAR, DAY, PART] = [2017, 1, 1];
+  let result = 0;
 
-const input = readOld(YEAR, DAY, PART, { splitBy: '' }).map((n) => Number(n));
-
-let result = 0;
-
-for (let i = 0; i < input.length; i++) {
-  if (input[i] === input[(i + 1) % input.length]) {
-    result += input[i];
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] === input[(i + 1) % input.length]) {
+      result += input[i];
+    }
   }
-}
 
-write(YEAR, DAY, PART, result);
+  return result;
+}
