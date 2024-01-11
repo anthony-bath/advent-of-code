@@ -1,38 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getPrograms } from './common.js';
 
-const [YEAR, DAY, PART] = [2017, 12, 1];
+export function part1({ lines }) {
+  const programs = getPrograms(lines);
 
-class Program {
-  constructor(id, childrenIds) {
-    this.id = id;
-    this.childrenIds = childrenIds;
-  }
-}
+  let visited = { 0: 1 };
+  let queue = [0];
+  let count = 1;
 
-const programs = new Map();
+  while (queue.length) {
+    const id = queue.shift();
+    const childrenIds = programs.get(id).childrenIds;
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [id, childrenIdsRaw] = line.split(' <-> ');
-  const childrenIds = childrenIdsRaw.split(', ').map((n) => Number(n));
-
-  programs.set(Number(id), new Program(Number(id), childrenIds));
-});
-
-let visited = { 0: 1 };
-let queue = [0];
-let count = 1;
-
-while (queue.length) {
-  const id = queue.shift();
-  const childrenIds = programs.get(id).childrenIds;
-
-  for (const childId of childrenIds) {
-    if (!visited[childId]) {
-      count++;
-      visited[childId] = 1;
-      queue.push(childId);
+    for (const childId of childrenIds) {
+      if (!visited[childId]) {
+        count++;
+        visited[childId] = 1;
+        queue.push(childId);
+      }
     }
   }
-}
 
-write(YEAR, DAY, PART, count);
+  return count;
+}

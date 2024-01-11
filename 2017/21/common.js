@@ -1,4 +1,4 @@
-export function rotateGrid(grid) {
+function rotateGrid(grid) {
   // First, we flip the grid horizontally
   const rotated = grid.map((row) => [...row].reverse());
 
@@ -12,11 +12,11 @@ export function rotateGrid(grid) {
   return rotated;
 }
 
-export function flatten(data) {
+function flatten(data) {
   return data.map((row) => row.join('')).join('/');
 }
 
-export function getUpdatedGrid(size, grid, currentPieceSize, targetPieceSize, rules) {
+function getUpdatedGrid(size, grid, currentPieceSize, targetPieceSize, rules) {
   const parts = size / currentPieceSize;
   const nextSize = parts * targetPieceSize;
 
@@ -49,4 +49,63 @@ export function getUpdatedGrid(size, grid, currentPieceSize, targetPieceSize, ru
   }
 
   return [nextGrid, nextSize];
+}
+
+export function getOnCount(lines, iterations) {
+  const rules = new Map();
+
+  lines.forEach((line) => {
+    const [input, output] = line.split(' => ');
+    const inputData = input.split('/').map((row) => row.split(''));
+    const outputData = output.split('/').map((row) => row.split(''));
+
+    rules.set(input, outputData);
+
+    if (input.includes('#')) {
+      let data = inputData;
+      const rotations = [];
+
+      for (let i = 0; i < 4; i++) {
+        rotations.push(data);
+        data = rotateGrid(data);
+      }
+
+      data = data.map((row) => [...row].reverse());
+
+      for (let i = 0; i < 4; i++) {
+        rotations.push(data);
+        data = rotateGrid(data);
+      }
+
+      rotations.forEach((rot) => rules.set(flatten(rot), outputData));
+    }
+  });
+
+  let size = 3;
+
+  let grid = [
+    ['.', '#', '.'],
+    ['.', '.', '#'],
+    ['#', '#', '#'],
+  ];
+
+  for (let iteration = 0; iteration < iterations; iteration++) {
+    if (size % 2 === 0) {
+      [grid, size] = getUpdatedGrid(size, grid, 2, 3, rules);
+    } else {
+      [grid, size] = getUpdatedGrid(size, grid, 3, 4, rules);
+    }
+  }
+
+  let count = 0;
+
+  for (let row = 0; row < grid.length; row++) {
+    for (let col = 0; col < grid[row].length; col++) {
+      if (grid[row][col] === '#') {
+        count++;
+      }
+    }
+  }
+
+  return count;
 }

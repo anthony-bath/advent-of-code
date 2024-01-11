@@ -1,47 +1,37 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2017, 13, 1];
+export function part2({ lines }) {
+  const { layers, MAX_LAYER } = getInputElements(lines);
 
-const layers = new Map();
-let MAX_LAYER = -Infinity;
+  let delay = 1;
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [layer, depth] = line.split(': ').map((n) => Number(n));
-  layers.set(layer, depth);
+  while (true) {
+    let currentLayer = 0;
+    let currentPicoSecond = delay;
+    let caught = false;
 
-  if (layer > MAX_LAYER) {
-    MAX_LAYER = layer;
-  }
-});
+    while (currentLayer <= MAX_LAYER) {
+      const depth = layers.get(currentLayer);
 
-let delay = 1;
+      if (depth) {
+        const atDepth0 = currentPicoSecond % (2 * (depth - 1)) === 0;
 
-while (true) {
-  let currentLayer = 0;
-  let currentPicoSecond = delay;
-  let caught = false;
-
-  while (currentLayer <= MAX_LAYER) {
-    const depth = layers.get(currentLayer);
-
-    if (depth) {
-      const atDepth0 = currentPicoSecond % (2 * (depth - 1)) === 0;
-
-      if (atDepth0) {
-        caught = true;
-        break;
+        if (atDepth0) {
+          caught = true;
+          break;
+        }
       }
+
+      currentLayer++;
+      currentPicoSecond++;
     }
 
-    currentLayer++;
-    currentPicoSecond++;
+    if (!caught) {
+      break;
+    }
+
+    delay++;
   }
 
-  if (!caught) {
-    break;
-  }
-
-  delay++;
+  return delay;
 }
-
-write(YEAR, DAY, PART, delay);

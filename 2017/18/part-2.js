@@ -1,18 +1,30 @@
-import { readOld, write } from '../../utilities/io.js';
-
-const [YEAR, DAY, PART] = [2017, 18, 2];
-
-const instructions = readOld(YEAR, DAY, PART).map((line) => line.split(' '));
-
 const STATE = {
   WAITING: 1,
   RUNNING: 2,
   READY: 3,
 };
 
+export function part2({ lines }) {
+  const instructions = lines.map((line) => line.split(' '));
+
+  const p0 = new Program(0, instructions);
+  const p1 = new Program(1, instructions);
+
+  p0.setPartner(p1);
+  p1.setPartner(p0);
+
+  while (p0.state !== STATE.WAITING || p1.state !== STATE.WAITING) {
+    p0.run();
+    p1.run();
+  }
+
+  return p1.sent;
+}
+
 class Program {
-  constructor(id) {
+  constructor(id, instructions) {
     this.id = id;
+    this.instructions = instructions;
     this.pointer = 0;
     this.registers = new Map([['p', id]]);
     this.received = [];
@@ -45,7 +57,7 @@ class Program {
     this.state = STATE.RUNNING;
 
     while (true) {
-      const [command, arg1, arg2] = instructions[this.pointer];
+      const [command, arg1, arg2] = this.instructions[this.pointer];
 
       switch (command) {
         case 'set':
@@ -104,22 +116,9 @@ class Program {
         }
       }
 
-      if (this.state === STATE.WAITING || this.pointer >= instructions.length) {
+      if (this.state === STATE.WAITING || this.pointer >= this.instructions.length) {
         break;
       }
     }
   }
 }
-
-const p0 = new Program(0);
-const p1 = new Program(1);
-
-p0.setPartner(p1);
-p1.setPartner(p0);
-
-while (p0.state !== STATE.WAITING || p1.state !== STATE.WAITING) {
-  p0.run();
-  p1.run();
-}
-
-write(YEAR, DAY, PART, p1.sent);

@@ -1,8 +1,40 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines: input }) {
+  const STEPS = Number(input[1].match(/\d+/g)[0]);
 
-const [YEAR, DAY, PART] = [2017, 25, 1];
+  const states = new Map();
 
-const input = readOld(YEAR, DAY, PART);
+  for (let line = 3; line < input.length; line += 10) {
+    const ruleIf0 = new Rule(
+      Number(input[line + 2].match(/\d+/g)[0]),
+      input[line + 3].endsWith('right.') ? 1 : -1,
+      input[line + 4].split(' ').pop().replace('.', '')
+    );
+
+    const ruleIf1 = new Rule(
+      Number(input[line + 6].match(/\d+/g)[0]),
+      input[line + 7].endsWith('right.') ? 1 : -1,
+      input[line + 8].split(' ').pop().replace('.', '')
+    );
+
+    const name = input[line].match(/[A-F]/g)[0];
+
+    states.set(name, new State(name, ruleIf0, ruleIf1));
+  }
+
+  const tape = new Map([[0, 0]]);
+  let position = 0;
+  let currentState = input[0].split(' ').pop().replace('.', '');
+
+  for (let step = 0; step < STEPS; step++) {
+    const state = states.get(currentState);
+    const result = state.execute(tape, position);
+
+    position = result.position;
+    currentState = result.state;
+  }
+
+  return [...tape.values()].filter((x) => x === 1).length;
+}
 
 class State {
   constructor(name, ruleIf0, ruleIf1) {
@@ -34,39 +66,3 @@ class Rule {
     return { position: position + this.direction, state: this.nextState };
   }
 }
-
-const STEPS = Number(input[1].match(/\d+/g)[0]);
-
-const states = new Map();
-
-for (let line = 3; line < input.length; line += 10) {
-  const ruleIf0 = new Rule(
-    Number(input[line + 2].match(/\d+/g)[0]),
-    input[line + 3].endsWith('right.') ? 1 : -1,
-    input[line + 4].split(' ').pop().replace('.', '')
-  );
-
-  const ruleIf1 = new Rule(
-    Number(input[line + 6].match(/\d+/g)[0]),
-    input[line + 7].endsWith('right.') ? 1 : -1,
-    input[line + 8].split(' ').pop().replace('.', '')
-  );
-
-  const name = input[line].match(/[A-F]/g)[0];
-
-  states.set(name, new State(name, ruleIf0, ruleIf1));
-}
-
-const tape = new Map([[0, 0]]);
-let position = 0;
-let currentState = input[0].split(' ').pop().replace('.', '');
-
-for (let step = 0; step < STEPS; step++) {
-  const state = states.get(currentState);
-  const result = state.execute(tape, position);
-
-  position = result.position;
-  currentState = result.state;
-}
-
-write(YEAR, DAY, PART, [...tape.values()].filter((x) => x === 1).length);

@@ -1,39 +1,21 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  let [a, b] = lines.map((line) => Number(line.match(/\d+/g)[0]));
+  let comparisons = 0;
+  let count = 0;
 
-const [YEAR, DAY, PART] = [2017, 15, 2];
+  while (comparisons < 5000000) {
+    do a = (a * 16807) % 2147483647;
+    while (a % 4);
 
-let [a, b] = readOld(YEAR, DAY, PART).map((line) => Number(line.match(/\d+/g)[0]));
+    do b = (b * 48271) % 2147483647;
+    while (b % 8);
 
-let comparisons = 0;
-let count = 0;
-
-while (comparisons < 5000000) {
-  let aFound = false;
-  let bFound = false;
-
-  while (!aFound || !bFound) {
-    if (!aFound) {
-      a = (a * 16807) % 2147483647;
-
-      if (a % 4 === 0) {
-        aFound = true;
-      }
+    if ((a & 0xffff) === (b & 0xffff)) {
+      count++;
     }
 
-    if (!bFound) {
-      b = (b * 48271) % 2147483647;
-
-      if (b % 8 === 0) {
-        bFound = true;
-      }
-    }
+    comparisons++;
   }
 
-  if ((a & 0xffff) === (b & 0xffff)) {
-    count++;
-  }
-
-  comparisons++;
+  return count;
 }
-
-write(YEAR, DAY, PART, count);

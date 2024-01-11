@@ -1,21 +1,16 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const steps = Number(data);
 
-const [YEAR, DAY, PART] = [2017, 17, 2];
+  let position = 0;
+  let value = 0;
 
-const steps = Number(readOld(YEAR, DAY, PART, { splitBy: null }));
+  for (let i = 1; i <= 50000000; i++) {
+    position = ((position + steps) % i) + 1;
 
-let position = 0;
-let value = 0;
-
-for (let i = 1; i <= 50000000; i++) {
-  position = ((position + steps) % i) + 1;
-
-  if (position === 1) {
-    value = i;
+    if (position === 1) {
+      value = i;
+    }
   }
+
+  return value;
 }
-
-write(YEAR, DAY, PART, value);
-
-// 1745250 - Too Low
-// 11995607 - Answer

@@ -1,66 +1,63 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const instructions = lines.map((line) => line.split(' '));
+  const registers = new Map();
 
-const [YEAR, DAY, PART] = [2017, 23, 1];
+  function getValue(arg) {
+    if (/[a-z]/.test(arg)) {
+      if (!registers.has(arg)) {
+        registers.set(arg, 0);
+      }
 
-const instructions = readOld(YEAR, DAY, PART).map((line) => line.split(' '));
-
-const registers = new Map();
-
-function getValue(arg) {
-  if (/[a-z]/.test(arg)) {
-    if (!registers.has(arg)) {
-      registers.set(arg, 0);
+      return registers.get(arg);
     }
 
-    return registers.get(arg);
+    return Number(arg);
   }
 
-  return Number(arg);
-}
+  let pointer = 0;
+  let count = 0;
 
-let pointer = 0;
-let count = 0;
+  while (true) {
+    const [command, arg1, arg2] = instructions[pointer];
 
-while (true) {
-  const [command, arg1, arg2] = instructions[pointer];
-
-  switch (command) {
-    case 'set':
-      {
-        registers.set(arg1, getValue(arg2));
-        pointer++;
-      }
-      break;
-
-    case 'sub':
-      {
-        registers.set(arg1, getValue(arg1) - getValue(arg2));
-        pointer++;
-      }
-      break;
-
-    case 'mul':
-      {
-        registers.set(arg1, getValue(arg1) * getValue(arg2));
-        count++;
-        pointer++;
-      }
-      break;
-
-    case 'jnz':
-      {
-        if (getValue(arg1) !== 0) {
-          pointer += getValue(arg2);
-        } else {
+    switch (command) {
+      case 'set':
+        {
+          registers.set(arg1, getValue(arg2));
           pointer++;
         }
-      }
+        break;
+
+      case 'sub':
+        {
+          registers.set(arg1, getValue(arg1) - getValue(arg2));
+          pointer++;
+        }
+        break;
+
+      case 'mul':
+        {
+          registers.set(arg1, getValue(arg1) * getValue(arg2));
+          count++;
+          pointer++;
+        }
+        break;
+
+      case 'jnz':
+        {
+          if (getValue(arg1) !== 0) {
+            pointer += getValue(arg2);
+          } else {
+            pointer++;
+          }
+        }
+        break;
+    }
+
+    if (pointer >= instructions.length) {
       break;
+    }
   }
 
-  if (pointer >= instructions.length) {
-    break;
-  }
+  return count;
 }
-
-write(YEAR, DAY, PART, count);

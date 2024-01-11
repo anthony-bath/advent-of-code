@@ -1,39 +1,29 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2017, 13, 1];
+export function part1({ lines }) {
+  const { layers, MAX_LAYER } = getInputElements(lines);
 
-const layers = new Map();
-let MAX_LAYER = -Infinity;
+  let currentLayer = 0;
+  let currentPicoSecond = 0;
+  let severity = 0;
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [layer, depth] = line.split(': ').map((n) => Number(n));
-  layers.set(layer, depth);
+  while (currentLayer <= MAX_LAYER) {
+    const depth = layers.get(currentLayer);
 
-  if (layer > MAX_LAYER) {
-    MAX_LAYER = layer;
-  }
-});
+    if (depth) {
+      const atDepth0 = currentPicoSecond % (2 * (depth - 1)) === 0;
 
-let currentLayer = 0;
-let currentPicoSecond = 0;
-let severity = 0;
-
-while (currentLayer <= MAX_LAYER) {
-  const depth = layers.get(currentLayer);
-
-  if (depth) {
-    const atDepth0 = currentPicoSecond % (2 * (depth - 1)) === 0;
-
-    if (atDepth0) {
-      severity += currentLayer * depth;
+      if (atDepth0) {
+        severity += currentLayer * depth;
+      }
     }
+
+    currentLayer++;
+    currentPicoSecond++;
   }
 
-  currentLayer++;
-  currentPicoSecond++;
+  return severity;
 }
-
-write(YEAR, DAY, PART, severity);
 
 // Depth = 4    C   /4  %
 // At  0 -> 0   *   0   0

@@ -1,54 +1,52 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  let particles = lines.map((line, id) => {
+    const [px, py, pz, vx, vy, vz, ax, ay, az] = line.match(/-?\d+/g).map((n) => Number(n));
+    return { px, py, pz, vx, vy, vz, ax, ay, az, id };
+  });
 
-const [YEAR, DAY, PART] = [2017, 20, 2];
+  let ticksWithoutCollision = 0;
 
-let particles = readOld(YEAR, DAY, PART).map((line, id) => {
-  const [px, py, pz, vx, vy, vz, ax, ay, az] = line.match(/-?\d+/g).map((n) => Number(n));
-  return { px, py, pz, vx, vy, vz, ax, ay, az, id };
-});
+  while (true) {
+    const positions = {};
 
-let ticksWithoutCollision = 0;
+    particles.forEach((particle) => {
+      particle.vx += particle.ax;
+      particle.vy += particle.ay;
+      particle.vz += particle.az;
+      particle.px += particle.vx;
+      particle.py += particle.vy;
+      particle.pz += particle.vz;
 
-while (true) {
-  const positions = {};
+      const key = `${particle.px}|${particle.py}|${particle.pz}`;
 
-  particles.forEach((particle) => {
-    particle.vx += particle.ax;
-    particle.vy += particle.ay;
-    particle.vz += particle.az;
-    particle.px += particle.vx;
-    particle.py += particle.vy;
-    particle.pz += particle.vz;
+      if (key in positions) {
+        positions[key]++;
+      } else {
+        positions[key] = 1;
+      }
+    });
 
-    const key = `${particle.px}|${particle.py}|${particle.pz}`;
+    const collided = [];
 
-    if (key in positions) {
-      positions[key]++;
+    particles.forEach(({ px, py, pz, id }) => {
+      const key = `${px}|${py}|${pz}`;
+
+      if (positions[key] > 1) {
+        collided.push(id);
+      }
+    });
+
+    if (collided.length === 0) {
+      ticksWithoutCollision++;
+
+      if (ticksWithoutCollision >= 10) {
+        break;
+      }
     } else {
-      positions[key] = 1;
+      ticksWithoutCollision = 0;
+      particles = particles.filter(({ id }) => !collided.includes(id));
     }
-  });
-
-  const collided = [];
-
-  particles.forEach(({ px, py, pz, id }) => {
-    const key = `${px}|${py}|${pz}`;
-
-    if (positions[key] > 1) {
-      collided.push(id);
-    }
-  });
-
-  if (collided.length === 0) {
-    ticksWithoutCollision++;
-
-    if (ticksWithoutCollision >= 10) {
-      break;
-    }
-  } else {
-    ticksWithoutCollision = 0;
-    particles = particles.filter(({ id }) => !collided.includes(id));
   }
-}
 
-write(YEAR, DAY, PART, particles.length);
+  return particles.length;
+}
