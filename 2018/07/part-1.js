@@ -1,48 +1,32 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getSteps } from './common.js';
 
-const [YEAR, DAY, PART] = [2018, 7, 1];
+export function part1({ lines }) {
+  const steps = getSteps(lines);
+  const executionOrder = [];
 
-const steps = {};
-const expr = /Step (?<dependency>[A-Z]) must be finished before step (?<step>[A-Z]) can begin/;
+  while (executionOrder.length < Object.keys(steps).length) {
+    const available = [];
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const { dependency, step } = line.match(expr).groups;
-
-  if (!steps[dependency]) {
-    steps[dependency] = [];
-  }
-
-  if (!steps[step]) {
-    steps[step] = [];
-  }
-
-  steps[step].push(dependency);
-});
-
-const executionOrder = [];
-
-while (executionOrder.length < Object.keys(steps).length) {
-  const available = [];
-
-  for (const [step, dependencies] of Object.entries(steps)) {
-    if (dependencies.length === 0 && !executionOrder.includes(step)) {
-      available.push(step);
+    for (const [step, dependencies] of Object.entries(steps)) {
+      if (dependencies.length === 0 && !executionOrder.includes(step)) {
+        available.push(step);
+      }
     }
-  }
 
-  available.sort();
+    available.sort();
 
-  const execute = available.shift();
+    const execute = available.shift();
 
-  for (const [, dependencies] of Object.entries(steps)) {
-    const index = dependencies.indexOf(execute);
+    for (const [, dependencies] of Object.entries(steps)) {
+      const index = dependencies.indexOf(execute);
 
-    if (index !== -1) {
-      dependencies.splice(index, 1);
+      if (index !== -1) {
+        dependencies.splice(index, 1);
+      }
     }
+
+    executionOrder.push(execute);
   }
 
-  executionOrder.push(execute);
+  return executionOrder.join('');
 }
-
-write(YEAR, DAY, PART, executionOrder.join(''));

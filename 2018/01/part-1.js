@@ -1,7 +1,3 @@
-import { readOld, write } from '../../utilities/io.js';
-
-const [YEAR, DAY, PART] = [2018, 1, 1];
-
-const result = readOld(YEAR, DAY, PART).reduce((sum, num) => sum + Number(num), 0);
-
-write(YEAR, DAY, PART, result);
+export function part1({ lines }) {
+  return lines.reduce((sum, num) => sum + Number(num), 0);
+}

@@ -1,29 +1,25 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const seen = {};
+  let result;
+  let frequency = 0;
+  let index = 0;
 
-const [YEAR, DAY, PART] = [2018, 1, 2];
+  while (true) {
+    frequency += Number(lines[index]);
 
-const input = readOld(YEAR, DAY, PART);
+    if (seen[frequency]) {
+      result = frequency;
+      break;
+    }
 
-const seen = {};
-let result;
-let frequency = 0;
-let index = 0;
+    seen[frequency] = 1;
 
-while (true) {
-  frequency += Number(input[index]);
+    index++;
 
-  if (seen[frequency]) {
-    result = frequency;
-    break;
+    if (index >= lines.length) {
+      index = 0;
+    }
   }
 
-  seen[frequency] = 1;
-
-  index++;
-
-  if (index >= input.length) {
-    index = 0;
-  }
+  return result;
 }
-
-write(YEAR, DAY, PART, result);

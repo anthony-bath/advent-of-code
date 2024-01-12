@@ -1,4 +1,4 @@
-import { readOld, write } from '../../utilities/io.js';
+import { readOld, write } from '../../../utilities/io.js';
 
 const [YEAR, DAY, PART] = [2018, 17, 1];
 

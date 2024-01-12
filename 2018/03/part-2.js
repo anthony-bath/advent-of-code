@@ -1,40 +1,38 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const claims = [];
 
-const [YEAR, DAY, PART] = [2018, 3, 2];
+  lines.forEach((line) => {
+    const [id, x, y, w, h] = line.match(/\d+/g).map((n) => Number(n));
+    claims.push({ id, x1: x, y1: y, x2: x + w - 1, y2: y + h - 1 });
+  });
 
-const claims = [];
+  let result = null;
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [id, x, y, w, h] = line.match(/\d+/g).map((n) => Number(n));
-  claims.push({ id, x1: x, y1: y, x2: x + w - 1, y2: y + h - 1 });
-});
+  for (const claim1 of claims) {
+    let overlapCount = 0;
 
-let result = null;
+    for (const claim2 of claims) {
+      if (claim1.id === claim2.id) continue;
 
-for (const claim1 of claims) {
-  let overlapCount = 0;
+      if (
+        claim1.x1 > claim2.x2 ||
+        claim2.x1 > claim1.x2 ||
+        claim1.y1 > claim2.y2 ||
+        claim2.y1 > claim1.y2
+      ) {
+        // Does not overlap
+        continue;
+      } else {
+        overlapCount++;
+        break;
+      }
+    }
 
-  for (const claim2 of claims) {
-    if (claim1.id === claim2.id) continue;
-
-    if (
-      claim1.x1 > claim2.x2 ||
-      claim2.x1 > claim1.x2 ||
-      claim1.y1 > claim2.y2 ||
-      claim2.y1 > claim1.y2
-    ) {
-      // Does not overlap
-      continue;
-    } else {
-      overlapCount++;
+    if (overlapCount === 0) {
+      result = claim1.id;
       break;
     }
   }
 
-  if (overlapCount === 0) {
-    result = claim1.id;
-    break;
-  }
+  return result;
 }
-
-write(YEAR, DAY, PART, result);

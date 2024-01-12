@@ -1,35 +1,33 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const polymer = data.split('').map((c) => c.charCodeAt(0));
 
-const [YEAR, DAY, PART] = [2018, 5, 2];
+  function react(polymer) {
+    let index = 1;
 
-const polymer = readOld(YEAR, DAY, PART, { splitBy: '' }).map((c) => c.charCodeAt(0));
+    while (index < polymer.length) {
+      const l1 = polymer[index];
+      const l2 = polymer[index - 1];
 
-function react(polymer) {
-  let index = 1;
+      if (Math.abs(l1 - l2) === 32) {
+        polymer.splice(index - 1, 2);
+        index--;
+      } else {
+        index++;
+      }
+    }
 
-  while (index < polymer.length) {
-    const l1 = polymer[index];
-    const l2 = polymer[index - 1];
+    return polymer.length;
+  }
 
-    if (Math.abs(l1 - l2) === 32) {
-      polymer.splice(index - 1, 2);
-      index--;
-    } else {
-      index++;
+  let min = Infinity;
+
+  for (let unit = 65; unit <= 90; unit++) {
+    const result = react(polymer.filter((x) => ![unit, unit + 32].includes(x)));
+
+    if (result < min) {
+      min = result;
     }
   }
 
-  return polymer.length;
+  return min;
 }
-
-let min = Infinity;
-
-for (let unit = 65; unit <= 90; unit++) {
-  const result = react(polymer.filter((x) => ![unit, unit + 32].includes(x)));
-
-  if (result < min) {
-    min = result;
-  }
-}
-
-write(YEAR, DAY, PART, min);

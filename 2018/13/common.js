@@ -130,10 +130,10 @@ export class Cart {
   }
 }
 
-export function loadData(part) {
+export function getInputElements(lines) {
   let carts = [];
 
-  const track = readOld(YEAR, DAY, part).map((line, y) => {
+  const track = lines.map((line, y) => {
     const parts = line.split('');
 
     for (let x = 0; x < parts.length; x++) {

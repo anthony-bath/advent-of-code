@@ -1,9 +1,11 @@
 import { sum } from '../../utilities/array.js';
-import { readOld, write } from '../../utilities/io.js';
 
-const [YEAR, DAY, PART] = [2018, 8, 2];
+export function part2({ data }) {
+  const input = data.split(' ').map(Number);
+  const root = buildNode(input);
 
-const input = readOld(YEAR, DAY, PART, { splitBy: ' ' }).map((n) => Number(n));
+  return root.value();
+}
 
 class TreeNode {
   constructor(children, metadata) {
@@ -41,7 +43,3 @@ function buildNode(data) {
 
   return new TreeNode(children, data.splice(0, metadataCount));
 }
-
-const root = buildNode(input);
-
-write(YEAR, DAY, PART, root.value());

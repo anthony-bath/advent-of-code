@@ -1,73 +1,54 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getEntries } from './common.js';
 
-const [YEAR, DAY, PART] = [2018, 4, 2];
+export function part2({ lines }) {
+  const entries = getEntries(lines);
+  const rangesAsleepByGuard = {};
 
-const entries = [];
+  let currentGuard = null;
+  let currentRange = null;
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const timestamp = line.substring(1, 17);
-  const [, time] = timestamp.split(' ');
-  const [, minute] = time.split(':').map((n) => Number(n));
+  entries.forEach(({ id, minute }) => {
+    if (id) {
+      currentGuard = id;
+      rangesAsleepByGuard[id] = rangesAsleepByGuard[id] ?? [];
+      return;
+    }
 
-  let id = null;
+    if (currentRange === null) {
+      currentRange = { start: minute };
+    } else {
+      currentRange.end = minute - 1;
+      rangesAsleepByGuard[currentGuard].push({ ...currentRange });
+      currentRange = null;
+    }
+  });
 
-  const eventData = line.substring(19);
+  const minuteAsleepByGuard = {};
+  let best = null;
 
-  if (eventData.includes('Guard')) {
-    id = eventData.match(/\d+/g)[0];
-  }
+  for (let minute = 0; minute < 60; minute++) {
+    minuteAsleepByGuard[minute] = {};
 
-  entries.push({ time: new Date(timestamp), minute, id });
-});
+    for (const [id, ranges] of Object.entries(rangesAsleepByGuard)) {
+      for (const { start, end } of ranges) {
+        if (minute >= start && minute <= end) {
+          if (!minuteAsleepByGuard[minute][id]) {
+            minuteAsleepByGuard[minute][id] = 0;
+          }
 
-entries.sort((a, b) => a.time - b.time);
+          minuteAsleepByGuard[minute][id]++;
 
-const rangesAsleepByGuard = {};
-
-let currentGuard = null;
-let currentRange = null;
-
-entries.forEach(({ id, minute }) => {
-  if (id) {
-    currentGuard = id;
-    rangesAsleepByGuard[id] = rangesAsleepByGuard[id] ?? [];
-    return;
-  }
-
-  if (currentRange === null) {
-    currentRange = { start: minute };
-  } else {
-    currentRange.end = minute - 1;
-    rangesAsleepByGuard[currentGuard].push({ ...currentRange });
-    currentRange = null;
-  }
-});
-
-const minuteAsleepByGuard = {};
-let best = null;
-
-for (let minute = 0; minute < 60; minute++) {
-  minuteAsleepByGuard[minute] = {};
-
-  for (const [id, ranges] of Object.entries(rangesAsleepByGuard)) {
-    for (const { start, end } of ranges) {
-      if (minute >= start && minute <= end) {
-        if (!minuteAsleepByGuard[minute][id]) {
-          minuteAsleepByGuard[minute][id] = 0;
-        }
-
-        minuteAsleepByGuard[minute][id]++;
-
-        if (!best || minuteAsleepByGuard[minute][id] > best.count) {
-          best = {
-            id: Number(id),
-            minute,
-            count: minuteAsleepByGuard[minute][id],
-          };
+          if (!best || minuteAsleepByGuard[minute][id] > best.count) {
+            best = {
+              id: Number(id),
+              minute,
+              count: minuteAsleepByGuard[minute][id],
+            };
+          }
         }
       }
     }
   }
-}
 
-write(YEAR, DAY, PART, best.id * best.minute);
+  return best.id * best.minute;
+}

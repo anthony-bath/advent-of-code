@@ -1,35 +1,34 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  let twos = 0;
+  let threes = 0;
 
-const [YEAR, DAY, PART] = [2018, 2, 1];
+  lines.forEach((line) => {
+    const countByLetter = new Map();
 
-let twos = 0;
-let threes = 0;
+    line.split('').forEach((letter) => {
+      const count = countByLetter.get(letter) ?? 0;
+      countByLetter.set(letter, count + 1);
+    });
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const countByLetter = new Map();
+    let hasTwo = false;
+    let hasThree = false;
 
-  line.split('').forEach((letter) => {
-    const count = countByLetter.get(letter) ?? 0;
-    countByLetter.set(letter, count + 1);
+    for (const [_, count] of countByLetter) {
+      if (!hasTwo && count === 2) {
+        twos++;
+        hasTwo = true;
+      }
+
+      if (!hasThree && count === 3) {
+        threes++;
+        hasThree = true;
+      }
+
+      if (hasThree && hasTwo) {
+        break;
+      }
+    }
   });
 
-  let hasTwo = false;
-  let hasThree = false;
-
-  for (const [_, count] of countByLetter) {
-    if (!hasTwo && count === 2) {
-      twos++;
-      hasTwo = true;
-    }
-    if (!hasThree && count === 3) {
-      threes++;
-      hasThree = true;
-    }
-
-    if (hasThree && hasTwo) {
-      break;
-    }
-  }
-});
-
-write(YEAR, DAY, PART, twos * threes);
+  return twos * threes;
+}

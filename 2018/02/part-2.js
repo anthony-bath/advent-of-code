@@ -1,35 +1,33 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const boxes = lines.map((line) => line.split(''));
 
-const [YEAR, DAY, PART] = [2018, 2, 2];
+  let result = null;
 
-const boxes = readOld(YEAR, DAY, PART).map((line) => line.split(''));
+  for (const [i, box1] of boxes.entries()) {
+    for (const [j, box2] of boxes.entries()) {
+      if (i === j) continue;
 
-let result = null;
+      let diffs = [];
 
-for (const [i, box1] of boxes.entries()) {
-  for (const [j, box2] of boxes.entries()) {
-    if (i === j) continue;
+      for (const [k, l1] of box1.entries()) {
+        if (box2[k] !== l1) {
+          diffs.push(k);
+        }
 
-    let diffs = [];
-
-    for (const [k, l1] of box1.entries()) {
-      if (box2[k] !== l1) {
-        diffs.push(k);
+        if (diffs.length > 1) {
+          break;
+        }
       }
 
-      if (diffs.length > 1) {
+      if (diffs.length === 1) {
+        box1.splice(diffs.shift(), 1);
+        result = box1.join('');
         break;
       }
     }
 
-    if (diffs.length === 1) {
-      box1.splice(diffs.shift(), 1);
-      result = box1.join('');
-      break;
-    }
+    if (result) break;
   }
 
-  if (result) break;
+  return result;
 }
-
-write(YEAR, DAY, PART, result);

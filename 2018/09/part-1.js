@@ -1,77 +1,59 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2018, 9, 1];
+export function part1({ data }) {
+  const { players, count, marbles, scores } = getInputElements(data);
 
-let [players, count] = readOld(YEAR, DAY, PART, { splitBy: null })
-  .match(/\d+/g)
-  .map((n) => Number(n));
+  const circle = marbles[0];
+  circle.next = circle;
+  circle.prev = circle;
 
-class Marble {
-  constructor(value) {
-    this.value = value;
-    this.next = null;
-    this.prev = null;
-  }
-}
+  let current = circle;
+  let marbleIndex = 1;
+  let playerIndex = 0;
 
-const marbles = [];
+  while (true) {
+    const marble = marbles[marbleIndex];
 
-for (let i = 0; i <= count; i++) {
-  marbles.push(new Marble(i));
-}
+    if (marble.value % 23 === 0) {
+      scores[playerIndex] += marble.value;
 
-const scores = Array(players).fill(0);
+      let temp = current;
 
-const circle = marbles[0];
-circle.next = circle;
-circle.prev = circle;
+      for (let moves = 0; moves < 7; moves++) {
+        temp = temp.prev;
+      }
 
-let current = circle;
-let marbleIndex = 1;
-let playerIndex = 0;
+      scores[playerIndex] += temp.value;
 
-while (true) {
-  const marble = marbles[marbleIndex];
+      const removedPrev = temp.prev;
+      const removedNext = temp.next;
 
-  if (marble.value % 23 === 0) {
-    scores[playerIndex] += marble.value;
+      removedPrev.next = removedNext;
+      removedNext.prev = removedPrev;
 
-    let temp = current;
+      current = removedNext;
+    } else {
+      let oldNext = current.next;
 
-    for (let moves = 0; moves < 7; moves++) {
-      temp = temp.prev;
+      marble.prev = oldNext;
+      marble.next = oldNext.next;
+      oldNext.next.prev = marble;
+      oldNext.next = marble;
+
+      current = marble;
     }
 
-    scores[playerIndex] += temp.value;
+    marbleIndex++;
+    playerIndex++;
 
-    const removedPrev = temp.prev;
-    const removedNext = temp.next;
+    if (marbleIndex > count) {
+      break;
+    }
 
-    removedPrev.next = removedNext;
-    removedNext.prev = removedPrev;
-
-    current = removedNext;
-  } else {
-    let oldNext = current.next;
-
-    marble.prev = oldNext;
-    marble.next = oldNext.next;
-    oldNext.next.prev = marble;
-    oldNext.next = marble;
-
-    current = marble;
+    if (playerIndex === players) {
+      playerIndex = 0;
+    }
   }
 
-  marbleIndex++;
-  playerIndex++;
-
-  if (marbleIndex > count) {
-    break;
-  }
-
-  if (playerIndex === players) {
-    playerIndex = 0;
-  }
+  return Math.max(...scores);
 }
-
-write(YEAR, DAY, PART, Math.max(...scores));

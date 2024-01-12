@@ -1,55 +1,54 @@
 import { sum } from '../../utilities/array.js';
-import { readOld, write } from '../../utilities/io.js';
 
-const [YEAR, DAY, PART] = [2018, 11, 2];
+export function part2({ data }) {
+  const gridSerialNumber = Number(data);
 
-const gridSerialNumber = Number(readOld(YEAR, DAY, PART));
+  const SIZE = 300;
+  const grid = [];
+  const cache = {};
 
-const SIZE = 300;
-const grid = [];
-const cache = {};
+  for (let y = 1; y <= SIZE; y++) {
+    const row = [];
 
-for (let y = 1; y <= SIZE; y++) {
-  const row = [];
+    for (let x = 1; x <= SIZE; x++) {
+      const rackId = x + 10;
+      let powerLevel = rackId * y;
 
-  for (let x = 1; x <= SIZE; x++) {
-    const rackId = x + 10;
-    let powerLevel = rackId * y;
+      powerLevel += gridSerialNumber;
+      powerLevel *= rackId;
+      powerLevel = Math.floor((powerLevel / 100) % 10);
+      powerLevel -= 5;
 
-    powerLevel += gridSerialNumber;
-    powerLevel *= rackId;
-    powerLevel = Math.floor((powerLevel / 100) % 10);
-    powerLevel -= 5;
+      row.push(powerLevel);
+      cache[`${x - 1}|${y - 1}`] = powerLevel;
+    }
 
-    row.push(powerLevel);
-    cache[`${x - 1}|${y - 1}`] = powerLevel;
+    grid.push(row);
   }
 
-  grid.push(row);
-}
+  let result = { totalPower: -Infinity };
 
-let result = { totalPower: -Infinity };
+  for (let size = 2; size <= SIZE; size++) {
+    for (let y = 0; y <= SIZE - size; y++) {
+      for (let x = 0; x <= SIZE - size; x++) {
+        let totalPower = cache[`${x}|${y}`];
 
-for (let size = 2; size <= SIZE; size++) {
-  for (let y = 0; y <= SIZE - size; y++) {
-    for (let x = 0; x <= SIZE - size; x++) {
-      let totalPower = cache[`${x}|${y}`];
+        // bottom row of new square
+        totalPower += sum(grid[y + size - 1].slice(x, x + size));
 
-      // bottom row of new square
-      totalPower += sum(grid[y + size - 1].slice(x, x + size));
+        // right column of new square
+        for (let yOffset = 0; yOffset < size - 1; yOffset++) {
+          totalPower += grid[y + yOffset][x + size - 1];
+        }
 
-      // right column of new square
-      for (let yOffset = 0; yOffset < size - 1; yOffset++) {
-        totalPower += grid[y + yOffset][x + size - 1];
+        if (totalPower > result.totalPower) {
+          result = { totalPower, x: x + 1, y: y + 1, size };
+        }
+
+        cache[`${x}|${y}`] = totalPower;
       }
-
-      if (totalPower > result.totalPower) {
-        result = { totalPower, x: x + 1, y: y + 1, size };
-      }
-
-      cache[`${x}|${y}`] = totalPower;
     }
   }
-}
 
-write(YEAR, DAY, PART, `${result.x},${result.y},${result.size}`);
+  return `${result.x},${result.y},${result.size}`;
+}
