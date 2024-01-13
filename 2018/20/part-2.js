@@ -1,50 +1,41 @@
-import { readOld, write } from '../../utilities/io.js';
-import { getData } from './common.js';
+import { getInputElements, deltas } from './common.js';
 
-const [YEAR, DAY, PART] = [2018, 20, 2];
+export function part2({ data }) {
+  const { map, xMin, xMax, yMin, yMax } = getInputElements(data);
 
-const input = readOld(YEAR, DAY, PART, { splitBy: null }).replace(/[\^\$]/g, '');
-const { map, xMin, xMax, yMin, yMax } = getData(input);
+  const queue = [{ x: 0, y: 0, doors: 0 }];
+  const visited = new Set();
+  let count = 0;
 
-const deltas = [
-  [-1, 0],
-  [1, 0],
-  [0, -1],
-  [0, 1],
-];
+  while (queue.length) {
+    const curr = queue.shift();
+    visited.add(`${curr.x}|${curr.y}`);
 
-const queue = [{ x: 0, y: 0, doors: 0 }];
-const visited = new Set();
-let count = 0;
+    if (curr.doors >= 1000) {
+      count++;
+    }
 
-while (queue.length) {
-  const curr = queue.shift();
-  visited.add(`${curr.x}|${curr.y}`);
+    for (const [dx, dy] of deltas) {
+      let nextX = curr.x + dx;
+      let nextY = curr.y + dy;
 
-  if (curr.doors >= 1000) {
-    count++;
-  }
+      if (nextX < xMin || nextX > xMax || nextY < yMin || nextY > yMax) continue;
 
-  for (const [dx, dy] of deltas) {
-    let nextX = curr.x + dx;
-    let nextY = curr.y + dy;
+      // Check for doors before taking an extra step into the room
+      if (map.has(`${nextX}|${nextY}`)) {
+        nextX = nextX + dx;
+        nextY = nextY + dy;
 
-    if (nextX < xMin || nextX > xMax || nextY < yMin || nextY > yMax) continue;
-
-    // Check for doors before taking an extra step into the room
-    if (map.has(`${nextX}|${nextY}`)) {
-      nextX = nextX + dx;
-      nextY = nextY + dy;
-
-      if (!visited.has(`${nextX}|${nextY}`)) {
-        queue.push({
-          x: nextX,
-          y: nextY,
-          doors: curr.doors + 1,
-        });
+        if (!visited.has(`${nextX}|${nextY}`)) {
+          queue.push({
+            x: nextX,
+            y: nextY,
+            doors: curr.doors + 1,
+          });
+        }
       }
     }
   }
-}
 
-write(YEAR, DAY, PART, count);
+  return count;
+}

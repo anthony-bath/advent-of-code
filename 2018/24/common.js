@@ -1,4 +1,4 @@
-export const DAMAGE_TYPE = {
+const DAMAGE_TYPE = {
   SLASHING: 0,
   BLUDGEONING: 1,
   FIRE: 2,
@@ -10,6 +10,55 @@ export const GROUP_TYPE = {
   IMMUNE_SYSTEM: 0,
   INFECTION: 1,
 };
+
+export const TEAM_SIZE = 10;
+
+export function getGroups(lines) {
+  const expr =
+    /(\d+) units each with (\d+) hit points (\([\w\s,;]+\))?\s?with an attack that does (\d+) (\w+) damage at initiative (\d+)/;
+
+  const groups = [];
+
+  lines.forEach((line) => {
+    if (!line || line.startsWith('Immune') || line.startsWith('Infection')) return;
+
+    const [_, count, hp, modifiers, baseDamage, damageType, initiative] = line.match(expr);
+
+    let weaknesses = [];
+    let immunities = [];
+
+    if (modifiers) {
+      const parts = modifiers.replace(/[\(\)]/g, '').split('; ');
+
+      for (const part of parts) {
+        const [type, modsRaw] = part.split(' to ');
+        const mods = modsRaw.split(', ');
+
+        if (type === 'weak') {
+          weaknesses = mods.map((mod) => DAMAGE_TYPE[mod.toUpperCase()]);
+        } else {
+          immunities = mods.map((mod) => DAMAGE_TYPE[mod.toUpperCase()]);
+        }
+      }
+    }
+
+    groups.push(
+      new Group(
+        groups.length + 1,
+        count,
+        hp,
+        weaknesses,
+        immunities,
+        baseDamage,
+        DAMAGE_TYPE[damageType.toUpperCase()],
+        initiative,
+        groups.length < TEAM_SIZE ? GROUP_TYPE.IMMUNE_SYSTEM : GROUP_TYPE.INFECTION
+      )
+    );
+  });
+
+  return groups;
+}
 
 const SortOption = {
   byBestTarget(forGroup) {

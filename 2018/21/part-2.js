@@ -1,46 +1,23 @@
-import { readOld, write } from '../../utilities/io.js';
-import { commandsByName } from '../16/common.js';
+export function part2() {
+  function getNextHaltingValue(input) {
+    let y = input | 65536;
+    let x = 832312;
 
-const [YEAR, DAY, PART] = [2018, 21, 2];
-
-let IP_REGISTER;
-const instructions = [];
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  if (line.startsWith('#')) {
-    IP_REGISTER = Number(line.match(/\d+/));
-  } else {
-    const [command, A, B, C] = line.split(' ');
-    instructions.push([command, Number(A), Number(B), Number(C)]);
-  }
-});
-
-let registers = Array(6).fill(0);
-let pointer = 0;
-
-const values = new Set();
-let lastValue = null;
-
-while (pointer < instructions.length) {
-  if (pointer === 30) {
-    // Register 0 is only evaluated at instruction 30 for my input, and if it is
-    // equal to Register 3, the program will halt. These values repeat and so for
-    // the most instructions to be executed, the answer is the final value before
-    // it starts repeating.
-    if (values.has(registers[3])) {
-      break;
-    } else {
-      values.add(registers[3]);
-      lastValue = registers[3];
+    while (y > 0) {
+      x = (((x + (y & 255)) & 16777215) * 65899) & 16777215;
+      y >>= 8;
     }
+
+    return x;
   }
 
-  registers[IP_REGISTER] = pointer;
+  let x = 0;
+  const seen = [];
 
-  const [command, A, B, C] = instructions[pointer];
-  registers = commandsByName.get(command)(registers, A, B, C);
+  while (!seen.includes(x)) {
+    seen.push(x);
+    x = getNextHaltingValue(x);
+  }
 
-  pointer = registers[IP_REGISTER] + 1;
+  return seen[seen.length - 1];
 }
-
-write(YEAR, DAY, PART, lastValue);

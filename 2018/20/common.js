@@ -20,7 +20,8 @@ function mark(map, { x, y }, type) {
   map.set(`${x}|${y}`, type);
 }
 
-export function getData(input) {
+export function getInputElements(data) {
+  const input = data.replace(/[\^\$]/g, '');
   let [xMin, xMax, yMin, yMax] = [Infinity, -Infinity, Infinity, -Infinity];
 
   const map = new Map([['0|0', 'X']]);
@@ -74,3 +75,10 @@ export function getData(input) {
 
   return { xMin, xMax, yMin, yMax, map };
 }
+
+export const deltas = [
+  [-1, 0],
+  [1, 0],
+  [0, -1],
+  [0, 1],
+];
