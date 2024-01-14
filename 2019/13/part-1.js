@@ -1,25 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 
-const [YEAR, DAY, PART] = [2019, 13, 1];
+export function part1({ data }) {
+  const program = data.split(',').map(Number);
 
-const program = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+  let output = [];
+  let blockCount = 0;
 
-let output = [];
-let blockCount = 0;
+  const state = { pointer: 0, program: [...program], relativeBase: 0 };
 
-const state = { pointer: 0, program: [...program], relativeBase: 0 };
+  while (!state.halted) {
+    const result = execute(state);
 
-while (!state.halted) {
-  const result = execute(state);
+    output.push(result);
 
-  output.push(result);
-
-  if (output.length % 3 === 0) {
-    if (output[output.length - 1] === 2) {
-      blockCount++;
+    if (output.length % 3 === 0) {
+      if (output[output.length - 1] === 2) {
+        blockCount++;
+      }
     }
   }
-}
 
-write(YEAR, DAY, PART, blockCount);
+  return blockCount;
+}

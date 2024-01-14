@@ -1,70 +1,57 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getReactions } from './common.js';
 
-const [YEAR, DAY, PART] = [2019, 14, 2];
+export function part2({ lines }) {
+  const reactions = getReactions(lines);
+  let inventory = new Map();
 
-const reactions = new Map();
+  function getCost(element, quantity) {
+    if (inventory.has(element)) {
+      const available = inventory.get(element);
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [inputs, output] = line.split(' => ');
-  const [quantity, element] = output.split(' ');
+      if (available === quantity) {
+        inventory.delete(element);
+        return 0;
+      } else if (available > quantity) {
+        inventory.set(element, available - quantity);
+        return 0;
+      } else {
+        quantity -= available;
+        inventory.delete(element);
+      }
+    }
 
-  const input = inputs.split(', ').map((part) => {
-    const [quantity, element] = part.split(' ');
-    return { element, quantity: Number(quantity) };
-  });
+    const reaction = reactions.get(element);
+    const multiplier = Math.ceil(quantity / reaction.output);
+    const output = multiplier * reaction.output;
 
-  reactions.set(element, { output: Number(quantity), input });
-});
+    if (output > quantity) {
+      inventory.set(element, output - quantity);
+    }
 
-let inventory = new Map();
+    if (reaction.input[0].element === 'ORE') {
+      return multiplier * reaction.input[0].quantity;
+    }
 
-function getCost(element, quantity) {
-  if (inventory.has(element)) {
-    const available = inventory.get(element);
+    return reaction.input.reduce((cost, { element: el, quantity: quant }) => {
+      return cost + getCost(el, multiplier * quant);
+    }, 0);
+  }
 
-    if (available === quantity) {
-      inventory.delete(element);
-      return 0;
-    } else if (available > quantity) {
-      inventory.set(element, available - quantity);
-      return 0;
+  let availableOre = 1000000000000;
+  let low = Math.floor(availableOre / getCost('FUEL', 1));
+  let high = availableOre;
+
+  while (low < high) {
+    const mid = Math.round((low + high) / 2);
+
+    inventory = new Map();
+
+    if (getCost('FUEL', mid) < availableOre) {
+      low = mid;
     } else {
-      quantity -= available;
-      inventory.delete(element);
+      high = mid - 1;
     }
   }
 
-  const reaction = reactions.get(element);
-  const multiplier = Math.ceil(quantity / reaction.output);
-  const output = multiplier * reaction.output;
-
-  if (output > quantity) {
-    inventory.set(element, output - quantity);
-  }
-
-  if (reaction.input[0].element === 'ORE') {
-    return multiplier * reaction.input[0].quantity;
-  }
-
-  return reaction.input.reduce((cost, { element: el, quantity: quant }) => {
-    return cost + getCost(el, multiplier * quant);
-  }, 0);
+  return low;
 }
-
-let availableOre = 1000000000000;
-let low = Math.floor(availableOre / getCost('FUEL', 1));
-let high = availableOre;
-
-while (low < high) {
-  const mid = Math.round((low + high) / 2);
-
-  inventory = new Map();
-
-  if (getCost('FUEL', mid) < availableOre) {
-    low = mid;
-  } else {
-    high = mid - 1;
-  }
-}
-
-write(YEAR, DAY, PART, low);
