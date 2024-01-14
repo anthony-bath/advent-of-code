@@ -1,33 +1,31 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const [start, end] = data.split('-').map(Number);
 
-const [YEAR, DAY, PART] = [2019, 4, 1];
+  // Negative Lookbehind & Negative Lookhead
+  // Only matches adjacent numbers if the number immediately before or after is not the same
+  const expr = [...Array(10).keys()].map((n) => `(?<!${n})${n}${n}(?!${n})`).join('|');
+  const dups = new RegExp(`(${expr})`);
 
-const [start, end] = readOld(YEAR, DAY, PART, { splitBy: '-' }).map((n) => Number(n));
+  const neverDecreases = (number) => {
+    const digits = number.split('').map(Number);
 
-// Negative Lookbehind & Negative Lookhead
-// Only matches adjacent numbers if the number immediately before or after is not the same
-const expr = [...Array(10).keys()].map((n) => `(?<!${n})${n}${n}(?!${n})`).join('|');
-const dups = new RegExp(`(${expr})`);
+    for (const [i, digit] of digits.entries()) {
+      if (i === 0) continue;
+      if (digits[i - 1] > digit) return false;
+    }
 
-const neverDecreases = (number) => {
-  const digits = number.split('').map((n) => Number(n));
+    return true;
+  };
 
-  for (const [i, digit] of digits.entries()) {
-    if (i === 0) continue;
-    if (digits[i - 1] > digit) return false;
+  let count = 0;
+
+  for (let password = start; password <= end; password++) {
+    const str = password.toString();
+
+    if (dups.test(str) && neverDecreases(str)) {
+      count++;
+    }
   }
 
-  return true;
-};
-
-let count = 0;
-
-for (let password = start; password <= end; password++) {
-  const str = password.toString();
-
-  if (dups.test(str) && neverDecreases(str)) {
-    count++;
-  }
+  return count;
 }
-
-write(YEAR, DAY, PART, count);

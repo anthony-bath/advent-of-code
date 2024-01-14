@@ -1,24 +1,22 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const WIDTH = 25;
+  const HEIGHT = 6;
 
-const [YEAR, DAY, PART] = [2019, 8, 1];
+  const layers = {};
 
-const WIDTH = 25;
-const HEIGHT = 6;
+  data.split('').forEach((pixel, i) => {
+    const layer = Math.floor(i / (WIDTH * HEIGHT));
 
-const layers = {};
+    if (!layers[layer]) {
+      layers[layer] = [0, 0, 0];
+    }
 
-readOld(YEAR, DAY, PART, { splitBy: '' }).forEach((pixel, i) => {
-  const layer = Math.floor(i / (WIDTH * HEIGHT));
+    layers[layer][Number(pixel)]++;
+  });
 
-  if (!layers[layer]) {
-    layers[layer] = [0, 0, 0];
-  }
+  const [_, ones, twos] = Object.values(layers)
+    .sort((a, b) => a[0] - b[0])
+    .shift();
 
-  layers[layer][Number(pixel)]++;
-});
-
-const [_, ones, twos] = Object.values(layers)
-  .sort((a, b) => a[0] - b[0])
-  .shift();
-
-write(YEAR, DAY, PART, ones * twos);
+  return ones * twos;
+}

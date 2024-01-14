@@ -1,34 +1,32 @@
-import { readOld, write } from '../../utilities/io.js';
 import { execute } from '../IntCode.js';
 
-const [YEAR, DAY, PART] = [2019, 2, 2];
+export function part2({ data }) {
+  const TARGET = 19690720;
+  const input = data.split(',').map(Number);
 
-const TARGET = 19690720;
+  let noun;
+  let verb;
+  let found = false;
 
-const input = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+  for (noun = 0; noun < 99; noun++) {
+    for (verb = 0; verb < 99; verb++) {
+      const program = [...input];
+      program[1] = noun;
+      program[2] = verb;
 
-let noun;
-let verb;
-let found = false;
+      const state = { pointer: 0, program };
+      execute(state);
 
-for (noun = 0; noun < 99; noun++) {
-  for (verb = 0; verb < 99; verb++) {
-    const program = [...input];
-    program[1] = noun;
-    program[2] = verb;
+      if (state.program[0] === TARGET) {
+        found = true;
+        break;
+      }
+    }
 
-    const state = { pointer: 0, program };
-    execute(state);
-
-    if (state.program[0] === TARGET) {
-      found = true;
+    if (found) {
       break;
     }
   }
 
-  if (found) {
-    break;
-  }
+  return 100 * noun + verb;
 }
-
-write(YEAR, DAY, PART, 100 * noun + verb);

@@ -1,29 +1,27 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ data }) {
+  const [start, end] = data.split('-').map(Number);
 
-const [YEAR, DAY, PART] = [2019, 4, 1];
+  const dups = /(\d)\1/;
+  const neverDecreases = (number) => {
+    const digits = number.split('').map(Number);
 
-const [start, end] = readOld(YEAR, DAY, PART, { splitBy: '-' }).map((n) => Number(n));
+    for (const [i, digit] of digits.entries()) {
+      if (i === 0) continue;
+      if (digits[i - 1] > digit) return false;
+    }
 
-const dups = /(\d)\1/;
-const neverDecreases = (number) => {
-  const digits = number.split('').map((n) => Number(n));
+    return true;
+  };
 
-  for (const [i, digit] of digits.entries()) {
-    if (i === 0) continue;
-    if (digits[i - 1] > digit) return false;
+  let count = 0;
+
+  for (let password = start; password <= end; password++) {
+    const str = password.toString();
+
+    if (dups.test(str) && neverDecreases(str)) {
+      count++;
+    }
   }
 
-  return true;
-};
-
-let count = 0;
-
-for (let password = start; password <= end; password++) {
-  const str = password.toString();
-
-  if (dups.test(str) && neverDecreases(str)) {
-    count++;
-  }
+  return count;
 }
-
-write(YEAR, DAY, PART, count);

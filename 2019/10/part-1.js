@@ -1,44 +1,45 @@
-import { readOld, write } from '../../utilities/io.js';
 import { Point, Line } from './common.js';
 
-const [YEAR, DAY, PART] = [2019, 10, 1];
+export function part1({ lines }) {
+  const asteroids = [];
 
-const asteroids = [];
+  lines.forEach((line, y) =>
+    line.split('').forEach((cell, x) => {
+      if (cell === '#') asteroids.push(new Point(x, y));
+    })
+  );
 
-readOld(YEAR, DAY, PART).forEach((line, y) =>
-  line.split('').forEach((cell, x) => {
-    if (cell === '#') asteroids.push(new Point(x, y));
-  })
-);
+  let max = -Infinity;
 
-let max = -Infinity;
+  for (let i = 0; i < asteroids.length; i++) {
+    const a1 = asteroids[i];
+    let count = 0;
 
-asteroids.forEach((a1) => {
-  let count = 0;
+    for (let j = 0; j < asteroids.length; j++) {
+      if (j === i) continue;
+      if (asteroids.length - j + count < max) break;
 
-  asteroids.forEach((a2) => {
-    if (a1.key === a2.key) return;
+      const line = new Line(a1, asteroids[j]);
+      let hasLineOfSight = true;
 
-    const line = new Line(a1, a2);
-    let hasLineOfSight = true;
+      for (let k = 0; k < asteroids.length; k++) {
+        if (k === i) continue;
 
-    for (const a3 of asteroids) {
-      if ([a1.key, a2.key].includes(a3.key)) continue;
+        if (asteroids[k].isPartOfLine(line)) {
+          hasLineOfSight = false;
+          break;
+        }
+      }
 
-      if (a3.isPartOfLine(line)) {
-        hasLineOfSight = false;
-        break;
+      if (hasLineOfSight) {
+        count++;
       }
     }
 
-    if (hasLineOfSight) {
-      count++;
+    if (count > max) {
+      max = count;
     }
-  });
-
-  if (count > max) {
-    max = count;
   }
-});
 
-write(YEAR, DAY, PART, max);
+  return max;
+}

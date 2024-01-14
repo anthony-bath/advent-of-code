@@ -1,25 +1,18 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const directOrbitsByObject = new Map();
 
-const [YEAR, DAY, PART] = [2019, 6, 1];
+  lines.forEach((line) => {
+    const [orbitee, orbiter] = line.split(')');
+    directOrbitsByObject.set(orbiter, orbitee);
+  });
 
-const directOrbitsByObject = new Map();
+  function getOrbits(object) {
+    if (object === 'COM') {
+      return 0;
+    }
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [orbitee, orbiter] = line.split(')');
-  directOrbitsByObject.set(orbiter, orbitee);
-});
-
-function getOrbits(object) {
-  if (object === 'COM') {
-    return 0;
+    return 1 + getOrbits(directOrbitsByObject.get(object));
   }
 
-  return 1 + getOrbits(directOrbitsByObject.get(object));
+  return [...directOrbitsByObject.keys()].reduce((sum, object) => sum + getOrbits(object), 0);
 }
-
-write(
-  YEAR,
-  DAY,
-  PART,
-  [...directOrbitsByObject.keys()].reduce((sum, object) => sum + getOrbits(object), 0)
-);
