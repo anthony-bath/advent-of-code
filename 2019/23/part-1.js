@@ -1,54 +1,53 @@
-import { readOld, write } from '../../utilities/io.js';
-import { execute } from '../IntCode.js';
+import { execute } from '../IntCode_v2.js';
 
-const [YEAR, DAY, PART] = [2019, 23, 1];
+export function part1({ data }) {
+  const program = data.split(',').map(Number);
 
-const program = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+  const programData = {
+    queue: [...Array(50).keys()].map(() => []),
+    output: [...Array(50).keys()].map(() => []),
+    booted: Array(50).fill(0),
+  };
 
-const data = {
-  queue: [...Array(50).keys()].map(() => []),
-  output: [...Array(50).keys()].map(() => []),
-  booted: Array(50).fill(0),
-};
+  const states = [...Array(50).keys()].map(() => ({
+    pointer: 0,
+    program: [...program],
+    relativeBase: 0,
+  }));
 
-const states = [...Array(50).keys()].map(() => ({
-  pointer: 0,
-  program: [...program],
-  relativeBase: 0,
-}));
+  let sentTo255 = null;
 
-let sentTo255 = null;
+  while (true) {
+    states.forEach((state, i) => {
+      if (state.halted) return;
 
-while (true) {
-  states.forEach((state, i) => {
-    if (state.halted) return;
+      const input = programData.booted[i]
+        ? programData.queue[i].length
+          ? [...programData.queue[i].splice(0, 2)]
+          : [-1]
+        : [i];
 
-    const input = data.booted[i]
-      ? data.queue[i].length
-        ? [...data.queue[i].splice(0, 2)]
-        : [-1]
-      : [i];
+      const result = execute(state, input);
 
-    const result = execute(state, input);
+      programData.booted[i] = 1;
 
-    data.booted[i] = 1;
+      if (result) {
+        programData.output[i].push(result);
 
-    if (result) {
-      data.output[i].push(result);
+        if (programData.output[i].length % 3 === 0) {
+          const [address, x, y] = programData.output[i].slice(-3);
 
-      if (data.output[i].length % 3 === 0) {
-        const [address, x, y] = data.output[i].slice(-3);
-
-        if (address === 255) {
-          sentTo255 = y;
-        } else {
-          data.queue[address].push(...[x, y]);
+          if (address === 255) {
+            sentTo255 = y;
+          } else {
+            programData.queue[address].push(...[x, y]);
+          }
         }
       }
-    }
-  });
+    });
 
-  if (sentTo255) break;
+    if (sentTo255) break;
+  }
+
+  return sentTo255;
 }
-
-write(YEAR, DAY, PART, sentTo255);

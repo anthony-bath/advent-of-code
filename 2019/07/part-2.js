@@ -1,4 +1,4 @@
-import { execute } from '../IntCode.js';
+import { execute } from '../IntCode_v2.js';
 import { permute } from '../../utilities/array.js';
 
 export function part2({ data }) {

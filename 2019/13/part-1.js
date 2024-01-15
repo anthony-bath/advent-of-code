@@ -1,4 +1,4 @@
-import { execute } from '../IntCode.js';
+import { execute } from '../IntCode_v2.js';
 
 export function part1({ data }) {
   const program = data.split(',').map(Number);

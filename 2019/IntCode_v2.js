@@ -13,9 +13,9 @@ export function execute(state, inputs) {
     let modes;
 
     if (command < 100) {
-      modes = [MODE.POSITION, MODE.POSITION, MODE.POSITION];
+      modes = [MODE.POSITION, MODE.POSITION];
     } else if (command < 1000) {
-      modes = [commandString[0], MODE.POSITION, MODE.POSITION];
+      modes = [commandString[0], MODE.POSITION];
     } else if (command < 10000) {
       modes = [commandString[1], commandString[0], MODE.POSITION];
     } else {
@@ -187,4 +187,8 @@ function getParameterValue(parameter, state) {
     case MODE.RELATIVE:
       return getFromAddress(parameter.raw + state.relativeBase, state);
   }
+}
+
+export function toASCIICommand(text) {
+  return [...text.split('').map((c) => c.charCodeAt(0)), 10];
 }

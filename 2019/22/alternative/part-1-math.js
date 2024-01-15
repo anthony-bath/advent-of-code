@@ -1,4 +1,4 @@
-import { readOld, write } from '../../utilities/io.js';
+import { readOld, write } from '../../../utilities/io.js';
 import { modInv, modPow } from 'bigint-crypto-utils';
 
 // Following along with tutorial at https://codeforces.com/blog/entry/72593

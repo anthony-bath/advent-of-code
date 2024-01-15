@@ -1,25 +1,19 @@
-import { readOld, write } from '../../utilities/io.js';
-import { execute } from '../IntCode.js';
+import { execute, toASCIICommand } from '../IntCode_v2.js';
 
-const [YEAR, DAY, PART] = [2019, 21, 1];
+export function part1({ data }) {
+  const program = data.split(',').map(Number);
+  const state = { pointer: 0, program: [...program], relativeBase: 0 };
 
-const program = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+  const output = [];
+  const commands = ['NOT A J', 'NOT B T', 'OR T J', 'NOT C T', 'OR T J', 'AND D J', 'WALK'];
+  const input = commands.map((command) => toASCIICommand(command)).flat();
 
-function toASCIICommand(text) {
-  return [...text.split('').map((c) => c.charCodeAt(0)), 10];
+  while (!state.halted) {
+    const result = execute(state, input);
+    if (!result) break;
+
+    output.push(result);
+  }
+
+  return output.pop();
 }
-
-const state = { pointer: 0, program: [...program], relativeBase: 0 };
-
-const output = [];
-const commands = ['NOT A J', 'NOT B T', 'OR T J', 'NOT C T', 'OR T J', 'AND D J', 'WALK'];
-const input = commands.map((command) => toASCIICommand(command)).flat();
-
-while (!state.halted) {
-  const result = execute(state, input);
-  if (!result) break;
-
-  output.push(result);
-}
-
-write(YEAR, DAY, PART, output.pop());
