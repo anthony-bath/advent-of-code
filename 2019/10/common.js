@@ -1,3 +1,5 @@
+import { abs } from '../../utilities/math.js';
+
 export class Point {
   constructor(x, y) {
     this.x = x;
@@ -11,9 +13,7 @@ export class Point {
       return this.x === line.x && this.y > Math.min(p1.y, p2.y) && this.y < Math.max(p1.y, p2.y);
     } else {
       const diff = this.y - (line.m * this.x + line.b);
-      if (diff > 1e-10 || diff < -1e-10) return false;
-
-      return this.x > Math.min(p1.x, p2.x) && this.x < Math.max(p1.x, p2.x);
+      return abs(diff) < 1e-10 && this.x > Math.min(p1.x, p2.x) && this.x < Math.max(p1.x, p2.x);
     }
   }
 }

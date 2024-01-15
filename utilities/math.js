@@ -18,6 +18,11 @@ export function lcm(x, y, ...z) {
   return lcm((x * y) / gcd(x, y), ...z);
 }
 
+// Math.abs() is extremely slow when running in jest
+export function abs(n) {
+  return n < 0 ? -n : n;
+}
+
 export function solveQuadratic(a, b, c) {
   const root = Math.sqrt(b * b - 4 * a * c);
 
