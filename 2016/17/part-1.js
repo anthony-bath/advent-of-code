@@ -1,16 +1,11 @@
 import { createHash } from 'node:crypto';
 
 export function part1({ data }) {
-  function key({ x, y, path }) {
-    return `${x}|${y}|${path.join('')}`;
-  }
-
   function isOpen(value) {
     return ['b', 'c', 'd', 'e', 'f'].includes(value);
   }
 
   function bfs(state, goalX, goalY) {
-    const visited = { [key(state)]: 1 };
     const queue = [state];
 
     const deltas = [
@@ -43,58 +38,30 @@ export function part1({ data }) {
 
         switch (index) {
           case 0:
-            {
-              if (isOpen(hash[3])) {
-                nextState.path.push('R');
-                const nextKey = key(nextState);
-
-                if (!visited[nextKey]) {
-                  visited[nextKey] = 1;
-                  queue.push(nextState);
-                }
-              }
+            if (isOpen(hash[3])) {
+              nextState.path.push('R');
+              queue.push(nextState);
             }
             break;
 
           case 1:
-            {
-              if (isOpen(hash[1])) {
-                nextState.path.push('D');
-                const nextKey = key(nextState);
-
-                if (!visited[nextKey]) {
-                  visited[nextKey] = 1;
-                  queue.push(nextState);
-                }
-              }
+            if (isOpen(hash[1])) {
+              nextState.path.push('D');
+              queue.push(nextState);
             }
             break;
 
           case 2:
-            {
-              if (isOpen(hash[2])) {
-                nextState.path.push('L');
-                const nextKey = key(nextState);
-
-                if (!visited[nextKey]) {
-                  visited[nextKey] = 1;
-                  queue.push(nextState);
-                }
-              }
+            if (isOpen(hash[2])) {
+              nextState.path.push('L');
+              queue.push(nextState);
             }
             break;
 
           case 3:
-            {
-              if (isOpen(hash[0])) {
-                nextState.path.push('U');
-                const nextKey = key(nextState);
-
-                if (!visited[nextKey]) {
-                  visited[nextKey] = 1;
-                  queue.push(nextState);
-                }
-              }
+            if (isOpen(hash[0])) {
+              nextState.path.push('U');
+              queue.push(nextState);
             }
             break;
         }
