@@ -1,13 +1,6 @@
-import { readOld, write } from '../../utilities/io.js';
-
-const [YEAR, DAY, PART] = [2020, 5, 1];
-
-write(
-  YEAR,
-  DAY,
-  PART,
-  Math.max(
-    ...readOld(YEAR, DAY, PART, { splitBy: null })
+export function part1({ data }) {
+  return Math.max(
+    ...data
       .replace(/[FL]/g, '0')
       .replace(/[BR]/g, '1')
       .split('\n')
@@ -17,5 +10,5 @@ write(
 
         return row * 8 + col;
       })
-  )
-);
+  );
+}

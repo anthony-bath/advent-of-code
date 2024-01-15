@@ -1,29 +1,27 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const numbers = lines.map(Number);
 
-const [YEAR, DAY, PART] = [2020, 1, 2];
+  function findTwoNumbersToSum(target, array) {
+    for (const number of array) {
+      if (array.includes(target - number)) {
+        return [number, target - number];
+      }
+    }
 
-const numbers = readOld(YEAR, DAY, PART).map((n) => parseInt(n, 10));
+    return [];
+  }
 
-function findTwoNumbersToSum(target, array) {
-  for (const number of array) {
-    if (array.includes(target - number)) {
-      return [number, target - number];
+  let result;
+
+  for (const number of numbers) {
+    const target = 2020 - number;
+    const pair = findTwoNumbersToSum(target, numbers);
+
+    if (pair.length) {
+      result = number * pair[0] * pair[1];
+      break;
     }
   }
 
-  return [];
+  return result;
 }
-
-let result;
-
-for (const number of numbers) {
-  const target = 2020 - number;
-  const pair = findTwoNumbersToSum(target, numbers);
-
-  if (pair.length) {
-    result = number * pair[0] * pair[1];
-    break;
-  }
-}
-
-write(YEAR, DAY, PART, result);

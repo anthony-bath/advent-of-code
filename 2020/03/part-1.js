@@ -1,29 +1,25 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ grid }) {
+  const W = grid[0].length;
+  const H = grid.length;
 
-const [YEAR, DAY, PART] = [2020, 3, 1];
+  let treesEncountered = 0;
 
-const map = readOld(YEAR, DAY, PART).map((line) => line.split(''));
+  const position = { x: 0, y: 0 };
 
-const WIDTH = map[0].length;
-const HEIGHT = map.length;
+  while (position.y < H) {
+    const { x, y } = position;
 
-let treesEncountered = 0;
+    if (grid[y][x] === '#') {
+      treesEncountered += 1;
+    }
 
-const position = { x: 0, y: 0 };
+    position.x += 3;
+    position.y += 1;
 
-while (position.y < HEIGHT) {
-  const { x, y } = position;
-
-  if (map[y][x] === '#') {
-    treesEncountered += 1;
+    if (position.x >= W) {
+      position.x = position.x % W;
+    }
   }
 
-  position.x += 3;
-  position.y += 1;
-
-  if (position.x >= WIDTH) {
-    position.x = position.x % WIDTH;
-  }
+  return treesEncountered;
 }
-
-write(YEAR, DAY, PART, treesEncountered);
