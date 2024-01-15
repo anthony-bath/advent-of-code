@@ -1,39 +1,21 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getBagsByType } from './common.js';
 
-const [YEAR, DAY, PART] = [2020, 7, 2];
+export function part2({ lines }) {
+  const bagsByType = getBagsByType(lines);
 
-const expr = /^(?<quantity>\d) (?<type>.+) bags?\.?/;
-const bagsByType = new Map();
+  function dfs(type) {
+    const { contains } = bagsByType.get(type);
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [type, others] = line.split(' bags contain ');
-  const contains = [];
+    return (
+      1 +
+      contains.reduce(
+        (sum, containedBag) => sum + containedBag.quantity * dfs(containedBag.type),
+        0
+      )
+    );
+  }
 
-  others.split(', ').forEach((bag) => {
-    const match = bag.match(expr);
+  const result = dfs('shiny gold') - 1;
 
-    if (match) {
-      const { quantity, type } = match.groups;
-      contains.push({ type, quantity: Number(quantity) });
-
-      if (!bagsByType.has(type)) {
-        bagsByType.set(type, { type, contains: [] });
-      }
-    }
-  });
-
-  bagsByType.set(type, { type, contains });
-});
-
-function dfs(type) {
-  const { contains } = bagsByType.get(type);
-
-  return (
-    1 +
-    contains.reduce((sum, containedBag) => sum + containedBag.quantity * dfs(containedBag.type), 0)
-  );
+  return result;
 }
-
-const result = dfs('shiny gold') - 1;
-
-write(YEAR, DAY, PART, result);

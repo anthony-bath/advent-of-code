@@ -1,38 +1,34 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  function calculateGroupScore(group) {
+    if (group.length === 1) {
+      return group[0].length;
+    }
 
-const [YEAR, DAY, PART] = [2020, 6, 2];
+    group.sort((a, b) => a.length - b.length);
+    const members = group.slice(1);
 
-const input = readOld(YEAR, DAY, PART);
-
-function calculateGroupScore(group) {
-  if (group.length === 1) {
-    return group[0].length;
+    return group[0].reduce((count, question) => {
+      return count + (members.every((member) => member.includes(question)) ? 1 : 0);
+    }, 0);
   }
 
-  group.sort((a, b) => a.length - b.length);
-  const members = group.slice(1);
+  let total = 0;
+  let currentGroup = [];
 
-  return group[0].reduce((count, question) => {
-    return count + (members.every((member) => member.includes(question)) ? 1 : 0);
-  }, 0);
-}
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
 
-let total = 0;
-let currentGroup = [];
-
-for (let i = 0; i < input.length; i++) {
-  const line = input[i];
-
-  if (!line) {
-    total += calculateGroupScore(currentGroup);
-    currentGroup = [];
-  } else {
-    currentGroup.push(line.split(''));
-
-    if (i === input.length - 1) {
+    if (!line) {
       total += calculateGroupScore(currentGroup);
+      currentGroup = [];
+    } else {
+      currentGroup.push(line.split(''));
+
+      if (i === lines.length - 1) {
+        total += calculateGroupScore(currentGroup);
+      }
     }
   }
-}
 
-write(YEAR, DAY, PART, total);
+  return total;
+}

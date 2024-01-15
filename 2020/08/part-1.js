@@ -1,43 +1,31 @@
-import { readOld, write } from '../../utilities/io.js';
+import { getJumpInstruction } from './common.js';
 
-const [YEAR, DAY, PART] = [2020, 8, 1];
+export function part1({ lines }) {
+  const instructions = lines.map((instruction) => {
+    const [operation, value] = instruction.split(' ');
+    return [operation, operation === 'nop' ? 0 : Number(value)];
+  });
 
-const instructions = readOld(YEAR, DAY, PART).map((instruction) => {
-  const [operation, value] = instruction.split(' ');
-  return [operation, operation === 'nop' ? 0 : Number(value)];
-});
+  let accumulator = 0;
+  let executed = new Set();
 
-function getJumpInstruction(index, value) {
-  if (index === 0) {
-    return index - 1;
+  for (let i = 0; i < instructions.length; i++) {
+    if (executed.has(i)) break;
+
+    const [operation, value] = instructions[i];
+    executed.add(i);
+
+    if (operation === 'nop') continue;
+
+    switch (operation) {
+      case 'acc':
+        accumulator += value;
+        break;
+
+      case 'jmp':
+        i = getJumpInstruction(i, value);
+    }
   }
 
-  if (index > 0) {
-    return index + value - 1;
-  }
-
-  return index - (Math.abs(value) + 1);
+  return accumulator;
 }
-
-let accumulator = 0;
-let executed = new Set();
-
-for (let i = 0; i < instructions.length; i++) {
-  if (executed.has(i)) break;
-
-  const [operation, value] = instructions[i];
-  executed.add(i);
-
-  if (operation === 'nop') continue;
-
-  switch (operation) {
-    case 'acc':
-      accumulator += value;
-      break;
-
-    case 'jmp':
-      i = getJumpInstruction(i, value);
-  }
-}
-
-write(YEAR, DAY, PART, accumulator);

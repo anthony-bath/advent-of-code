@@ -1,43 +1,41 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const SIZE = 25;
 
-const [YEAR, DAY, PART] = [2020, 9, 1];
+  const input = lines.map(Number);
+  const preamble = input.slice(0, SIZE);
+  let sums = [];
+  const used = new Set();
 
-const SIZE = 25;
+  for (let i = 0; i < SIZE; i++) {
+    preamble.forEach((value, j) => {
+      const key1 = `${i}-${j}`;
+      const key2 = `${j}-${i}`;
 
-const input = readOld(YEAR, DAY, PART).map((n) => Number(n));
-const preamble = input.slice(0, SIZE);
-let sums = [];
-const used = new Set();
-
-for (let i = 0; i < SIZE; i++) {
-  preamble.forEach((value, j) => {
-    const key1 = `${i}-${j}`;
-    const key2 = `${j}-${i}`;
-
-    if (j !== i && !used.has(key1) && !used.has(key2)) {
-      sums.push({ indexes: [i, j], value: input[i] + value });
-      used.add(key1);
-      used.add(key2);
-    }
-  });
-}
-
-let result;
-
-for (let i = SIZE; i < input.length; i++) {
-  if (sums.filter((sum) => sum.value === input[i]).length === 0) {
-    result = input[i];
-    break;
+      if (j !== i && !used.has(key1) && !used.has(key2)) {
+        sums.push({ indexes: [i, j], value: input[i] + value });
+        used.add(key1);
+        used.add(key2);
+      }
+    });
   }
 
-  const start = i - (SIZE - 1);
-  const prev = start - 1;
+  let result;
 
-  sums = sums.filter(({ indexes }) => !indexes.includes(prev));
+  for (let i = SIZE; i < input.length; i++) {
+    if (sums.filter((sum) => sum.value === input[i]).length === 0) {
+      result = input[i];
+      break;
+    }
 
-  input
-    .slice(start, start + SIZE)
-    .forEach((value, j) => sums.push({ indexes: [i, j + start], value: input[i] + value }));
+    const start = i - (SIZE - 1);
+    const prev = start - 1;
+
+    sums = sums.filter(({ indexes }) => !indexes.includes(prev));
+
+    input
+      .slice(start, start + SIZE)
+      .forEach((value, j) => sums.push({ indexes: [i, j + start], value: input[i] + value }));
+  }
+
+  return result;
 }
-
-write(YEAR, DAY, PART, result);

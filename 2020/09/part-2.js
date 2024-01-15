@@ -1,30 +1,29 @@
-import { readOld, write } from '../../utilities/io.js';
+import { part1 } from './part-1.js';
 
-const [YEAR, DAY, PART] = [2020, 9, 2];
+export function part2({ lines }) {
+  const TARGET = part1({ lines });
+  const input = lines.map(Number);
 
-const TARGET = 556543474; //part-1 result
+  let sum = input[0] + input[1];
+  let start = 0;
+  let contiguous = [];
 
-const input = readOld(YEAR, DAY, PART).map((n) => Number(n));
+  // Sliding Window
+  for (let i = 2; i < input.length; i++) {
+    while (sum > TARGET && start < i - 1) {
+      sum = sum - input[start];
+      start++;
+    }
 
-let sum = input[0] + input[1];
-let start = 0;
-let contiguous = [];
+    if (sum === TARGET) {
+      contiguous = input.slice(start, i);
+      break;
+    }
 
-// Sliding Window
-for (let i = 2; i < input.length; i++) {
-  while (sum > TARGET && start < i - 1) {
-    sum = sum - input[start];
-    start++;
+    sum += input[i];
   }
 
-  if (sum === TARGET) {
-    contiguous = input.slice(start, i);
-    break;
-  }
+  contiguous.sort((a, b) => a - b);
 
-  sum += input[i];
+  return contiguous.shift() + contiguous.pop();
 }
-
-contiguous.sort((a, b) => a - b);
-
-write(YEAR, DAY, PART, contiguous.shift() + contiguous.pop());

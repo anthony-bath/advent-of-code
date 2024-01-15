@@ -1,28 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const joltages = lines.map(Number).sort((a, b) => a - b);
 
-const [YEAR, DAY, PART] = [2020, 10, 2];
+  joltages.unshift(0); // source
+  joltages.push(joltages[joltages.length - 1] + 3); // built-in adapter
 
-const joltages = readOld(YEAR, DAY, PART)
-  .map((n) => Number(n))
-  .sort((a, b) => a - b);
+  const cache = {};
 
-joltages.unshift(0); // source
-joltages.push(joltages[joltages.length - 1] + 3); // built-in adapter
+  function getPaths(index) {
+    if (index === joltages.length - 1) return 1;
+    if (cache[index]) return cache[index];
 
-const cache = {};
+    let count = 0;
 
-function getPaths(index) {
-  if (index === joltages.length - 1) return 1;
-  if (cache[index]) return cache[index];
+    for (let j = index + 1; joltages[j] - joltages[index] <= 3; j++) {
+      count += getPaths(j);
+    }
 
-  let count = 0;
-
-  for (let j = index + 1; joltages[j] - joltages[index] <= 3; j++) {
-    count += getPaths(j);
+    cache[index] = count;
+    return count;
   }
 
-  cache[index] = count;
-  return count;
+  return getPaths(0);
 }
-
-write(YEAR, DAY, PART, getPaths(0));
