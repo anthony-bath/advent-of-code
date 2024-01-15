@@ -10,7 +10,7 @@ The airlock door is locked with a code; your best option is to send in a small d
 
 This droid can follow basic instructions and report on its surroundings; you can communicate with it through an Intcode program (your puzzle input) running on an ASCII-capable computer.
 
-As the droid moves through its environment, it will describe what it encounters. When it says Command?, you can give it a single instruction terminated with a newline (ASCII code 10). Possible instructions are:
+As the droid moves through its environment, it will describe what it encounters. When it says Command?, you can give it a single instruction terminated with a newline (ASCII code `10`). Possible instructions are:
 
 - Movement via `north`, `south`, `east`, or `west`.
 - To take an item the droid sees in the environment, use the command `take <name of item>`. For example, if the droid reports seeing a red ball, you can pick it up with take red ball.
