@@ -1,7 +1,3 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2020, 16];
-
 class Range {
   constructor(start, end) {
     this.start = Number(start);
@@ -27,7 +23,7 @@ class Field {
 const FIELD_EXPR =
   /(?<name>[a-z\s]+): (?<r1start>\d+)-(?<r1end>\d+) or (?<r2start>\d+)-(?<r2end>\d+)/;
 
-export function loadData(part) {
+export function getInputElements(lines) {
   let parsingMyTicket = false;
   let parsingNearbyTickets = false;
 
@@ -35,7 +31,7 @@ export function loadData(part) {
   let myTicket;
   const tickets = [];
 
-  readOld(YEAR, DAY, part).forEach((line) => {
+  lines.forEach((line) => {
     if (!line && !parsingMyTicket) {
       parsingMyTicket = true;
       return;

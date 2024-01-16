@@ -1,20 +1,18 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const [timestampString, schedule] = lines;
 
-const [YEAR, DAY, PART] = [2020, 13, 1];
+  const buses = schedule
+    .split(',')
+    .filter((id) => id !== 'x')
+    .map((id) => Number(id));
 
-const [timestampString, schedule] = readOld(YEAR, DAY, PART);
+  const timestamp = Number(timestampString);
 
-const buses = schedule
-  .split(',')
-  .filter((id) => id !== 'x')
-  .map((id) => Number(id));
+  const sorted = buses
+    .map((id) => ({ id, wait: Math.ceil(timestamp / id) * id - timestamp }))
+    .sort((a, b) => a.wait - b.wait);
 
-const timestamp = Number(timestampString);
+  const { id, wait } = sorted.shift();
 
-const sorted = buses
-  .map((id) => ({ id, wait: Math.ceil(timestamp / id) * id - timestamp }))
-  .sort((a, b) => a.wait - b.wait);
-
-const { id, wait } = sorted.shift();
-
-write(YEAR, DAY, PART, id * wait);
+  return id * wait;
+}

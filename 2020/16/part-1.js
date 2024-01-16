@@ -1,15 +1,9 @@
-import { write } from '../../utilities/io.js';
-import { loadData } from './common.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2020, 16, 1];
+export function part1({ lines }) {
+  const { tickets, fields } = getInputElements(lines);
 
-const { tickets, fields } = loadData(PART);
-
-write(
-  YEAR,
-  DAY,
-  PART,
-  tickets.reduce((error, ticket) => {
+  return tickets.reduce((error, ticket) => {
     return (
       error +
       ticket.reduce((sum, value) => {
@@ -20,5 +14,5 @@ write(
         return sum + value;
       }, 0)
     );
-  }, 0)
-);
+  }, 0);
+}

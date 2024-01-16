@@ -1,41 +1,29 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const input = data.split(',').map(Number);
+  const TURNS = 30000000;
 
-const [YEAR, DAY, PART] = [2020, 15, 2];
+  let turn = 1;
+  const spoken = new Array(TURNS);
 
-const numbers = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
-const TURNS = 30000000;
-
-let turn = 1;
-const spoken = new Map();
-let lastSpoken = null;
-
-while (turn <= TURNS) {
-  if (turn <= numbers.length) {
-    lastSpoken = numbers[turn - 1];
-    spoken.set(lastSpoken, [turn]);
-  } else {
-    const spokenOnTurns = spoken.get(lastSpoken);
-
-    if (spokenOnTurns.length === 1) {
-      lastSpoken = 0;
-    } else {
-      lastSpoken = spokenOnTurns[1] - spokenOnTurns[0];
-    }
-
-    const lastSpokenTurns = spoken.get(lastSpoken);
-
-    if (lastSpokenTurns) {
-      if (lastSpokenTurns.length === 2) {
-        lastSpokenTurns.shift();
-      }
-
-      lastSpokenTurns.push(turn);
-    } else {
-      spoken.set(lastSpoken, [turn]);
-    }
+  for (const number of input.slice(0, input.length - 1)) {
+    spoken[number] = turn++;
   }
 
-  turn++;
-}
+  turn = input.length;
+  let spokenNumber = input[input.length - 1];
 
-write(YEAR, DAY, PART, lastSpoken);
+  while (turn < TURNS) {
+    if (spokenNumber in spoken) {
+      const previousOccurence = spoken[spokenNumber];
+      spoken[spokenNumber] = turn;
+      spokenNumber = turn - previousOccurence;
+    } else {
+      spoken[spokenNumber] = turn;
+      spokenNumber = 0;
+    }
+
+    turn++;
+  }
+
+  return spokenNumber;
+}

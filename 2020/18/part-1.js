@@ -1,7 +1,14 @@
-import { readOld, write } from '../../utilities/io.js';
 import { EOL } from 'os';
 
-const [YEAR, DAY, PART] = [2020, 18, 1];
+export function part1({ data }) {
+  return data
+    .replace(/\(\(/g, '( (')
+    .replace(/\)\)/g, ') )')
+    .replace(/(\()(\d+)/g, '$1 $2')
+    .replace(/(\d+)(\))/g, '$1 $2')
+    .split(EOL)
+    .reduce((total, equation) => total + evaluate(equation), 0);
+}
 
 function evaluate(equation) {
   const tokens = equation.split(' ');
@@ -54,13 +61,3 @@ function evaluate(equation) {
 
   return values.pop();
 }
-
-const result = readOld(YEAR, DAY, PART, { splitBy: null })
-  .replace(/\(\(/g, '( (')
-  .replace(/\)\)/g, ') )')
-  .replace(/(\()(\d+)/g, '$1 $2')
-  .replace(/(\d+)(\))/g, '$1 $2')
-  .split(EOL)
-  .reduce((total, equation) => total + evaluate(equation), 0);
-
-write(YEAR, DAY, PART, result);

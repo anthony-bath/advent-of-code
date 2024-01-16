@@ -1,6 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const expr = /\d+/g;
+  const mem = {};
+  let mask;
 
-const [YEAR, DAY, PART] = [2020, 14, 2];
+  lines.forEach((line) => {
+    if (line.startsWith('mask')) {
+      const parts = line.split(' = ');
+      mask = parts[1].split('');
+    } else {
+      const [address, value] = line.match(expr);
+      const addresses = getAddresses(mask, address);
+
+      for (const address of addresses) {
+        mem[address] = Number(value);
+      }
+    }
+  });
+
+  return Object.values(mem).reduce((sum, value) => sum + value, 0);
+}
 
 function getAddresses(mask, address) {
   const binary = Number(address).toString(2).padStart(36, '0').split('');
@@ -36,28 +54,3 @@ function getAddresses(mask, address) {
 
   return addresses;
 }
-
-const expr = /\d+/g;
-const mem = {};
-let mask;
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  if (line.startsWith('mask')) {
-    const parts = line.split(' = ');
-    mask = parts[1].split('');
-  } else {
-    const [address, value] = line.match(expr);
-    const addresses = getAddresses(mask, address);
-
-    for (const address of addresses) {
-      mem[address] = Number(value);
-    }
-  }
-});
-
-write(
-  YEAR,
-  DAY,
-  PART,
-  Object.values(mem).reduce((sum, value) => sum + value, 0)
-);
