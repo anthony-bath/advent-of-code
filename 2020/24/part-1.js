@@ -1,38 +1,27 @@
-import { readOld, write } from '../../utilities/io.js';
+import { expr, deltas } from './common.js';
 
-const [YEAR, DAY, PART] = [2020, 24, 1];
+export function part1({ lines }) {
+  const tiles = new Set();
 
-const expr = /(se|sw|ne|nw|w|e)/g;
+  lines.forEach((path) => {
+    const moves = path.match(expr);
+    let [x, y] = [0, 0];
 
-const deltas = {
-  se: [0, 1],
-  sw: [-1, 1],
-  ne: [1, -1],
-  nw: [0, -1],
-  e: [1, 0],
-  w: [-1, 0],
-};
+    moves.forEach((move) => {
+      let [dx, dy] = deltas[move];
 
-const tiles = new Set();
+      x += dx;
+      y += dy;
+    });
 
-readOld(YEAR, DAY, PART).forEach((path) => {
-  const moves = path.match(expr);
-  let [x, y] = [0, 0];
+    const key = `${x}-${y}`;
 
-  moves.forEach((move) => {
-    let [dx, dy] = deltas[move];
-
-    x += dx;
-    y += dy;
+    if (tiles.has(key)) {
+      tiles.delete(key);
+    } else {
+      tiles.add(key);
+    }
   });
 
-  const key = `${x}-${y}`;
-
-  if (tiles.has(key)) {
-    tiles.delete(key);
-  } else {
-    tiles.add(key);
-  }
-});
-
-write(YEAR, DAY, PART, tiles.size);
+  return tiles.size;
+}

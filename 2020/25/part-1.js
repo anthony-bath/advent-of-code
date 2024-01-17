@@ -1,25 +1,23 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const SUBJECT_NUMBER = 7;
+  const FACTOR = 20201227;
+  const [cardPublicKey, doorPublicKey] = lines.map(Number);
 
-const [YEAR, DAY, PART] = [2020, 25, 1];
+  let cardLoopSize = 0;
+  let value = 1;
 
-const SUBJECT_NUMBER = 7;
-const FACTOR = 20201227;
-const [cardPublicKey, doorPublicKey] = readOld(YEAR, DAY, PART).map((n) => Number(n));
+  do {
+    value *= SUBJECT_NUMBER;
+    value %= FACTOR;
+    cardLoopSize++;
+  } while (value !== cardPublicKey);
 
-let cardLoopSize = 0;
-let value = 1;
+  let result = 1;
 
-do {
-  value *= SUBJECT_NUMBER;
-  value %= FACTOR;
-  cardLoopSize++;
-} while (value !== cardPublicKey);
+  for (let i = 0; i < cardLoopSize; i++) {
+    result *= doorPublicKey;
+    result %= FACTOR;
+  }
 
-let result = 1;
-
-for (let i = 0; i < cardLoopSize; i++) {
-  result *= doorPublicKey;
-  result %= FACTOR;
+  return result;
 }
-
-write(YEAR, DAY, PART, result);
