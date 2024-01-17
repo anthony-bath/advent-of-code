@@ -1,76 +1,47 @@
-class Node {
-  constructor(value, next, prev) {
-    this.value = value;
-    this.next = next;
-    this.previous = prev;
-  }
-}
-
 export function part2({ data }) {
   const input = data.split('').map(Number);
+
+  const first = input[0];
+  let current = first;
+
   const cups = [];
 
-  cups[input[0]] = new Node(input[0]);
-
-  for (const [index, cup] of input.entries()) {
-    if (index === 0) continue;
-
-    const prev = cups[input[index - 1]];
-    const node = new Node(cup, null, prev);
-    cups[cup] = node;
-    prev.next = node;
+  for (const cup of input) {
+    cups[current] = cup;
+    current = cup;
   }
 
-  const MAX = 1000000;
-
-  for (let x = 10; x <= MAX; x++) {
-    const prev = x === 10 ? cups[input[input.length - 1]] : cups[x - 1];
-    const node = new Node(x, null, prev);
-    cups[x] = node;
-    prev.next = node;
+  for (let i = 10; i <= 1000000; i++) {
+    cups[current] = i;
+    current = i;
   }
 
-  const first = cups[input[0]];
-  const last = cups[MAX];
+  cups[current] = first;
+  current = first;
 
-  first.prev = last;
-  last.next = first;
+  for (let move = 1; move <= 10000000; move++) {
+    const p1 = cups[current];
+    const p2 = cups[p1];
+    const p3 = cups[p2];
+    const p4 = cups[p3];
+    const picked = [p1, p2, p3];
 
-  const MOVES = 10000000;
-  let currentCup = first;
+    let destination = current;
 
-  for (let move = 0; move < MOVES; move++) {
-    const pickup = [];
-    const pickupLabels = [];
-    let temp = currentCup.next;
+    do {
+      destination = destination - 1;
 
-    while (pickup.length < 3) {
-      pickup.push(temp);
-      pickupLabels.push(temp.value);
-      temp = temp.next;
-    }
-
-    let destinationLabel = currentCup.value - 1;
-
-    while (pickupLabels.includes(destinationLabel) || destinationLabel <= 0) {
-      destinationLabel--;
-
-      if (destinationLabel < 1) {
-        destinationLabel = MAX;
+      if (destination === 0) {
+        destination = 1000000;
       }
-    }
+    } while (picked.includes(destination));
 
-    const destinationCup = cups[destinationLabel];
-
-    currentCup.next = pickup[2].next;
-    pickup[0].prev = destinationCup;
-    pickup[2].next = destinationCup.next;
-    destinationCup.next = pickup[0];
-
-    currentCup = currentCup.next;
+    cups[current] = p4;
+    cups[p3] = cups[destination];
+    cups[destination] = p1;
+    current = p4;
   }
 
-  const one = cups[1];
-
-  return one.next.value * one.next.next.value;
+  const next = cups[1];
+  return next * cups[next];
 }
