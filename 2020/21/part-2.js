@@ -1,70 +1,60 @@
-import { readOld, write } from '../../utilities/io.js';
+import { Recipe } from './common.js';
 
-const [YEAR, DAY, PART] = [2020, 21, 2];
+export function part2({ lines }) {
+  const expr = /(?<ingredientList>.+) \(contains (?<allergenList>.+)\)/;
+  const recipes = [];
+  const possibleIngredientsByAllergen = new Map();
 
-const expr = /(?<ingredientList>.+) \(contains (?<allergenList>.+)\)/;
+  lines.forEach((line) => {
+    const { ingredientList, allergenList } = line.match(expr).groups;
+    const ingredients = ingredientList.split(' ');
+    const allergens = allergenList.split(', ');
 
-class Recipe {
-  constructor(ingredients, allergens) {
-    this.ingredients = ingredients;
-    this.allergens = allergens;
-  }
-}
+    for (const allergen of allergens) {
+      if (!possibleIngredientsByAllergen.has(allergen)) {
+        possibleIngredientsByAllergen.set(allergen, new Set());
+      }
 
-const recipes = [];
-const possibleIngredientsByAllergen = new Map();
+      const possibles = possibleIngredientsByAllergen.get(allergen);
 
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const { ingredientList, allergenList } = line.match(expr).groups;
-  const ingredients = ingredientList.split(' ');
-  const allergens = allergenList.split(', ');
-
-  for (const allergen of allergens) {
-    if (!possibleIngredientsByAllergen.has(allergen)) {
-      possibleIngredientsByAllergen.set(allergen, new Set());
+      for (const ingredient of ingredients) {
+        possibles.add(ingredient);
+      }
     }
 
-    const possibles = possibleIngredientsByAllergen.get(allergen);
+    recipes.push(new Recipe(ingredients, allergens));
+  });
 
-    for (const ingredient of ingredients) {
-      possibles.add(ingredient);
-    }
-  }
+  for (const recipe of recipes) {
+    for (const allergen of recipe.allergens) {
+      const possibleIngredients = possibleIngredientsByAllergen.get(allergen);
 
-  recipes.push(new Recipe(ingredients, allergens));
-});
+      if (possibleIngredients.size === 1) continue;
 
-for (const recipe of recipes) {
-  for (const allergen of recipe.allergens) {
-    const possibleIngredients = possibleIngredientsByAllergen.get(allergen);
-
-    if (possibleIngredients.size === 1) continue;
-
-    for (const ingredient of possibleIngredients) {
-      if (!recipe.ingredients.includes(ingredient)) {
-        possibleIngredients.delete(ingredient);
+      for (const ingredient of possibleIngredients) {
+        if (!recipe.ingredients.includes(ingredient)) {
+          possibleIngredients.delete(ingredient);
+        }
       }
     }
   }
-}
 
-while ([...possibleIngredientsByAllergen.values()].some((possible) => possible.size > 1)) {
-  for (const [allergen1, possibleIngredidents1] of possibleIngredientsByAllergen) {
-    if (possibleIngredidents1.size > 1) continue;
+  while ([...possibleIngredientsByAllergen.values()].some((possible) => possible.size > 1)) {
+    for (const [allergen1, possibleIngredidents1] of possibleIngredientsByAllergen) {
+      if (possibleIngredidents1.size > 1) continue;
 
-    const ingredient = [...possibleIngredidents1][0];
+      const ingredient = [...possibleIngredidents1][0];
 
-    for (const [allergen2, possibleIngredients2] of possibleIngredientsByAllergen) {
-      if (allergen1 === allergen2) continue;
+      for (const [allergen2, possibleIngredients2] of possibleIngredientsByAllergen) {
+        if (allergen1 === allergen2) continue;
 
-      possibleIngredients2.delete(ingredient);
+        possibleIngredients2.delete(ingredient);
+      }
     }
   }
+
+  return [...possibleIngredientsByAllergen.keys()]
+    .sort()
+    .map((allergen) => [...possibleIngredientsByAllergen.get(allergen)][0])
+    .join(',');
 }
-
-const result = [...possibleIngredientsByAllergen.keys()]
-  .sort()
-  .map((allergen) => [...possibleIngredientsByAllergen.get(allergen)][0])
-  .join(',');
-
-write(YEAR, DAY, PART, result);
