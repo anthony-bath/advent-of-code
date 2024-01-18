@@ -78,7 +78,7 @@ if (!fs.existsSync(testJs)) {
     `describe('${year} Day ${day}', () => {`,
     "  beforeEach(() => (grid = lines.map((line) => line.split(''))));",
     '',
-    "  it('Part 1', () => {",
+    "  test('Part 1', () => {",
     '    expect(part1({ lines, grid, data })).toBe(0);',
     '  });',
   ]);
@@ -86,7 +86,7 @@ if (!fs.existsSync(testJs)) {
   if (day !== '25') {
     templateLines = templateLines.concat([
       '',
-      "  it('Part 2', () => {",
+      "  test('Part 2', () => {",
       '    expect(part2({ lines, grid, data })).toBe(0);',
       '  });',
     ]);

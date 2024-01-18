@@ -8,11 +8,11 @@ let grid;
 describe('2020 Day 3', () => {
   beforeEach(() => (grid = lines.map((line) => line.split(''))));
 
-  it('Part 1', () => {
+  test('Part 1', () => {
     expect(part1({ grid })).toBe(169);
   });
 
-  it('Part 2', () => {
+  test('Part 2', () => {
     expect(part2({ grid })).toBe(7560370818);
   });
 });

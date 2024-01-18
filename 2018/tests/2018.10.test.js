@@ -6,11 +6,11 @@ const { lines } = loadInput(2018, 10);
 
 describe('2018 Day 10', () => {
   // Part 1 outputs a grid of pixels, so we'll just check that it's not empty.
-  it('Part 1', () => {
+  test('Part 1', () => {
     expect(part1({ lines }).length).toBeGreaterThan(0);
   });
 
-  it('Part 2', () => {
+  test('Part 2', () => {
     expect(part2({ lines })).toBe(10641);
   });
 });

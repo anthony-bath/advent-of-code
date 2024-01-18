@@ -7,7 +7,7 @@ let grid;
 describe('2016 Day 25', () => {
   beforeEach(() => (grid = lines.map((line) => line.split(''))));
 
-  it('Part 1', () => {
+  test('Part 1', () => {
     expect(part1({ lines, grid, data })).toBe(189);
   });
 });

@@ -5,11 +5,11 @@ import { part2 } from '../20/part-2.js';
 const { lines } = loadInput(2020, 20);
 
 describe('2020 Day 20', () => {
-  it('Part 1', () => {
+  test('Part 1', () => {
     expect(part1({ lines })).toBe(51214443014783);
   });
 
-  it('Part 2', () => {
+  test('Part 2', () => {
     expect(part2({ lines })).toBe(2065);
   });
 });
