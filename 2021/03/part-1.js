@@ -1,32 +1,29 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const report = lines.map((x) => x.trim());
+  const bitCounts = [];
 
-const [YEAR, DAY, PART] = [2021, 3, 1];
+  for (const entry of report) {
+    [...entry].forEach((value, bit) => {
+      if (!bitCounts[bit]) {
+        bitCounts[bit] = [0, 0];
+      }
 
-const data = readOld(YEAR, DAY, PART).map((x) => x.trim());
-
-const bitCounts = [];
-
-for (const entry of data) {
-  [...entry].forEach((value, bit) => {
-    if (!bitCounts[bit]) {
-      bitCounts[bit] = [0, 0];
-    }
-
-    bitCounts[bit][parseInt(value)]++;
-  });
-}
-
-let gamma = '';
-let epsilon = '';
-
-for (const [low, high] of bitCounts) {
-  if (high > low) {
-    gamma += '1';
-    epsilon += '0';
-  } else {
-    gamma += '0';
-    epsilon += '1';
+      bitCounts[bit][parseInt(value)]++;
+    });
   }
-}
 
-write(YEAR, DAY, PART, parseInt(gamma, 2) * parseInt(epsilon, 2));
+  let gamma = '';
+  let epsilon = '';
+
+  for (const [low, high] of bitCounts) {
+    if (high > low) {
+      gamma += '1';
+      epsilon += '0';
+    } else {
+      gamma += '0';
+      epsilon += '1';
+    }
+  }
+
+  return parseInt(gamma, 2) * parseInt(epsilon, 2);
+}

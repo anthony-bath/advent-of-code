@@ -1,29 +1,28 @@
-import { write } from '../../utilities/io.js';
-import { loadData, evaluateBoard, sumBoard } from './common.js';
+import { getInputElements, evaluateBoard, sumBoard } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 4, 2];
+export function part2({ lines }) {
+  const { numbers, boards } = getInputElements(lines);
 
-const { numbers, boards } = loadData(PART);
+  const winningStates = [];
+  const wonBoardIndices = [];
 
-const winningStates = [];
-const wonBoardIndices = [];
+  for (const number of numbers) {
+    for (let i = 0; i < boards.length; i++) {
+      if (wonBoardIndices.includes(i)) {
+        continue;
+      }
 
-for (const number of numbers) {
-  for (let i = 0; i < boards.length; i++) {
-    if (wonBoardIndices.includes(i)) {
-      continue;
-    }
+      const board = boards[i];
+      const result = evaluateBoard(number, board);
 
-    const board = boards[i];
-    const result = evaluateBoard(number, board);
-
-    if (result) {
-      winningStates.push({ board, number });
-      wonBoardIndices.push(i);
+      if (result) {
+        winningStates.push({ board, number });
+        wonBoardIndices.push(i);
+      }
     }
   }
+
+  const { board, number } = winningStates.pop();
+
+  return sumBoard(board) * number;
 }
-
-const { board, number } = winningStates.pop();
-
-write(YEAR, DAY, PART, sumBoard(board) * number);

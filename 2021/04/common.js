@@ -1,15 +1,9 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 4];
-
-export const loadData = (part) => {
-  const input = readOld(YEAR, DAY, part);
-  const numbers = input[0].split(',').map((x) => Number(x));
-
+export const getInputElements = (lines) => {
+  const numbers = lines[0].split(',').map(Number);
   const boards = [];
   let board = [];
 
-  input.slice(2).forEach((row, index) => {
+  lines.slice(2).forEach((row, index) => {
     if ((index + 1) % 6 === 0) {
       boards.push(board);
       board = [];
@@ -19,7 +13,7 @@ export const loadData = (part) => {
           .trim()
           .split(' ')
           .filter((x) => x)
-          .map((x) => Number(x))
+          .map(Number)
       );
     }
   });

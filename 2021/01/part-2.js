@@ -1,28 +1,24 @@
-import { readOld, write } from '../../utilities/io.js';
+import { sum } from '../../utilities/array.js';
 
-const [YEAR, DAY, PART] = [2021, 1, 2];
+export function part2({ lines }) {
+  const report = lines.map(Number);
+  const windowSize = 3;
 
-const data = readOld(YEAR, DAY, PART).map((x) => Number(x));
+  let windowIncreaseCount = 0;
 
-const windowSize = 3;
-let windowIncreaseCount = 0;
+  for (let i = 1; i < report.length; i++) {
+    const currentWindow = report.slice(i, windowSize + i);
 
-for (let i = 1; i < data.length; i++) {
-  const currentWindow = data.slice(i, windowSize + i);
+    if (currentWindow.length < windowSize) {
+      break;
+    }
 
-  if (currentWindow.length < windowSize) {
-    break;
+    const previousWindow = report.slice(i - 1, windowSize + i - 1);
+
+    if (sum(currentWindow) > sum(previousWindow)) {
+      windowIncreaseCount++;
+    }
   }
 
-  const previousWindow = data.slice(i - 1, windowSize + i - 1);
-
-  if (sum(currentWindow) > sum(previousWindow)) {
-    windowIncreaseCount++;
-  }
-}
-
-write(YEAR, DAY, PART, windowIncreaseCount);
-
-function sum(array) {
-  return array.reduce((result, current) => result + current, 0);
+  return windowIncreaseCount;
 }

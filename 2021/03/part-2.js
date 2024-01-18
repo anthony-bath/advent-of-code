@@ -1,8 +1,10 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ lines }) {
+  const report = lines.map((x) => x.trim());
+  const generator = getResultData(report, getMostCommonValue);
+  const scrubber = getResultData(report, getLeastCommonValue);
 
-const [YEAR, DAY, PART] = [2021, 3, 2];
-
-const data = readOld(YEAR, DAY, PART).map((x) => x.trim());
+  return parseInt(generator, 2) * parseInt(scrubber, 2);
+}
 
 function getResultData(inputData, valueFunc) {
   let bitCounts = getBitCounts(inputData);
@@ -49,8 +51,3 @@ function getBitCounts(array) {
 
   return bitCounts;
 }
-
-const generator = getResultData(data, getMostCommonValue);
-const scrubber = getResultData(data, getLeastCommonValue);
-
-write(YEAR, DAY, PART, parseInt(generator, 2) * parseInt(scrubber, 2));

@@ -1,13 +1,9 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 5];
-
-export const loadData = (part) => {
+export const getInputElements = (lines) => {
   let xMax = 0;
   let yMax = 0;
-  const lines = [];
+  const lineData = [];
 
-  readOld(YEAR, DAY, part).forEach((row) => {
+  lines.forEach((row) => {
     const [start, end] = row.split(' -> ');
     const [x1, y1] = start.split(',').map((n) => parseInt(n));
     const [x2, y2] = end.split(',').map((n) => parseInt(n));
@@ -15,12 +11,12 @@ export const loadData = (part) => {
     xMax = Math.max(x1, x2, xMax);
     yMax = Math.max(y1, y2, yMax);
 
-    lines.push({ x1, y1, x2, y2 });
+    lineData.push({ x1, y1, x2, y2 });
   });
 
   const grid = [...Array(yMax + 1)].map((x) => Array(xMax + 1).fill(0));
 
-  return { lines, grid };
+  return { lineData, grid };
 };
 
 export const plotVertical = (y1, y2, x, grid) => {

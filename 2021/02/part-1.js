@@ -1,27 +1,25 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const directions = lines.map((row) => {
+    const [direction, amount] = row.split(' ');
+    return [direction, Number(amount)];
+  });
 
-const [YEAR, DAY, PART] = [2021, 2, 1];
+  let horizontal = 0;
+  let depth = 0;
 
-const data = readOld(YEAR, DAY, PART).map((row) => {
-  const [direction, amount] = row.split(' ');
-  return [direction, Number(amount)];
-});
-
-let horizontal = 0;
-let depth = 0;
-
-for (const [direction, amount] of data) {
-  switch (direction) {
-    case 'forward':
-      horizontal += amount;
-      break;
-    case 'up':
-      depth -= amount;
-      break;
-    case 'down':
-      depth += amount;
-      break;
+  for (const [direction, amount] of directions) {
+    switch (direction) {
+      case 'forward':
+        horizontal += amount;
+        break;
+      case 'up':
+        depth -= amount;
+        break;
+      case 'down':
+        depth += amount;
+        break;
+    }
   }
-}
 
-write(YEAR, DAY, PART, horizontal * depth);
+  return horizontal * depth;
+}

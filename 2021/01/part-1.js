@@ -1,14 +1,7 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const report = lines.map(Number);
 
-const [YEAR, DAY, PART] = [2021, 1, 1];
-
-const data = readOld(YEAR, DAY, PART).map((x) => Number(x));
-
-write(
-  YEAR,
-  DAY,
-  PART,
-  data.reduce((depthIncreaseCount, depth, i) => {
-    return i === 0 ? depthIncreaseCount : depthIncreaseCount + (depth > data[i - 1] ? 1 : 0);
-  }, 0)
-);
+  return report.reduce((depthIncreaseCount, depth, i) => {
+    return i === 0 ? depthIncreaseCount : depthIncreaseCount + (depth > report[i - 1] ? 1 : 0);
+  }, 0);
+}

@@ -1,24 +1,22 @@
-import { write } from '../../utilities/io.js';
-import { loadData, evaluateBoard, sumBoard } from './common.js';
+import { getInputElements, evaluateBoard, sumBoard } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 4, 1];
+export function part1({ lines }) {
+  const { numbers, boards } = getInputElements(lines);
 
-const { numbers, boards } = loadData(PART);
+  let bestBoard = null;
 
-let bestBoard = null;
+  for (const number of numbers) {
+    for (let board of boards) {
+      const result = evaluateBoard(number, board);
 
-for (const number of numbers) {
-  for (let board of boards) {
-    const result = evaluateBoard(number, board);
-
-    if (result) {
-      bestBoard = board;
-      break;
+      if (result) {
+        bestBoard = board;
+        break;
+      }
     }
-  }
 
-  if (bestBoard) {
-    write(YEAR, DAY, PART, sumBoard(bestBoard) * number);
-    break;
+    if (bestBoard) {
+      return sumBoard(bestBoard) * number;
+    }
   }
 }
