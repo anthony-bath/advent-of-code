@@ -1,27 +1,23 @@
-import { readOld, write } from '../../utilities/io.js';
+import { abs, sumN } from '../../utilities/math.js';
 
-const [YEAR, DAY, PART] = [2021, 7, 2];
+export function part2({ data }) {
+  const positions = data.split(',').map(Number);
 
-const positions = readOld(YEAR, DAY, PART, { splitBy: ',' }).map((n) => Number(n));
+  const maxPos = Math.max(...positions);
+  const moveCostByDistance = new Map();
+  let fuelByPosition = Array(maxPos + 1).fill(0);
 
-const maxPos = Math.max(...positions);
-const moveCostByDistance = new Map();
-let fuelByPosition = Array(maxPos + 1).fill(0);
+  for (const position of positions) {
+    fuelByPosition = fuelByPosition.map((fuel, targetPosition) => {
+      const distance = abs(position - targetPosition);
 
-for (const position of positions) {
-  fuelByPosition = fuelByPosition.map((fuel, targetPosition) => {
-    const distance = Math.abs(position - targetPosition);
+      if (!moveCostByDistance.has(distance)) {
+        moveCostByDistance.set(distance, sumN(distance));
+      }
 
-    if (!moveCostByDistance.has(distance)) {
-      moveCostByDistance.set(distance, sumN(distance));
-    }
+      return fuel + moveCostByDistance.get(distance);
+    });
+  }
 
-    return fuel + moveCostByDistance.get(distance);
-  });
+  return Math.min(...fuelByPosition);
 }
-
-function sumN(n) {
-  return (n * (n + 1)) / 2;
-}
-
-write(YEAR, DAY, PART, Math.min(...fuelByPosition));

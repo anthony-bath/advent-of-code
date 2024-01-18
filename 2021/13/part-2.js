@@ -1,57 +1,56 @@
 import { printTextGrid } from '../../utilities/grid.js';
-import { write } from '../../utilities/io.js';
-import { loadData } from './common.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 13, 2];
+export function part2({ lines }) {
+  let { xMax, yMax, coords, folds } = getInputElements(lines);
+  let paper = [...Array(yMax + 1)].map((_) => Array(xMax + 1).fill('.'));
 
-let { xMax, yMax, coords, folds } = loadData(PART);
-let paper = [...Array(yMax + 1)].map((_) => Array(xMax + 1).fill('.'));
+  coords.forEach(([x, y]) => {
+    paper[y][x] = '#';
+  });
 
-coords.forEach(([x, y]) => {
-  paper[y][x] = '#';
-});
+  for (const [dir, point] of folds) {
+    let paperAfterFold;
 
-for (const [dir, point] of folds) {
-  let paperAfterFold;
+    switch (dir) {
+      case 'y':
+        const yMaxNew = point - 1;
 
-  switch (dir) {
-    case 'y':
-      const yMaxNew = point - 1;
+        paperAfterFold = [...Array(yMaxNew + 1)].map((_) => Array(xMax + 1).fill('.'));
 
-      paperAfterFold = [...Array(yMaxNew + 1)].map((_) => Array(xMax + 1).fill('.'));
+        for (let i = 1; i < yMax - point + 1; i++) {
+          let newY = point - i;
+          let oldY = point + i;
 
-      for (let i = 1; i < yMax - point + 1; i++) {
-        let newY = point - i;
-        let oldY = point + i;
-
-        for (let x = 0; x < xMax + 1; x++) {
-          paperAfterFold[newY][x] = paper[newY][x] === '#' || paper[oldY][x] === '#' ? '#' : '.';
+          for (let x = 0; x < xMax + 1; x++) {
+            paperAfterFold[newY][x] = paper[newY][x] === '#' || paper[oldY][x] === '#' ? '#' : '.';
+          }
         }
-      }
 
-      paper = paperAfterFold;
-      yMax = yMaxNew;
+        paper = paperAfterFold;
+        yMax = yMaxNew;
 
-      break;
-    case 'x':
-      const xMaxNew = point - 1;
+        break;
+      case 'x':
+        const xMaxNew = point - 1;
 
-      paperAfterFold = [...Array(yMax + 1)].map((_) => Array(xMaxNew + 1).fill('.'));
+        paperAfterFold = [...Array(yMax + 1)].map((_) => Array(xMaxNew + 1).fill('.'));
 
-      for (let y = 0; y < yMax + 1; y++) {
-        for (let i = 1; i < xMax - point + 1; i++) {
-          let newX = point - i;
-          let oldX = point + i;
+        for (let y = 0; y < yMax + 1; y++) {
+          for (let i = 1; i < xMax - point + 1; i++) {
+            let newX = point - i;
+            let oldX = point + i;
 
-          paperAfterFold[y][newX] = paper[y][newX] === '#' || paper[y][oldX] === '#' ? '#' : '.';
+            paperAfterFold[y][newX] = paper[y][newX] === '#' || paper[y][oldX] === '#' ? '#' : '.';
+          }
         }
-      }
 
-      paper = paperAfterFold;
-      xMax = xMaxNew;
+        paper = paperAfterFold;
+        xMax = xMaxNew;
 
-      break;
+        break;
+    }
   }
-}
 
-write(YEAR, DAY, PART, printTextGrid(paper, '#'));
+  return printTextGrid(paper, '#');
+}

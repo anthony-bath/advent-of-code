@@ -85,3 +85,7 @@ export function factors(num) {
 
   return output;
 }
+
+export function sumN(n) {
+  return (n * (n + 1)) / 2;
+}

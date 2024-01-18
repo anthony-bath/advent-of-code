@@ -1,17 +1,11 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 13];
-
-export const loadData = (part) => {
-  const input = readOld(YEAR, DAY, part);
-
+export const getInputElements = (lines) => {
   let xMax = 0;
   let yMax = 0;
   let parsedCoords = false;
   const coords = [];
   const folds = [];
 
-  input.forEach((line) => {
+  lines.forEach((line) => {
     if (!line) {
       parsedCoords = true;
       return;

@@ -1,35 +1,33 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const chunkLines = lines.map((l) => l.trim().split(''));
 
-const [YEAR, DAY, PART] = [2021, 10, 1];
+  const BRACKETS = new Map([
+    ['(', ')'],
+    ['[', ']'],
+    ['<', '>'],
+    ['{', '}'],
+  ]);
 
-const lines = readOld(YEAR, DAY, PART).map((l) => l.trim().split(''));
+  const SCORE_MAP = { ')': 3, ']': 57, '}': 1197, '>': 25137 };
 
-const BRACKETS = new Map([
-  ['(', ')'],
-  ['[', ']'],
-  ['<', '>'],
-  ['{', '}'],
-]);
+  let score = 0;
 
-const SCORE_MAP = { ')': 3, ']': 57, '}': 1197, '>': 25137 };
+  for (const line of chunkLines) {
+    const stack = [];
 
-let score = 0;
+    for (const char of line) {
+      if (BRACKETS.has(char)) {
+        stack.push(char);
+      } else {
+        const expected = BRACKETS.get(stack.pop());
 
-for (const line of lines) {
-  const stack = [];
-
-  for (const char of line) {
-    if (BRACKETS.has(char)) {
-      stack.push(char);
-    } else {
-      const expected = BRACKETS.get(stack.pop());
-
-      if (char !== expected) {
-        score += SCORE_MAP[char];
-        break;
+        if (char !== expected) {
+          score += SCORE_MAP[char];
+          break;
+        }
       }
     }
   }
-}
 
-write(YEAR, DAY, PART, score);
+  return score;
+}

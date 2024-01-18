@@ -4,17 +4,8 @@ const [YEAR, DAY] = [2021, 15];
 
 const DIMENSION = 100;
 
-export const loadData = (part) => {
-  const partialGrid = [];
-
-  readOld(YEAR, DAY, part).forEach((row) =>
-    partialGrid.push(
-      row
-        .trim()
-        .split('')
-        .map((p) => Number(p))
-    )
-  );
+export function getInputElements(lines, part) {
+  const partialGrid = lines.map((row) => row.trim().split('').map(Number));
 
   let grid;
 
@@ -45,7 +36,7 @@ export const loadData = (part) => {
   const queue = [{ x: 0, y: 0, risk: 0 }];
 
   return { grid, visited, risk, queue };
-};
+}
 
 function insertIntoSortedQueue(queue, node) {
   let low = 0;

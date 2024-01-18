@@ -1,7 +1,3 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 14];
-
 export class Node {
   constructor(element) {
     this.element = element;
@@ -12,9 +8,8 @@ export class Node {
   }
 }
 
-export const loadData = (part) => {
-  const data = readOld(YEAR, DAY, part).map((line) => line.trim());
-
+export function getInputElements(lines, part) {
+  const data = lines.map((line) => line.trim());
   const template = data[0];
 
   const rules = new Map();
@@ -49,7 +44,7 @@ export const loadData = (part) => {
 
     return { template, rules, pairs };
   }
-};
+}
 
 export const getElementDifference = (elements) => {
   const sorted = [...elements.values()].sort((a, b) => b - a);
