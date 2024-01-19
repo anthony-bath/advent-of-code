@@ -89,3 +89,7 @@ export function factors(num) {
 export function sumN(n) {
   return (n * (n + 1)) / 2;
 }
+
+export function sumMtoN(m, n) {
+  return (n * (n + 1)) / 2 - (m * (m - 1)) / 2;
+}

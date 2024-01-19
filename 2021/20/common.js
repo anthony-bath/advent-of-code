@@ -1,12 +1,8 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 20, 1];
-
-export const loadData = (part) => {
+export function getInputElements(lines) {
   let algo = [];
   const image = [];
 
-  readOld(YEAR, DAY, part).forEach((line, i) => {
+  lines.forEach((line, i) => {
     if (i === 0) {
       algo = line.trim().split('');
     } else if (i > 1) {
@@ -15,7 +11,7 @@ export const loadData = (part) => {
   });
 
   return { algo, image };
-};
+}
 
 export function enhance(image, algo, step) {
   const infinity = step % 2 ? '#' : '.';

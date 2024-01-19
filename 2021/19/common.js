@@ -1,10 +1,10 @@
 import { readOld } from '../../utilities/io.js';
 
-export function loadScannersWithOverlapsCalculated(year, day, part) {
+export function loadScannersWithOverlapsCalculated(lines) {
   const scanners = [];
   let currentScanner;
 
-  readOld(year, day, part).forEach((line) => {
+  lines.forEach((line) => {
     if (!line) return;
 
     if (line.startsWith('---')) {

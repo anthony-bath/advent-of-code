@@ -1,18 +1,17 @@
-import { write } from '../../utilities/io.js';
-import { loadData, enhance } from './common.js';
+import { getInputElements, enhance } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 20, 1];
+export function part1({ lines }) {
+  let { image, algo } = getInputElements(lines);
+  let result = 0;
 
-let { image, algo } = loadData(PART);
-let result = 0;
+  const STEPS = 2;
 
-const STEPS = 2;
+  for (let step = 0; step < STEPS; step++) {
+    const { enhanced, lit } = enhance(image, algo, step);
 
-for (let step = 0; step < STEPS; step++) {
-  const { enhanced, lit } = enhance(image, algo, step);
+    image = enhanced;
+    result = lit;
+  }
 
-  image = enhanced;
-  result = lit;
+  return result;
 }
-
-write(YEAR, DAY, PART, result);

@@ -1,15 +1,14 @@
-import { write } from '../../utilities/io.js';
-import { loadData } from './common.js';
+import { getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2021, 18, 2];
+export function part2({ lines }) {
+  const magnitudes = [];
+  const fish = getInputElements(lines);
 
-const magnitudes = [];
-const fish = loadData(PART);
-
-for (const fish1 of fish) {
-  for (const fish2 of fish) {
-    magnitudes.push(fish1.add(fish2).magnitude());
+  for (const fish1 of fish) {
+    for (const fish2 of fish) {
+      magnitudes.push(fish1.add(fish2).magnitude());
+    }
   }
-}
 
-write(YEAR, DAY, PART, Math.max(...magnitudes));
+  return Math.max(...magnitudes);
+}

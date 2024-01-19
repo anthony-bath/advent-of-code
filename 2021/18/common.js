@@ -1,11 +1,6 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 18];
-
-export const loadData = (part) => {
-  const fishData = readOld(YEAR, DAY, part).map((line) => JSON.parse(line.trim()));
-  return fishData.map((data) => new Fish(data, 1));
-};
+export function getInputElements(lines) {
+  return lines.map((line) => JSON.parse(line.trim())).map((data) => new Fish(data, 1));
+}
 
 export default class Fish {
   constructor(data, depth, parent) {
