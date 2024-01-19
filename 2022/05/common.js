@@ -1,18 +1,14 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2022, 5];
-
 const END_DATA = ' 1   2   3   4   5   6   7   8   9 ';
 const chunkExpr = new RegExp(/.{1,4}/g);
 const itemExpr = new RegExp(/[^A-Z]/g);
 const instructionExpr = new RegExp(/\d+/g);
 
-export function loadData(part) {
+export function getInputElements(lines) {
   const stacks = [];
   const instructions = [];
   let parsedData = false;
 
-  readOld(YEAR, DAY, part).forEach((line) => {
+  lines.forEach((line) => {
     if (!line) return;
     if (!parsedData && line === END_DATA) {
       parsedData = true;

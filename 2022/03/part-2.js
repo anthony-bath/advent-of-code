@@ -1,27 +1,23 @@
-import { readOld, write } from '../../utilities/io.js';
-import { generatePriorityMap } from './common.js';
+import { priorityMap } from './common.js';
 
-const [YEAR, DAY, PART] = [2022, 3, 2];
+export function part2({ lines }) {
+  const groups = [];
+  let currentGroup = [];
 
-const priorityMap = generatePriorityMap();
-const groups = [];
-let currentGroup = [];
+  lines.forEach((rucksack) => {
+    currentGroup.push(rucksack);
 
-readOld(YEAR, DAY, PART).forEach((rucksack) => {
-  currentGroup.push(rucksack);
+    if (currentGroup.length === 3) {
+      groups.push([...currentGroup]);
+      currentGroup = [];
+    }
+  });
 
-  if (currentGroup.length === 3) {
-    groups.push([...currentGroup]);
-    currentGroup = [];
-  }
-});
+  return groups.reduce((sum, [r1, r2, r3]) => {
+    const r2Set = new Set([...r2.split('')]);
+    const r1r2Intersection = new Set([...r1.split('').filter((item) => r2Set.has(item))]);
+    const commonItem = [...r3.split('').filter((item) => r1r2Intersection.has(item))][0];
 
-const prioritySum = groups.reduce((sum, [r1, r2, r3]) => {
-  const r2Set = new Set([...r2.split('')]);
-  const r1r2Intersection = new Set([...r1.split('').filter((item) => r2Set.has(item))]);
-  const commonItem = [...r3.split('').filter((item) => r1r2Intersection.has(item))][0];
-
-  return (sum += priorityMap.get(commonItem));
-}, 0);
-
-write(YEAR, DAY, PART, prioritySum);
+    return (sum += priorityMap.get(commonItem));
+  }, 0);
+}
