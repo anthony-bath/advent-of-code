@@ -1,46 +1,38 @@
-import { readOld, write } from '../../utilities/io.js';
+import { Sensor } from './common.js';
 
-const [YEAR, DAY, PART] = [2022, 15, 1];
+const { abs } = Math;
 
-const digits = new RegExp(/-?\d+/g);
-const SEARCH_Y = 2000000;
+export function part1({ lines }) {
+  const digits = new RegExp(/-?\d+/g);
+  const SEARCH_Y = 2000000;
 
-class Sensor {
-  constructor(x, y, bx, by) {
-    this.x = x;
-    this.y = y;
-    this.range = Math.abs(x - bx) + Math.abs(y - by);
-    this.top = y - this.range;
-    this.bottom = y + this.range;
-  }
-}
+  const beacons = {};
 
-const beacons = {};
+  const sensors = lines.map((line) => {
+    const [sx, sy, bx, by] = line.match(digits).map(Number);
 
-const sensors = readOld(YEAR, DAY, PART).map((line) => {
-  const [sx, sy, bx, by] = line.match(digits).map((n) => parseInt(n));
-
-  if (by === SEARCH_Y) {
-    beacons[bx] = 1;
-  }
-
-  return new Sensor(sx, sy, bx, by);
-});
-
-let unavailableLocations = 0;
-let alreadyUnavailable = {};
-
-sensors.forEach((sensor) => {
-  const yDiff = Math.abs(sensor.y - SEARCH_Y);
-  const startX = sensor.x - sensor.range + yDiff;
-  const endX = sensor.x + sensor.range - yDiff;
-
-  for (let x = startX; x <= endX; x++) {
-    if (!beacons[x] && !alreadyUnavailable[x]) {
-      alreadyUnavailable[x] = 1;
-      unavailableLocations++;
+    if (by === SEARCH_Y) {
+      beacons[bx] = 1;
     }
-  }
-});
 
-write(YEAR, DAY, PART, unavailableLocations);
+    return new Sensor(sx, sy, bx, by);
+  });
+
+  let unavailableLocations = 0;
+  let alreadyUnavailable = {};
+
+  sensors.forEach((sensor) => {
+    const yDiff = abs(sensor.y - SEARCH_Y);
+    const startX = sensor.x - sensor.range + yDiff;
+    const endX = sensor.x + sensor.range - yDiff;
+
+    for (let x = startX; x <= endX; x++) {
+      if (!beacons[x] && !alreadyUnavailable[x]) {
+        alreadyUnavailable[x] = 1;
+        unavailableLocations++;
+      }
+    }
+  });
+
+  return unavailableLocations;
+}

@@ -34,3 +34,17 @@ export function findMissingWithinRanges(ranges) {
 
   return result;
 }
+
+const { abs } = Math;
+
+export class Sensor {
+  constructor(x, y, bx, by) {
+    this.x = x;
+    this.y = y;
+    this.range = abs(x - bx) + abs(y - by);
+    this.top = y - this.range;
+    this.bottom = y + this.range;
+    this.left = x - this.range;
+    this.right = x + this.range;
+  }
+}

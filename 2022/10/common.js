@@ -2,11 +2,10 @@ import { readOld } from '../../utilities/io.js';
 
 const [YEAR, DAY] = [2022, 10];
 
-export function loadCycles(part) {
-  const instructions = readOld(YEAR, DAY, part);
+export function loadCycles(lines) {
   const cycles = [];
 
-  for (const instruction of instructions) {
+  for (const instruction of lines) {
     if (instruction === 'noop') {
       cycles.push(0);
     } else {

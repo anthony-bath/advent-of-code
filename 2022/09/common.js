@@ -1,7 +1,3 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2022, 9];
-
 export class Knot {
   constructor(x, y, link) {
     this.x = x;

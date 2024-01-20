@@ -85,18 +85,16 @@ class Item {
   }
 }
 
-export function loadMonkeys(part) {
-  const input = readOld(YEAR, DAY, part);
-
+export function loadMonkeys(lines) {
   const numberExpr = new RegExp(/\d+/g);
   const monkeys = [];
 
-  for (let i = 0; i < input.length; i += 7) {
-    const items = input[i + 1].match(numberExpr).map((n) => new Item(parseInt(n, 10)));
-    const [operator, operationValue] = input[i + 2].split(' = old ')[1].trim().split(' ');
-    const testDisibleBy = parseInt(input[i + 3].match(numberExpr)[0], 0);
-    const successRecipientIndex = parseInt(input[i + 4].match(numberExpr)[0], 0);
-    const failureRecipientIndex = parseInt(input[i + 5].match(numberExpr)[0], 0);
+  for (let i = 0; i < lines.length; i += 7) {
+    const items = lines[i + 1].match(numberExpr).map((n) => new Item(parseInt(n, 10)));
+    const [operator, operationValue] = lines[i + 2].split(' = old ')[1].trim().split(' ');
+    const testDisibleBy = parseInt(lines[i + 3].match(numberExpr)[0], 0);
+    const successRecipientIndex = parseInt(lines[i + 4].match(numberExpr)[0], 0);
+    const failureRecipientIndex = parseInt(lines[i + 5].match(numberExpr)[0], 0);
 
     monkeys.push(
       new Monkey(

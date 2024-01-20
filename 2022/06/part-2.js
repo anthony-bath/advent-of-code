@@ -1,34 +1,31 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part2({ data }) {
+  const markerData = data.split('');
+  const marker = new Map();
+  const TARGET_SIZE = 14;
+  let markerStart;
 
-const [YEAR, DAY, PART] = [2022, 6, 2];
+  for (let i = 0; i < markerData.length; i++) {
+    const nextCount = (marker.get(markerData[i]) || 0) + 1;
+    marker.set(markerData[i], nextCount);
 
-const data = readOld(YEAR, DAY, PART, { splitBy: '' });
+    if (i - TARGET_SIZE >= 0) {
+      const prevCount = marker.get(markerData[i - TARGET_SIZE]) - 1;
 
-const marker = new Map();
-const TARGET_SIZE = 14;
-let markerStart;
+      if (prevCount <= 0) {
+        marker.delete(markerData[i - TARGET_SIZE]);
+      } else {
+        marker.set(markerData[i - TARGET_SIZE], prevCount);
+      }
+    }
 
-for (let i = 0; i < data.length; i++) {
-  const nextCount = (marker.get(data[i]) || 0) + 1;
-  marker.set(data[i], nextCount);
-
-  if (i - TARGET_SIZE >= 0) {
-    const prevCount = marker.get(data[i - TARGET_SIZE]) - 1;
-
-    if (prevCount <= 0) {
-      marker.delete(data[i - TARGET_SIZE]);
-    } else {
-      marker.set(data[i - TARGET_SIZE], prevCount);
+    if (marker.size === TARGET_SIZE) {
+      markerStart = i + 1;
+      break;
     }
   }
 
-  if (marker.size === TARGET_SIZE) {
-    markerStart = i + 1;
-    break;
-  }
+  return markerStart;
 }
-
-write(YEAR, DAY, PART, markerStart);
 
 /*
 Original implementation, less performant
