@@ -58,7 +58,7 @@ if (!fs.existsSync(testsDir)) {
   fs.mkdirSync(testsDir);
 }
 
-const testJs = path.join(testsDir, `${year}.${dayPadded}.test.js`);
+const testJs = path.join(testsDir, `${year}-${dayPadded}.test.js`);
 
 if (!fs.existsSync(testJs)) {
   let templateLines = [
