@@ -1,4 +1,4 @@
-import { abs } from '../../utilities/math.js';
+const { abs } = Math;
 
 export function getJumpInstruction(index, value) {
   if (index === 0) {

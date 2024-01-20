@@ -1,4 +1,4 @@
-import { abs } from '../../utilities/math.js';
+const { abs } = Math;
 
 export function part2({ data }) {
   const sequence = data.split('').map(Number);

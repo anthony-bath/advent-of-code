@@ -1,9 +1,11 @@
-import { abs, sumN } from '../../utilities/math.js';
+import { sumN } from '../../utilities/math.js';
+
+const { abs, max, min } = Math;
 
 export function part2({ data }) {
   const positions = data.split(',').map(Number);
 
-  const maxPos = Math.max(...positions);
+  const maxPos = max(...positions);
   const moveCostByDistance = new Map();
   let fuelByPosition = Array(maxPos + 1).fill(0);
 
@@ -19,5 +21,5 @@ export function part2({ data }) {
     });
   }
 
-  return Math.min(...fuelByPosition);
+  return min(...fuelByPosition);
 }

@@ -1,4 +1,4 @@
-import { abs } from '../../utilities/math.js';
+const { abs } = Math;
 
 export function part2({ lines }) {
   const expr = /(?<instruction>[NSEWFLR])(?<amount>\d+)/;
