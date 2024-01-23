@@ -1,9 +1,8 @@
-import { write } from '../../utilities/io.js';
-import { loadData, walkLoop } from './common.js';
+import { getInputElements, walkLoop } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 10, 1];
+export function part1({ lines }) {
+  const { grid, start } = getInputElements(lines);
+  const loop = walkLoop(grid, start);
 
-const { grid, start } = loadData(YEAR, DAY, PART);
-const loop = walkLoop(grid, start);
-
-write(YEAR, DAY, PART, loop.length / 2);
+  return loop.length / 2;
+}

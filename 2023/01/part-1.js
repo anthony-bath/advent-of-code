@@ -1,15 +1,11 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  return lines.reduce((total, line) => {
+    const digits = line.match(/\d/g);
 
-const [YEAR, DAY, PART] = [2023, 1, 1];
+    if (digits.length === 1) {
+      return total + Number(`${digits[0]}${digits[0]}`);
+    }
 
-const result = readOld(YEAR, DAY, PART).reduce((total, line) => {
-  const digits = line.match(/\d/g);
-
-  if (digits.length === 1) {
-    return total + Number(`${digits[0]}${digits[0]}`);
-  }
-
-  return total + Number(`${digits[0]}${digits[digits.length - 1]}`);
-}, 0);
-
-write(YEAR, DAY, PART, result);
+    return total + Number(`${digits[0]}${digits[digits.length - 1]}`);
+  }, 0);
+}

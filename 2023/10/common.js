@@ -1,9 +1,7 @@
-import { readOld } from '../../utilities/io.js';
-
-export function loadData(year, day, part) {
+export function getInputElements(lines) {
   let start = null;
 
-  const grid = readOld(year, day, part).map((line, y) => {
+  const grid = lines.map((line, y) => {
     const row = line.split('');
     const s = row.indexOf('S');
 
