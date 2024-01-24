@@ -1,11 +1,9 @@
-import { readOld } from '../../utilities/io.js';
-
-export function loadData(year, day, part) {
+export function getInputElements(lines) {
   const emptyRows = [];
   const emptyCols = [];
   const galaxies = [];
 
-  const grid = readOld(year, day, part).map((line, y) => {
+  const grid = lines.map((line, y) => {
     let hasGalaxies = false;
     const row = line.split('');
 

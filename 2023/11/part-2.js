@@ -1,18 +1,13 @@
 import { pairs } from '../../utilities/array.js';
-import { write } from '../../utilities/io.js';
 import { manhattan } from '../../utilities/math.js';
-import { getBlankSpaceBetween, loadData } from './common.js';
+import { getBlankSpaceBetween, getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 11, 2];
-const { galaxies, emptyCols, emptyRows } = loadData(YEAR, DAY, PART);
+export function part2({ lines }) {
+  const { galaxies, emptyCols, emptyRows } = getInputElements(lines);
 
-write(
-  YEAR,
-  DAY,
-  PART,
-  pairs(galaxies).reduce(
+  return pairs(galaxies).reduce(
     (total, [g1, g2]) =>
       total + manhattan(g1, g2) + getBlankSpaceBetween(g1, g2, emptyCols, emptyRows, 1e6),
     0
-  )
-);
+  );
+}
