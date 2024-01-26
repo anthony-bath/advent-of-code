@@ -1,10 +1,9 @@
-import { write } from '../../utilities/io.js';
-import { tiltNorth, calcLoad, loadData } from './common.js';
+import { tiltNorth, calcLoad, getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 14, 1];
+export function part1({ lines }) {
+  const { xMax, yMax, blockersByColumn, allStones } = getInputElements(lines);
 
-const { xMax, yMax, blockersByColumn, allStones } = loadData(YEAR, DAY, PART);
+  tiltNorth(allStones, xMax, blockersByColumn);
 
-tiltNorth(allStones, xMax, blockersByColumn);
-
-write(YEAR, DAY, PART, calcLoad(allStones, yMax));
+  return calcLoad(allStones, yMax);
+}

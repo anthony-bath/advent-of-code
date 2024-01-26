@@ -1,12 +1,12 @@
-import { readOld } from '../../utilities/io.js';
+const { min, max } = Math;
 
-export function loadData(year, day, part) {
+export function getInputElements(lines) {
   let [yMax, xMax] = [-Infinity, -Infinity];
   const blockersByColumn = {};
   const blockersByRow = {};
   const allStones = [];
 
-  readOld(year, day, part).forEach((line, y) => {
+  lines.forEach((line, y) => {
     const row = line.split('');
 
     for (let x = 0; x < line.length; x++) {
@@ -56,7 +56,7 @@ export function tiltNorth(allStones, xMax, blockersByColumn) {
       const stonesAbove = stones.filter((s) => s.y < stone.y).map((s) => s.y);
       const occupied = blockersAbove.concat(stonesAbove);
 
-      stone.y = occupied.length ? 1 + Math.max(...occupied) : 0;
+      stone.y = occupied.length ? 1 + max(...occupied) : 0;
     }
   }
 }
@@ -78,7 +78,7 @@ export function tiltWest(allStones, yMax, blockersByRow) {
       const stonesLeft = stones.filter((s) => s.x < stone.x).map((s) => s.x);
       const occupied = blockersLeft.concat(stonesLeft);
 
-      stone.x = occupied.length ? 1 + Math.max(...occupied) : 0;
+      stone.x = occupied.length ? 1 + max(...occupied) : 0;
     }
   }
 }
@@ -101,7 +101,7 @@ export function tiltSouth(allStones, xMax, yMax, blockersByColumn) {
       const stonesBelow = stones.filter((s) => s.y > stone.y).map((s) => s.y);
       const occupied = blockersBelow.concat(stonesBelow);
 
-      stone.y = occupied.length ? Math.min(...occupied) - 1 : yMax - 1;
+      stone.y = occupied.length ? min(...occupied) - 1 : yMax - 1;
     }
   }
 }
@@ -124,7 +124,7 @@ export function tiltEast(allStones, xMax, yMax, blockersByRow) {
       const stonesRight = stones.filter((sx) => sx.x > stone.x);
       const occupied = blockersRight.concat(stonesRight.map((s) => s.x));
 
-      stone.x = occupied.length ? Math.min(...occupied) - 1 : xMax - 1;
+      stone.x = occupied.length ? min(...occupied) - 1 : xMax - 1;
     }
   }
 }
