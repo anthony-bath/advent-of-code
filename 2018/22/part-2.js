@@ -58,23 +58,22 @@ export function part2({ lines }) {
   };
 
   const ITEM = {
-    NEITHER: 0,
-    TORCH: 1,
-    CLIMBING_GEAR: 2,
+    NEITHER: 2 ** 0,
+    TORCH: 2 ** 1,
+    CLIMBING_GEAR: 2 ** 2,
   };
 
   const ALL_ITEMS = [ITEM.NEITHER, ITEM.TORCH, ITEM.CLIMBING_GEAR];
 
   const VALID_ITEMS_BY_REGION = {
-    [REGION.ROCKY]: [ITEM.TORCH, ITEM.CLIMBING_GEAR],
-    [REGION.WET]: [ITEM.NEITHER, ITEM.CLIMBING_GEAR],
-    [REGION.NARROW]: [ITEM.TORCH, ITEM.NEITHER],
+    [REGION.ROCKY]: ITEM.TORCH | ITEM.CLIMBING_GEAR,
+    [REGION.WET]: ITEM.NEITHER | ITEM.CLIMBING_GEAR,
+    [REGION.NARROW]: ITEM.TORCH | ITEM.NEITHER,
   };
 
   function isValid(item, currentRegion, targetRegion) {
     return (
-      VALID_ITEMS_BY_REGION[currentRegion].includes(item) &&
-      VALID_ITEMS_BY_REGION[targetRegion].includes(item)
+      VALID_ITEMS_BY_REGION[currentRegion] & item && VALID_ITEMS_BY_REGION[targetRegion] & item
     );
   }
 
