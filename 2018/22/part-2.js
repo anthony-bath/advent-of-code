@@ -1,4 +1,5 @@
 import { manhattan } from '../../utilities/math.js';
+import { PriorityQueue } from '../../utilities/queue.js';
 
 export function part2({ lines }) {
   const [depth, [tx, ty]] = lines.map((line) => {
@@ -77,23 +78,6 @@ export function part2({ lines }) {
     );
   }
 
-  function insertIntoSortedQueue(queue, state) {
-    let low = 0;
-    let high = queue.length;
-
-    while (low < high) {
-      let mid = (low + high) >>> 1;
-
-      if (queue[mid].minutes > state.minutes) {
-        low = mid + 1;
-      } else {
-        high = mid;
-      }
-    }
-
-    queue.splice(low, 0, state);
-  }
-
   const deltas = [
     [0, 1],
     [1, 0],
@@ -106,10 +90,10 @@ export function part2({ lines }) {
   const maxDistance = manhattan({ x: 0, y: 0 }, target);
   const state = { minutes: 0, x: 0, y: 0, item: ITEM.TORCH, distance: maxDistance };
   const visited = new Map();
-  const queue = [state];
+  const queue = new PriorityQueue([state], 'minutes');
 
-  while (queue.length) {
-    const current = queue.pop();
+  while (queue.isNotEmpty()) {
+    const current = queue.next();
 
     if (current.x === tx && current.y === ty && current.item === ITEM.TORCH) {
       result = current.minutes;
@@ -137,11 +121,13 @@ export function part2({ lines }) {
         continue;
       }
 
-      for (const item of ALL_ITEMS) {
-        if (isValid(item, getRegionType(current.x, current.y), getRegionType(nextX, nextY))) {
-          const distance = manhattan({ x: nextX, y: nextY }, target);
+      const currentRegionType = getRegionType(current.x, current.y);
+      const nextRegionType = getRegionType(nextX, nextY);
+      const distance = manhattan({ x: nextX, y: nextY }, target);
 
-          insertIntoSortedQueue(queue, {
+      for (const item of ALL_ITEMS) {
+        if (isValid(item, currentRegionType, nextRegionType)) {
+          queue.insert({
             distance,
             item,
             minutes: current.minutes + (item === current.item ? 1 : 8),

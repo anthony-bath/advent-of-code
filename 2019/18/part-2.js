@@ -1,3 +1,5 @@
+import { PriorityQueue } from '../../utilities/queue.js';
+
 export function part2({ grid: maze }) {
   const keyExpr = /[a-z]/;
   const doorExpr = /[A-Z]/;
@@ -132,11 +134,11 @@ export function part2({ grid: maze }) {
   }
 
   function bfs_path(state) {
-    const queue = [state];
+    const queue = new PriorityQueue([state], 'steps');
     const visited = { [getKey(state.robots, state.collected)]: 1 };
 
-    while (queue.length) {
-      const current = queue.shift();
+    while (queue.isNotEmpty()) {
+      const current = queue.next();
 
       if (current.collected === allKeys) {
         return current.steps;
@@ -161,7 +163,7 @@ export function part2({ grid: maze }) {
           };
 
           visited[getKey(nextState.robots, nextState.collected)] = 1;
-          insertIntoSortedQueue(queue, nextState);
+          queue.insert(nextState);
         }
       }
     }
