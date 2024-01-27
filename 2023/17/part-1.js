@@ -1,62 +1,64 @@
-import { readOld, write } from '../../utilities/io.js';
-import { DIR, deltas, key, insertIntoSortedQueue } from './common.js';
+import { PriorityQueue } from '../../utilities/queue.js';
+import { DIR, deltas, key } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 17, 1];
+export function part1({ lines }) {
+  const grid = lines.map((line) => line.split('').map(Number));
 
-const grid = readOld(YEAR, DAY, PART).map((line) => line.split('').map((n) => Number(n)));
+  const W = grid[0].length;
+  const H = grid.length;
 
-const W = grid[0].length;
-const H = grid.length;
+  const visited = new Set();
+  let minHeatLoss = Infinity;
 
-const visited = new Set();
-let minHeatLoss = Infinity;
+  const queueItems = [
+    {
+      x: 0,
+      y: 0,
+      heatLoss: 0,
+      steps: 1,
+      direction: DIR.RIGHT,
+    },
+  ];
 
-const queue = [
-  {
-    x: 0,
-    y: 0,
-    heatLoss: 0,
-    steps: 1,
-    direction: DIR.RIGHT,
-  },
-];
+  const queue = new PriorityQueue(queueItems, 'heatLoss');
 
-while (queue.length) {
-  const current = queue.shift();
+  while (queue.isNotEmpty()) {
+    const current = queue.next();
 
-  if (current.x === W - 1 && current.y === H - 1) {
-    minHeatLoss = current.heatLoss;
-    break;
-  }
-
-  for (const [dx, dy, direction] of deltas) {
-    // Can't go in opposite direction so skip
-    if (direction === (current.direction + 2) % 4) {
-      continue;
+    if (current.x === W - 1 && current.y === H - 1) {
+      minHeatLoss = current.heatLoss;
+      break;
     }
 
-    const [x, y] = [current.x + dx, current.y + dy];
+    for (const [dx, dy, direction] of deltas) {
+      // Can't go in opposite direction so skip
+      if (direction === (current.direction + 2) % 4) {
+        continue;
+      }
 
-    if (x < 0 || x >= W || y < 0 || y >= H) continue;
+      const [x, y] = [current.x + dx, current.y + dy];
 
-    const heatLoss = current.heatLoss + grid[y][x];
-    const steps = direction === current.direction ? current.steps + 1 : 1;
+      if (x < 0 || x >= W || y < 0 || y >= H) continue;
 
-    const next = {
-      x,
-      y,
-      heatLoss,
-      steps,
-      direction,
-    };
+      const heatLoss = current.heatLoss + grid[y][x];
+      const steps = direction === current.direction ? current.steps + 1 : 1;
 
-    const nextKey = key(next);
+      const next = {
+        x,
+        y,
+        heatLoss,
+        steps,
+        direction,
+      };
 
-    if (next.steps <= 3 && !visited.has(nextKey)) {
-      insertIntoSortedQueue(queue, next);
-      visited.add(nextKey);
+      const nextKey = key(next);
+
+      if (next.steps <= 3 && !visited.has(nextKey)) {
+        queue.insert(next);
+        visited.add(nextKey);
+      }
     }
   }
+
+  return minHeatLoss;
 }
-
-write(YEAR, DAY, PART, minHeatLoss);

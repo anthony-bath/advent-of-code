@@ -1,23 +1,20 @@
-import { readOld, write } from '../../utilities/io.js';
 import { DIR, evaluate } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 16, 1];
+export function part2({ grid }) {
+  const W = grid[0].length;
+  const H = grid.length;
 
-const grid = readOld(YEAR, DAY, PART).map((line) => line.split(''));
+  const options = [];
 
-const W = grid[0].length;
-const H = grid.length;
+  for (let x = 0; x < W; x++) {
+    options.push({ x, y: 0, dir: DIR.UP });
+    options.push({ x, y: H - 1, dir: DIR.UP });
+  }
 
-const options = [];
+  for (let y = 0; y < H; y++) {
+    options.push({ x: 0, y, dir: DIR.RIGHT });
+    options.push({ x: W - 1, y, dir: DIR.LEFT });
+  }
 
-for (let x = 0; x < W; x++) {
-  options.push({ x, y: 0, dir: DIR.UP });
-  options.push({ x, y: H - 1, dir: DIR.UP });
+  return evaluate(options, grid);
 }
-
-for (let y = 0; y < H; y++) {
-  options.push({ x: 0, y, dir: DIR.RIGHT });
-  options.push({ x: W - 1, y, dir: DIR.LEFT });
-}
-
-write(YEAR, DAY, PART, evaluate(options, grid));

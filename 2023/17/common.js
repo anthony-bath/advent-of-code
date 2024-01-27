@@ -16,20 +16,3 @@ export function key(current) {
   const { x, y, direction, steps } = current;
   return `${x}|${y}|${direction}|${steps}`;
 }
-
-export function insertIntoSortedQueue(queue, state) {
-  let low = 0;
-  let high = queue.length;
-
-  while (low < high) {
-    let mid = (low + high) >>> 1;
-
-    if (queue[mid].heatLoss < state.heatLoss) {
-      low = mid + 1;
-    } else {
-      high = mid;
-    }
-  }
-
-  queue.splice(low, 0, state);
-}
