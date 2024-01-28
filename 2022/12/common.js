@@ -36,31 +36,13 @@ export function getInputElements(lines) {
   return { start, end, grid, visited, cost, lowPoints };
 }
 
-function insertIntoSortedQueue(queue, node) {
-  let low = 0;
-  let high = queue.length;
-
-  while (low < high) {
-    let mid = (low + high) >>> 1;
-
-    if (queue[mid].cost > node.cost) {
-      low = mid + 1;
-    } else {
-      high = mid;
-    }
-  }
-
-  queue.splice(low, 0, node);
-}
-
 const STEP_COST = 1;
 
 export function evaluate(yNext, xNext, args) {
   const { y, x, cost, queue } = args;
 
   cost[yNext][xNext] = Math.min(cost[yNext][xNext], cost[y][x] + STEP_COST);
-
-  insertIntoSortedQueue(queue, {
+  queue.insert({
     y: yNext,
     x: xNext,
     cost: cost[yNext][xNext],

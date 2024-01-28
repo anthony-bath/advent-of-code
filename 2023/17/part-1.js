@@ -10,17 +10,15 @@ export function part1({ lines }) {
   const visited = new Set();
   let minHeatLoss = Infinity;
 
-  const queueItems = [
-    {
-      x: 0,
-      y: 0,
-      heatLoss: 0,
-      steps: 1,
-      direction: DIR.RIGHT,
-    },
-  ];
+  const state = {
+    x: 0,
+    y: 0,
+    heatLoss: 0,
+    steps: 1,
+    direction: DIR.RIGHT,
+  };
 
-  const queue = new PriorityQueue(queueItems, 'heatLoss');
+  const queue = new PriorityQueue(state, (a, b) => a.heatLoss - b.heatLoss);
 
   while (queue.isNotEmpty()) {
     const current = queue.next();

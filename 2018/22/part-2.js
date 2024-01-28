@@ -89,7 +89,7 @@ export function part2({ lines }) {
   const maxDistance = manhattan({ x: 0, y: 0 }, target);
   const state = { minutes: 0, x: 0, y: 0, item: ITEM.TORCH, distance: maxDistance };
   const visited = new Map();
-  const queue = new PriorityQueue([state], 'minutes');
+  const queue = new PriorityQueue(state, (a, b) => a.minutes - b.minutes);
 
   while (queue.isNotEmpty()) {
     const current = queue.next();

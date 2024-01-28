@@ -1,6 +1,4 @@
-import { readOld } from '../../utilities/io.js';
-
-const [YEAR, DAY] = [2021, 15];
+import { PriorityQueue } from '../../utilities/queue.js';
 
 const DIMENSION = 100;
 
@@ -33,26 +31,10 @@ export function getInputElements(lines, part) {
 
   risk[0][0] = 0;
 
-  const queue = [{ x: 0, y: 0, risk: 0 }];
+  const state = { x: 0, y: 0, risk: 0 };
+  const queue = new PriorityQueue(state, (a, b) => a.risk - b.risk);
 
   return { grid, visited, risk, queue };
-}
-
-function insertIntoSortedQueue(queue, node) {
-  let low = 0;
-  let high = queue.length;
-
-  while (low < high) {
-    let mid = (low + high) >>> 1;
-
-    if (queue[mid].risk > node.risk) {
-      low = mid + 1;
-    } else {
-      high = mid;
-    }
-  }
-
-  queue.splice(low, 0, node);
 }
 
 export const evaluate = (yNext, xNext, args) => {
@@ -60,7 +42,7 @@ export const evaluate = (yNext, xNext, args) => {
 
   risk[yNext][xNext] = Math.min(risk[yNext][xNext], risk[y][x] + grid[yNext][xNext]);
 
-  insertIntoSortedQueue(queue, {
+  queue.insert({
     y: yNext,
     x: xNext,
     risk: risk[yNext][xNext],

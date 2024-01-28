@@ -1,3 +1,4 @@
+import { PriorityQueue } from '../../utilities/queue.js';
 import { evaluate, getInputElements } from './common.js';
 
 export function part1({ lines }) {
@@ -5,11 +6,12 @@ export function part1({ lines }) {
   const WIDTH = grid[0].length;
   const HEIGHT = grid.length;
 
-  const queue = [{ x: start.x, y: start.y, cost: 0 }];
+  const state = { x: start.x, y: start.y, cost: 0 };
+  const queue = new PriorityQueue(state, (a, b) => a.cost - b.cost);
   cost[start.y][start.x] = 0;
 
-  while (queue.length) {
-    const { y, x } = queue.pop();
+  while (queue.isNotEmpty()) {
+    const { y, x } = queue.next();
 
     if (visited[y][x]) {
       continue;

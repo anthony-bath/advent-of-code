@@ -1,17 +1,15 @@
-export const QueueOrder = {
-  ASC: 1,
-  DESC: -1,
-};
-
 export class PriorityQueue {
   items;
-  order;
-  weightProp;
+  comparator;
 
-  constructor(items, weightProp, order = QueueOrder.ASC) {
-    this.items = items;
-    this.weightProp = weightProp;
-    this.order = order;
+  constructor(initial, comparator) {
+    if (Array.isArray(initial)) {
+      this.items = initial;
+    } else {
+      this.items = [initial];
+    }
+
+    this.comparator = comparator;
   }
 
   isNotEmpty() {
@@ -26,25 +24,13 @@ export class PriorityQueue {
     let low = 0;
     let high = this.items.length;
 
-    if (this.order === QueueOrder.ASC) {
-      while (low < high) {
-        let mid = (low + high) >>> 1;
+    while (low < high) {
+      let mid = (low + high) >>> 1;
 
-        if (this.items[mid][this.weightProp] < item[this.weightProp]) {
-          low = mid + 1;
-        } else {
-          high = mid;
-        }
-      }
-    } else {
-      while (low < high) {
-        let mid = (low + high) >>> 1;
-
-        if (this.items[mid][this.weightProp] > item[this.weightProp]) {
-          low = mid + 1;
-        } else {
-          high = mid;
-        }
+      if (this.comparator(this.items[mid], item) < 0) {
+        low = mid + 1;
+      } else {
+        high = mid;
       }
     }
 

@@ -5,8 +5,8 @@ export function part2({ lines }) {
   const cols = grid[0].length;
   const rows = grid.length;
 
-  while (queue.length) {
-    const { y, x } = queue.pop();
+  while (queue.isNotEmpty()) {
+    const { y, x } = queue.next();
 
     if (visited[y][x]) {
       continue;

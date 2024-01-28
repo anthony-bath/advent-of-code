@@ -116,25 +116,8 @@ export function part2({ grid: maze }) {
     return `${robots.map(({ x, y }) => `${x}|${y}`).join(`|`)}|${collected}`;
   }
 
-  function insertIntoSortedQueue(queue, state) {
-    let low = 0;
-    let high = queue.length;
-
-    while (low < high) {
-      let mid = (low + high) >>> 1;
-
-      if (queue[mid].steps < state.steps) {
-        low = mid + 1;
-      } else {
-        high = mid;
-      }
-    }
-
-    queue.splice(low, 0, state);
-  }
-
   function bfs_path(state) {
-    const queue = new PriorityQueue([state], 'steps');
+    const queue = new PriorityQueue(state, (a, b) => a.steps - b.steps);
     const visited = { [getKey(state.robots, state.collected)]: 1 };
 
     while (queue.isNotEmpty()) {
