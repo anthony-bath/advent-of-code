@@ -1,4 +1,4 @@
-export function getData(lines) {
+export function getInputElements(lines) {
   let [xMin, xMax, yMin, yMax, zMin, zMax] = [
     Infinity,
     -Infinity,

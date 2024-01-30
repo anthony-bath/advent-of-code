@@ -1,33 +1,32 @@
-import { readOld, write } from '../../utilities/io.js';
-import { canDrop, getData } from './common.js';
+import { canDrop, getInputElements } from './common.js';
 
-const [YEAR, DAY, PART] = [2023, 22, 1];
+export function part1({ lines }) {
+  let { bricks, space } = getInputElements(lines);
 
-let { bricks, space } = getData(readOld(YEAR, DAY, PART));
+  let canDistintegrateCount = 0;
 
-let canDistintegrateCount = 0;
+  for (const brick1 of bricks) {
+    let allowsMovement = false;
 
-for (const brick1 of bricks) {
-  let allowsMovement = false;
+    // Temporarily Disintegrate Brick
+    brick1.updateSpace(space, '.');
 
-  // Temporarily Disintegrate Brick
-  brick1.updateSpace(space, '.');
+    for (const brick2 of bricks) {
+      if (brick1 === brick2) {
+        continue;
+      }
 
-  for (const brick2 of bricks) {
-    if (brick1 === brick2) {
-      continue;
+      if (canDrop(brick2, space)) {
+        allowsMovement = true;
+        break;
+      }
     }
 
-    if (canDrop(brick2, space)) {
-      allowsMovement = true;
-      break;
-    }
+    // Restore Brick
+    brick1.updateSpace(space, '#');
+
+    if (!allowsMovement) canDistintegrateCount++;
   }
 
-  // Restore Brick
-  brick1.updateSpace(space, '#');
-
-  if (!allowsMovement) canDistintegrateCount++;
+  return canDistintegrateCount;
 }
-
-write(YEAR, DAY, PART, canDistintegrateCount);
