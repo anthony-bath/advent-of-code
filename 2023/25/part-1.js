@@ -1,56 +1,54 @@
-import { readOld, write } from '../../utilities/io.js';
+export function part1({ lines }) {
+  const graph = new Map();
 
-const [YEAR, DAY, PART] = [2023, 25, 1];
+  lines.forEach((line) => {
+    const [source, ...connections] = line.replace(':', '').split(' ');
 
-const graph = new Map();
-
-readOld(YEAR, DAY, PART).forEach((line) => {
-  const [source, ...connections] = line.replace(':', '').split(' ');
-
-  if (!graph.has(source)) {
-    graph.set(source, connections);
-  } else {
-    graph.set(source, [...graph.get(source), ...connections]);
-  }
-
-  connections.forEach((connection) => {
-    if (!graph.has(connection)) {
-      graph.set(connection, [source]);
+    if (!graph.has(source)) {
+      graph.set(source, connections);
     } else {
-      graph.get(connection).push(source);
+      graph.set(source, [...graph.get(source), ...connections]);
     }
+
+    connections.forEach((connection) => {
+      if (!graph.has(connection)) {
+        graph.set(connection, [source]);
+      } else {
+        graph.get(connection).push(source);
+      }
+    });
   });
-});
 
-function removeConnection(graph, source, target) {
-  graph.set(
-    source,
-    graph.get(source).filter((node) => node !== target)
-  );
-  graph.set(
-    target,
-    graph.get(target).filter((node) => node !== source)
-  );
-}
-
-// Identified cut nodes with GraphViz
-removeConnection(graph, 'nrs', 'khn');
-removeConnection(graph, 'ssd', 'xqh');
-removeConnection(graph, 'qlc', 'mqb');
-
-function traverse(graph, source, visited = new Set()) {
-  visited.add(source);
-
-  for (const target of graph.get(source)) {
-    if (!visited.has(target)) {
-      traverse(graph, target, visited);
-    }
+  function removeConnection(graph, source, target) {
+    graph.set(
+      source,
+      graph.get(source).filter((node) => node !== target)
+    );
+    graph.set(
+      target,
+      graph.get(target).filter((node) => node !== source)
+    );
   }
 
-  return visited;
+  // Identified cut nodes with GraphViz
+  removeConnection(graph, 'nrs', 'khn');
+  removeConnection(graph, 'ssd', 'xqh');
+  removeConnection(graph, 'qlc', 'mqb');
+
+  function traverse(graph, source, visited = new Set()) {
+    visited.add(source);
+
+    for (const target of graph.get(source)) {
+      if (!visited.has(target)) {
+        traverse(graph, target, visited);
+      }
+    }
+
+    return visited;
+  }
+
+  const oneClusterSize = traverse(graph, graph.keys().next().value).size;
+  const result = oneClusterSize * (graph.size - oneClusterSize);
+
+  return result;
 }
-
-const oneClusterSize = traverse(graph, graph.keys().next().value).size;
-const result = oneClusterSize * (graph.size - oneClusterSize);
-
-write(YEAR, DAY, PART, result);
