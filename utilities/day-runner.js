@@ -1,13 +1,13 @@
 import { loadInput } from './io.js';
-import { hrtime } from 'node:process';
+import { hrtime, argv, env, exit } from 'node:process';
 
-const year = process.argv[2];
-const day = process.argv[3];
-const test = process.env.npm_config_t;
+const year = argv[2];
+const day = argv[3];
+const test = env.npm_config_t;
 
 if (!year || !day) {
   console.log('Usage: node day-runner.js <year> <day> [-t]');
-  process.exit(1);
+  exit(1);
 }
 
 const dayPadded = day.padStart(2, '0');
