@@ -1,4 +1,5 @@
 import { loadInput } from './io.js';
+import { hrtime } from 'node:process';
 
 const year = process.argv[2];
 const day = process.argv[3];
@@ -26,14 +27,10 @@ for (const [i, part] of [part1, part2].entries()) {
   if (!part) continue;
 
   const grid = lines.map((line) => line.split(''));
-  timeAndRun(() => part({ lines, grid, data }), i + 1);
-}
+  const start = hrtime.bigint();
+  const result = part({ lines, grid, data });
+  const diff = hrtime.bigint() - start;
 
-function timeAndRun(part, number) {
-  const start = process.hrtime();
-  const result = part();
-  const end = process.hrtime(start);
-
-  console.log(`Part ${number} (${end[0]}s ${end[1] / 1000000}ms)`);
+  console.log(`Part ${i + 1} (${Number(diff) / 1e6}ms)`);
   console.log(result);
 }
