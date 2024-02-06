@@ -1,3 +1,5 @@
+const { abs } = Math;
+
 export function gcd(x, y, ...z) {
   if (!y && z.length > 0) {
     return gcd(x, ...z);
@@ -33,15 +35,15 @@ export function shoelace(points) {
     sum += x1 * y2 - x2 * y1;
   }
 
-  return Math.abs(sum / 2);
+  return abs(sum / 2);
 }
 
 export function manhattan(p1, p2) {
-  return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y);
+  return abs(p1.x - p2.x) + abs(p1.y - p2.y);
 }
 
 export function manhattan3D(p1, p2) {
-  return Math.abs(p1.x - p2.x) + Math.abs(p1.y - p2.y) + Math.abs(p1.z - p2.z);
+  return abs(p1.x - p2.x) + abs(p1.y - p2.y) + abs(p1.z - p2.z);
 }
 
 export class Point {

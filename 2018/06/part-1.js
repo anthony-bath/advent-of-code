@@ -21,28 +21,31 @@ export function part1({ lines }) {
     return new Point(x, y);
   });
 
-  const areasByPoint = new Map();
+  const areas = Array(points.length).fill(0);
 
   for (let y = minY; y <= maxY; y++) {
     for (let x = minX; x <= maxX; x++) {
       const current = new Point(x, y);
 
-      const distances = points
-        .map((point) => ({ point, distance: manhattan(current, point) }))
-        .sort((a, b) => a.distance - b.distance);
+      let index = -1;
+      let minDistance = Infinity;
 
-      const { point, distance } = distances[0];
-      const equiDistantCount = distances.filter((d) => d.distance === distance).length;
+      for (let i = 0; i < points.length; i++) {
+        const distance = manhattan(current, points[i]);
 
-      if (equiDistantCount === 1) {
-        if (!areasByPoint.has(point)) {
-          areasByPoint.set(point, 1);
-        } else {
-          areasByPoint.set(point, areasByPoint.get(point) + 1);
+        if (distance < minDistance) {
+          index = i;
+          minDistance = distance;
+        } else if (distance === minDistance) {
+          index = -1;
         }
+      }
+
+      if (index !== -1) {
+        areas[index]++;
       }
     }
   }
 
-  return Math.max(...areasByPoint.values());
+  return Math.max(...areas);
 }
