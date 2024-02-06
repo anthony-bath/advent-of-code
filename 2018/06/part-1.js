@@ -41,7 +41,11 @@ export function part1({ lines }) {
         }
       }
 
-      if (index !== -1) {
+      if (index === -1) continue;
+
+      if (x === minX || x === maxX || y === minY || y === maxY) {
+        areas[index] = 0;
+      } else {
         areas[index]++;
       }
     }
