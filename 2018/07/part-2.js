@@ -14,54 +14,43 @@ export function part2({ lines }) {
   );
 
   let time = 0;
-  let inProgress = [];
-  const completed = [];
+  const inProgress = new Map();
 
-  while (true) {
+  while (steps.size) {
     const justFinished = [];
 
-    for (const { step, finishes } of inProgress) {
+    for (const [step, finishes] of inProgress) {
       if (finishes === time) {
         justFinished.push(step);
-        completed.push(step);
-      }
-    }
+        inProgress.delete(step);
 
-    if (completed.length === Object.keys(steps).length) break;
+        for (const [_, dependencies] of steps) {
+          const index = dependencies.indexOf(step);
 
-    inProgress = inProgress.filter((t) => !justFinished.includes(t.step));
-
-    for (const dependencies of Object.values(steps)) {
-      for (const step of justFinished) {
-        const index = dependencies.indexOf(step);
-
-        if (index !== -1) {
-          dependencies.splice(index, 1);
+          if (index !== -1) {
+            dependencies.splice(index, 1);
+          }
         }
       }
     }
 
     const available = [];
-    const inProgressSteps = inProgress.map((t) => t.step);
 
-    for (const [step, dependencies] of Object.entries(steps)) {
-      if (
-        dependencies.length === 0 &&
-        !completed.includes(step) &&
-        !inProgressSteps.includes(step)
-      ) {
+    for (const [step, dependencies] of steps) {
+      if (dependencies.length === 0) {
         available.push(step);
       }
     }
 
     available.sort();
 
-    while (available.length && inProgress.length < WORKERS) {
+    while (inProgress.size < WORKERS && available.length) {
       const step = available.shift();
-      inProgress.push({ step, finishes: time + STEP_DURATION[step] });
+      steps.delete(step);
+      inProgress.set(step, time + STEP_DURATION[step]);
     }
 
-    time = Math.min(...inProgress.map((t) => t.finishes));
+    time = Math.min(...inProgress.values());
   }
 
   return time;

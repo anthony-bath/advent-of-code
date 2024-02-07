@@ -4,10 +4,10 @@ export function part1({ lines }) {
   const steps = getSteps(lines);
   const executionOrder = [];
 
-  while (executionOrder.length < Object.keys(steps).length) {
+  while (steps.size > 0) {
     const available = [];
 
-    for (const [step, dependencies] of Object.entries(steps)) {
+    for (const [step, dependencies] of steps) {
       if (dependencies.length === 0 && !executionOrder.includes(step)) {
         available.push(step);
       }
@@ -16,8 +16,9 @@ export function part1({ lines }) {
     available.sort();
 
     const execute = available.shift();
+    steps.delete(execute);
 
-    for (const [, dependencies] of Object.entries(steps)) {
+    for (const [_, dependencies] of steps) {
       const index = dependencies.indexOf(execute);
 
       if (index !== -1) {
