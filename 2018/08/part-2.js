@@ -17,16 +17,16 @@ class TreeNode {
     if (this.children.length === 0) {
       return sum(this.metadata);
     } else {
-      const values = [];
+      let sum = 0;
 
       for (const entry of this.metadata) {
         if (entry === 0) continue;
         if (entry > this.children.length) continue;
 
-        values.push(this.children[entry - 1].value());
+        sum += this.children[entry - 1].value();
       }
 
-      return sum(values);
+      return sum;
     }
   }
 }

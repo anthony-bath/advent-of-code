@@ -1,22 +1,19 @@
-import { sum } from '../../utilities/array.js';
-
 export function part1({ data }) {
-  const input = data.split(' ').map(Number);
-  const metadata = [];
+  const input = data.split(' ').map(Number).reverse();
 
-  function setMetadata(data) {
-    const [children, metadataCount] = data.splice(0, 2);
+  function setMetadata(children, metadataCount) {
+    let sum = 0;
 
-    if (children > 0) {
-      for (let i = 0; i < children; i++) {
-        setMetadata(data);
-      }
+    for (let i = 0; i < children; i++) {
+      sum += setMetadata(input.pop(), input.pop());
     }
 
-    metadata.push(...data.splice(0, metadataCount));
+    for (let i = 0; i < metadataCount; i++) {
+      sum += input.pop();
+    }
+
+    return sum;
   }
 
-  setMetadata(input);
-
-  return sum(metadata);
+  return setMetadata(input.pop(), input.pop());
 }
