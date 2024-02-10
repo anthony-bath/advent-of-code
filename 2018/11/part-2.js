@@ -5,7 +5,9 @@ export function part2({ data }) {
 
   const SIZE = 300;
   const grid = [];
-  const cache = {};
+  const cache = Array(SIZE)
+    .fill()
+    .map(() => Array(SIZE).fill(0));
 
   for (let y = 1; y <= SIZE; y++) {
     const row = [];
@@ -20,7 +22,7 @@ export function part2({ data }) {
       powerLevel -= 5;
 
       row.push(powerLevel);
-      cache[`${x - 1}|${y - 1}`] = powerLevel;
+      cache[y - 1][x - 1] = powerLevel;
     }
 
     grid.push(row);
@@ -31,7 +33,7 @@ export function part2({ data }) {
   for (let size = 2; size <= SIZE; size++) {
     for (let y = 0; y <= SIZE - size; y++) {
       for (let x = 0; x <= SIZE - size; x++) {
-        let totalPower = cache[`${x}|${y}`];
+        let totalPower = cache[y][x];
 
         // bottom row of new square
         totalPower += sum(grid[y + size - 1].slice(x, x + size));
@@ -45,7 +47,7 @@ export function part2({ data }) {
           result = { totalPower, x: x + 1, y: y + 1, size };
         }
 
-        cache[`${x}|${y}`] = totalPower;
+        cache[y][x] = totalPower;
       }
     }
   }

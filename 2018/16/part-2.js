@@ -1,12 +1,12 @@
 import { commands } from './common.js';
 
 export function part2({ lines }) {
-  const possibles = Array.from({ length: 16 }).map(() => []);
+  const possibles = Array.from({ length: 16 }, () => []);
 
   for (let row = 0; row <= 3256; row += 4) {
-    const before = JSON.parse(lines[row].split(': ')[1]);
-    const [op, A, B, C] = lines[row + 1].split(' ').map((n) => Number(n));
-    const after = JSON.parse(lines[row + 2].split(': ')[1]);
+    const before = lines[row].match(/\d+/g).map(Number);
+    const [op, A, B, C] = lines[row + 1].split(' ').map(Number);
+    const after = lines[row + 2].match(/\d+/g).map(Number);
 
     for (const command of commands) {
       const result = command(before, A, B, C);
