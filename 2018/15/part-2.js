@@ -132,9 +132,10 @@ export function part2({ lines }) {
   }
 
   let result;
+  let bonusAttackPower = 1;
 
-  for (let bonusAttackPower = 1; bonusAttackPower < 197; bonusAttackPower++) {
-    result = simulate(units, map, bonusAttackPower);
+  while (true) {
+    result = simulate(units, map, bonusAttackPower++);
 
     if (result.deadElves === 0) {
       break;

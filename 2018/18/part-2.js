@@ -23,8 +23,8 @@ export function part2({ grid: land }) {
     }
   }
 
-  const seen = {};
-  const cache = {};
+  const seen = new Map();
+  const cache = new Map();
   let minute = 0;
   let cycleStart = 0;
 
@@ -67,27 +67,28 @@ export function part2({ grid: land }) {
 
     for (const [x, y] of toOpen) {
       land[y][x] = ACRE_TYPE.OPEN;
-      openCount++;
     }
 
     for (const [x, y] of toTrees) {
       land[y][x] = ACRE_TYPE.TREES;
-      treeCount++;
     }
 
     for (const [x, y] of toLumberyard) {
       land[y][x] = ACRE_TYPE.LUMBERYARD;
-      lumberyardCount++;
     }
 
-    cache[minute] = lumberyardCount * treeCount;
+    openCount += toOpen.size;
+    treeCount += toTrees.size;
+    lumberyardCount += toLumberyard.size;
+
+    cache.set(minute, lumberyardCount * treeCount);
     const key = `${treeCount}|${openCount}|${lumberyardCount}|${land[0].join('')}`;
 
-    if (seen[key]) {
-      cycleStart = seen[key];
+    if (seen.has(key)) {
+      cycleStart = seen.get(key);
       break;
     } else {
-      seen[key] = minute;
+      seen.set(key, minute);
     }
 
     minute++;
@@ -97,5 +98,5 @@ export function part2({ grid: land }) {
   const cycleSize = minute - cycleStart;
   const leftoverMinutes = (minsZeroIndexed - minute) % cycleSize;
 
-  return cache[cycleStart + leftoverMinutes];
+  return cache.get(cycleStart + leftoverMinutes);
 }

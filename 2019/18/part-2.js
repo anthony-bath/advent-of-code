@@ -1,5 +1,7 @@
 import { PriorityQueue } from '../../utilities/queue.js';
 
+const { pow } = Math;
+
 export function part2({ grid: maze }) {
   const keyExpr = /[a-z]/;
   const doorExpr = /[A-Z]/;
@@ -12,15 +14,15 @@ export function part2({ grid: maze }) {
   maze.forEach((row, y) => {
     row.forEach((cell, x) => {
       if (keyExpr.test(cell)) {
-        keyValue.set(cell, Math.pow(2, cell.charCodeAt(0) - 97));
+        keyValue.set(cell, pow(2, cell.charCodeAt(0) - 97));
         locationByKey.set(cell, { x, y });
       } else if (doorExpr.test(cell)) {
-        doorValue.set(cell, Math.pow(2, cell.toLowerCase().charCodeAt(0) - 97));
+        doorValue.set(cell, pow(2, cell.toLowerCase().charCodeAt(0) - 97));
       } else if (cell === '@') {
-        robots.push({ x: x - 1, y: y - 1, visited: {} });
-        robots.push({ x: x + 1, y: y - 1, visited: {} });
-        robots.push({ x: x - 1, y: y + 1, visited: {} });
-        robots.push({ x: x + 1, y: y + 1, visited: {} });
+        robots.push({ x: x - 1, y: y - 1, visited: new Set() });
+        robots.push({ x: x + 1, y: y - 1, visited: new Set() });
+        robots.push({ x: x - 1, y: y + 1, visited: new Set() });
+        robots.push({ x: x + 1, y: y + 1, visited: new Set() });
 
         maze[y][x] = '#';
         maze[y - 1][x] = '#';
@@ -38,19 +40,19 @@ export function part2({ grid: maze }) {
     [0, 1],
   ];
 
-  const allKeys = Math.pow(2, locationByKey.size) - 1;
+  const allKeys = pow(2, locationByKey.size) - 1;
 
   function bfs_distance(grid, { x, y }, collected, visited) {
     const lookup = `${x}|${y}|${collected}`;
 
-    if (visited[lookup]) {
+    if (visited.has(lookup)) {
       return [];
     }
 
     const initialState = { x, y, steps: 0, collected };
     const queue = [initialState];
     const distances = [];
-    visited[lookup] = 1;
+    visited.add(lookup);
 
     while (queue.length) {
       let { x, y, steps, collected } = queue.shift();
@@ -58,7 +60,7 @@ export function part2({ grid: maze }) {
       for (const [dx, dy] of deltas) {
         const lookup = `${x + dx}|${y + dy}|${collected}`;
 
-        if (grid[y + dy][x + dx] !== '#' && !visited[lookup]) {
+        if (grid[y + dy][x + dx] !== '#' && !visited.has(lookup)) {
           const location = grid[y + dy][x + dx];
 
           if (doorExpr.test(location)) {
@@ -72,7 +74,7 @@ export function part2({ grid: maze }) {
                 collected,
               });
 
-              visited[lookup] = 1;
+              visited.add(lookup);
             }
 
             continue;
@@ -92,11 +94,11 @@ export function part2({ grid: maze }) {
                 y: y + dy,
               });
 
-              visited[lookup] = 1;
+              visited.add(lookup);
 
               queue.push({ x: x + dx, y: y + dy, steps: steps + 1, collected: nextCollected });
             } else {
-              visited[lookup] = 1;
+              visited.add(lookup);
               queue.push({ x: x + dx, y: y + dy, steps: steps + 1, collected });
             }
 
@@ -104,7 +106,7 @@ export function part2({ grid: maze }) {
           }
 
           queue.push({ x: x + dx, y: y + dy, steps: steps + 1, collected });
-          visited[lookup] = 1;
+          visited.add(lookup);
         }
       }
     }
@@ -118,7 +120,7 @@ export function part2({ grid: maze }) {
 
   function bfs_path(state) {
     const queue = new PriorityQueue(state, (a, b) => a.steps - b.steps);
-    const visited = { [getKey(state.robots, state.collected)]: 1 };
+    const visited = new Set([getKey(state.robots, state.collected)]);
 
     while (queue.isNotEmpty()) {
       const current = queue.next();
@@ -145,7 +147,7 @@ export function part2({ grid: maze }) {
             }),
           };
 
-          visited[getKey(nextState.robots, nextState.collected)] = 1;
+          visited.add(getKey(nextState.robots, nextState.collected));
           queue.insert(nextState);
         }
       }

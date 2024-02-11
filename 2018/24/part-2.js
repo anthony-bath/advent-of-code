@@ -14,13 +14,11 @@ export function part2({ lines }) {
       Infection.set(i + TEAM_SIZE + 1, groups[i + TEAM_SIZE]);
     }
 
-    result = simulate(ImmuneSystem, Infection, boost);
+    result = simulate(ImmuneSystem, Infection, boost++);
 
     if (result.winner === GROUP_TYPE.IMMUNE_SYSTEM) {
       break;
     } else {
-      boost++;
-
       for (const group of groups) {
         group.reset();
       }
