@@ -58,7 +58,7 @@ export function part1({ grid: maze }) {
 
   function bfs(state) {
     const queue = [state];
-    const visited = { [`${state.x}|${state.y}`]: 1 };
+    const visited = new Set([`${state.x}|${state.y}`]);
 
     while (queue.length) {
       const current = queue.shift();
@@ -72,15 +72,15 @@ export function part1({ grid: maze }) {
       if (portals.has(currentKey)) {
         const destination = portals.get(currentKey);
 
-        visited[`${destination.x}|${destination.y}`] = 1;
+        visited.add(`${destination.x}|${destination.y}`);
         queue.push({ ...destination, steps: current.steps + 1 });
       }
 
       for (const [dx, dy] of deltas) {
         const nextKey = `${current.x + dx}|${current.y + dy}`;
 
-        if (!visited[nextKey] && maze[current.y + dy][current.x + dx] === '.') {
-          visited[nextKey] = 1;
+        if (!visited.has(nextKey) && maze[current.y + dy][current.x + dx] === '.') {
+          visited.add(nextKey);
           queue.push({ x: current.x + dx, y: current.y + dy, steps: current.steps + 1 });
         }
       }

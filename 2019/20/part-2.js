@@ -66,7 +66,7 @@ export function part2({ grid: maze }) {
 
   function bfs(state) {
     const queue = [state];
-    const visited = { [`${state.x}|${state.y}|${state.layer}`]: 1 };
+    const visited = new Set([`${state.x}|${state.y}|${state.layer}`]);
 
     while (queue.length) {
       const current = queue.shift();
@@ -83,8 +83,8 @@ export function part2({ grid: maze }) {
 
         const nextKey = `${x}|${y}|${current.layer + layerDelta}`;
 
-        if (!visited[nextKey]) {
-          visited[nextKey] = 1;
+        if (!visited.has(nextKey)) {
+          visited.add(nextKey);
           queue.push({ x, y, steps: current.steps + 1, layer: current.layer + layerDelta });
         }
       }
@@ -107,8 +107,8 @@ export function part2({ grid: maze }) {
 
         const nextKey = `${nextX}|${nextY}|${current.layer}`;
 
-        if (!visited[nextKey] && maze[nextY][nextX] === '.') {
-          visited[nextKey] = 1;
+        if (!visited.has(nextKey) && maze[nextY][nextX] === '.') {
+          visited.add(nextKey);
           queue.push({ x: nextX, y: nextY, steps: current.steps + 1, layer: current.layer });
         }
       }
