@@ -1,70 +1,37 @@
-import { Recipe, advance } from './common.js';
-
 export function part2({ data }) {
-  const scoreSequence = data;
+  function addRecipe(score) {
+    recipes.push(score);
 
-  const start = Number(scoreSequence.at(0));
-  const end = Number(scoreSequence.slice(-1));
-  const length = scoreSequence.length;
-
-  const recipes = [new Recipe(3), new Recipe(7)];
-  let one = recipes[0];
-  let two = recipes[1];
-
-  one.setNext(two).setPrev(two);
-  two.setNext(one).setPrev(one);
-
-  const head = one;
-  let tail = two;
-  let count = 2;
-  let lastStartCount = 0;
-
-  while (true) {
-    const newRecipeScores = (one.value + two.value).toString().split('');
-    let done = false;
-
-    for (const score of newRecipeScores) {
-      const recipe = new Recipe(Number(score));
-
-      recipe.setPrev(tail).setNext(head);
-      tail.setNext(recipe);
-      tail = recipe;
-
-      count++;
-
-      if (recipe.value === start) {
-        lastStartCount = count;
-      }
-
-      if (count - lastStartCount === length - 1 && tail.value === end) {
-        let pointer = tail.prev;
-        let index = length - 2;
-
-        while (true) {
-          if (pointer.value == scoreSequence.at(index)) {
-            pointer = pointer.prev;
-            index--;
-          } else {
-            break;
-          }
-        }
-
-        if (index === -1) {
-          done = true;
-          break;
-        }
-      }
+    if (score == recipeSequence[spotInSequence]) {
+      spotInSequence++;
+    } else {
+      spotInSequence = 0;
     }
 
-    if (done) {
-      break;
-    }
-
-    one = advance(one);
-    two = advance(two);
+    return spotInSequence === recipeSequence.length;
   }
 
-  return count - scoreSequence.length;
-}
+  const recipeSequence = data.split('');
+  const recipes = [3, 7];
 
-// TODO: Come back and improve performance
+  let elf1 = 0;
+  let elf2 = 1;
+  let spotInSequence = 0;
+
+  while (spotInSequence < recipeSequence.length) {
+    const sum = recipes[elf1] + recipes[elf2];
+
+    if (sum >= 10) {
+      if (addRecipe(1)) {
+        return recipes.length - recipeSequence.length;
+      }
+
+      addRecipe(sum - 10);
+    } else {
+      addRecipe(sum);
+    }
+
+    elf1 = (elf1 + recipes[elf1] + 1) % recipes.length;
+    elf2 = (elf2 + recipes[elf2] + 1) % recipes.length;
+  }
+}
