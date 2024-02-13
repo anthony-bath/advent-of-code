@@ -1,5 +1,7 @@
 import { manhattan } from '../../utilities/math.js';
 
+const { min, pow } = Math;
+
 export function part2({ lines }) {
   const amphipods = [];
 
@@ -33,13 +35,8 @@ export function part2({ lines }) {
     const others = amphipods.filter((a) => a !== amphipod);
     const targetX = 3 + 2 * type;
 
-    if (x !== targetX) {
+    if (x !== targetX || y === 5) {
       amphipod.done = false;
-      continue;
-    }
-
-    if (y === 5) {
-      amphipod.done = true;
       continue;
     }
 
@@ -76,30 +73,30 @@ export function part2({ lines }) {
   }
 
   const HALLWAY_X_POSITIONS = [1, 2, 4, 6, 8, 10, 11];
-  const visited = {};
+  const visited = new Map();
   const stack = [{ spent: 0, amphipods }];
-  let min = Infinity;
+  let minCost = Infinity;
 
   while (stack.length) {
     const current = stack.pop();
-    const key = JSON.stringify(current.amphipods);
+    const key = current.amphipods.map((a) => `${a.x},${a.y},${a.type},${a.done}`).join('|');
 
-    if (key in visited) {
-      if (current.spent < visited[key]) {
-        visited[key] = current.spent;
+    if (visited.has(key)) {
+      if (current.spent < visited.get(key)) {
+        visited.set(key, current.spent);
       } else {
         continue;
       }
     } else {
-      visited[key] = current.spent;
+      visited.set(key, current.spent);
     }
 
     if (current.amphipods.every((a) => a.done)) {
-      min = Math.min(min, current.spent);
+      minCost = min(minCost, current.spent);
       continue;
     }
 
-    if (current.spent > min) continue;
+    if (current.spent > minCost) continue;
 
     for (const amphipod of current.amphipods) {
       if (amphipod.done) continue;
@@ -117,7 +114,7 @@ export function part2({ lines }) {
         const to = { x: targetX, y: 5 };
 
         if (canMove(from, to, others)) {
-          const cost = Math.pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
+          const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
           const nextAmphipods = [
             ...others.map((a) => ({ ...a })),
             { x: targetX, y: 5, type, done: true },
@@ -129,14 +126,14 @@ export function part2({ lines }) {
         othersInTargetRoom.length <= 3 &&
         othersInTargetRoom.every((a) => a.type === type)
       ) {
-        const nextAvailableY = Math.min(...othersInTargetRoom.map((a) => a.y)) - 1;
+        const nextAvailableY = min(...othersInTargetRoom.map((a) => a.y)) - 1;
 
         // can move into the next available slot in the room if able to
         const from = { x, y };
         const to = { x: targetX, y: nextAvailableY };
 
         if (canMove(from, to, others)) {
-          const cost = Math.pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
+          const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
           const nextAmphipods = [
             ...others.map((a) => ({ ...a })),
             { x: targetX, y: nextAvailableY, type, done: true },
@@ -154,7 +151,7 @@ export function part2({ lines }) {
             const to = { x: hallwayX, y: 1 };
 
             if (canMove(from, to, others)) {
-              const cost = Math.pow(10, type) * manhattan(from, to);
+              const cost = pow(10, type) * manhattan(from, to);
               const nextAmphipods = [
                 ...others.map((a) => ({ ...a })),
                 { ...to, type, done: false },
@@ -168,5 +165,5 @@ export function part2({ lines }) {
     }
   }
 
-  return min;
+  return minCost;
 }
