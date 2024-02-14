@@ -56,13 +56,13 @@ export function part1({ lines }) {
       }
 
       // Find open squares adjacent to targets
-      const openSquares = targets.reduce((squares, target) => {
-        const targetOpenSquares = deltas
-          .filter(([dx, dy]) => map[target.y + dy][target.x + dx] === '.')
-          .map(([dx, dy]) => ({ x: target.x + dx, y: target.y + dy }));
-
-        return [...squares, ...targetOpenSquares];
-      }, []);
+      const openSquares = targets
+        .map((target) =>
+          deltas
+            .filter(([dx, dy]) => map[target.y + dy][target.x + dx] === '.')
+            .map(([dx, dy]) => ({ x: target.x + dx, y: target.y + dy }))
+        )
+        .flat();
 
       if (openSquares.length === 0) {
         // No available squares to move to, end of turn
