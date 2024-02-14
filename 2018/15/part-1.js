@@ -19,7 +19,7 @@ export function part1({ lines }) {
 
     // Perform Unit Turns
     let combatFinished = false;
-    let unitsThisTurn = [...units];
+    let unitsThisTurn = units;
 
     for (const unit of units) {
       if (!unitsThisTurn.find((u) => u.id === unit.id)) {

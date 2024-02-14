@@ -16,8 +16,8 @@ export const ATTACK_OUTCOME = {
 };
 
 class Unit {
-  constructor(x, y, type) {
-    this.attackPower = 3;
+  constructor(x, y, type, bonusAttackPower) {
+    this.attackPower = 3 + (type === UNIT_TYPE.ELF ? bonusAttackPower : 0);
     this.hitPoints = 200;
     this.type = type;
     this.x = x;
@@ -35,10 +35,6 @@ class Unit {
     this.y = y;
   }
 
-  increaseAttackPower(bonus) {
-    this.attackPower += bonus;
-  }
-
   getAttackPower() {
     return this.attackPower;
   }
@@ -50,16 +46,9 @@ class Unit {
   isDead() {
     return this.hitPoints <= 0;
   }
-
-  reset() {
-    this.x = this.startX;
-    this.y = this.startY;
-    this.hitPoints = 200;
-    this.attackPower = 3;
-  }
 }
 
-export function getInputElements(lines) {
+export function getInputElements(lines, bonusAttackPower = 0) {
   let units = [];
 
   const map = lines.map((line, y) => {
@@ -67,7 +56,7 @@ export function getInputElements(lines) {
 
     for (const [x, type] of row.entries()) {
       if ([UNIT_TYPE.ELF, UNIT_TYPE.GOBLIN].includes(type)) {
-        units.push(new Unit(x, y, type));
+        units.push(new Unit(x, y, type, bonusAttackPower));
       }
     }
 
@@ -105,7 +94,7 @@ export function getAttackTarget(unit, targets) {
     .sort(hitPointsThenReadingOrder);
 
   if (inRangeTargets.length > 0) {
-    return inRangeTargets.shift();
+    return inRangeTargets[0];
   }
 
   return null;
@@ -117,10 +106,10 @@ export function attack(attacker, target) {
 }
 
 export function getNextLocation(from, to, map) {
-  const queue = [{ ...from, distance: 0 }];
+  const queue = [{ x: from.x, y: from.y, distance: 0 }];
   const visited = new Set([`${from.x}|${from.y}`]);
   const toKeys = new Set(to.map(({ x, y }) => `${x}|${y}`));
-  let destinations = [];
+  const destinations = [];
   let minDistance = Infinity;
 
   while (queue.length) {
@@ -137,15 +126,20 @@ export function getNextLocation(from, to, map) {
     }
 
     for (const [dx, dy] of deltas) {
-      const next = { x: current.x + dx, y: current.y + dy };
+      if (map[current.y + dy][current.x + dx] !== '.') continue;
 
-      if (!visited.has(`${next.x}|${next.y}`) && map[next.y][next.x] === '.') {
-        visited.add(`${next.x}|${next.y}`);
-        queue.push({
-          ...next,
-          distance: current.distance + 1,
-          origin: current.origin || next,
-        });
+      const next = {
+        x: current.x + dx,
+        y: current.y + dy,
+        distance: current.distance + 1,
+        origin: current.origin || current,
+      };
+
+      const nextKey = `${next.x}|${next.y}`;
+
+      if (!visited.has(nextKey)) {
+        visited.add(nextKey);
+        queue.push(next);
       }
     }
   }
@@ -156,7 +150,7 @@ export function getNextLocation(from, to, map) {
     // The shortest path with the sorted by reading order destination had a first step
     // going up which is the best first step for reading order so no need to check
     // other first steps.
-    if (best.y < from.y) {
+    if (best.origin.y < from.y) {
       return best.origin;
     }
 
@@ -171,7 +165,7 @@ function getBestFirstStepToDestination(from, to, distance, map) {
     if (map[from.y + dy][from.x + dx] !== '.') continue;
 
     const queue = [{ x: from.x + dx, y: from.y + dy, distance: 1 }];
-    const visited = new Set([`${from.x}|${from.y}`, `${from.x + dx}|${from.y + dy}`]);
+    const visited = new Set([`${from.x + dx}|${from.y + dy}`]);
 
     while (queue.length) {
       const current = queue.shift();
@@ -187,12 +181,13 @@ function getBestFirstStepToDestination(from, to, distance, map) {
           distance: current.distance + 1,
         };
 
-        if (
-          !visited.has(`${next.x}|${next.y}`) &&
-          map[next.y][next.x] === '.' &&
-          next.distance <= distance
-        ) {
-          visited.add(`${next.x}|${next.y}`);
+        if (next.distance > distance) continue;
+        if (map[next.y][next.x] !== '.') continue;
+
+        const nextKey = `${next.x}|${next.y}`;
+
+        if (!visited.has(nextKey)) {
+          visited.add(nextKey);
           queue.push(next);
         }
       }

@@ -12,13 +12,10 @@ import {
 
 export function part2({ lines }) {
   function simulate(lines, bonusAttackPower) {
-    let { map: mapThisSimulation, units: unitsThisSimulation } = getInputElements(lines);
-
-    unitsThisSimulation.forEach((unit) => {
-      if (unit.type === UNIT_TYPE.ELF) {
-        unit.increaseAttackPower(bonusAttackPower);
-      }
-    });
+    let { map: mapThisSimulation, units: unitsThisSimulation } = getInputElements(
+      lines,
+      bonusAttackPower
+    );
 
     let round = 0;
 
@@ -28,7 +25,7 @@ export function part2({ lines }) {
 
       // Perform Unit Turns
       let combatFinished = false;
-      let unitsThisTurn = [...unitsThisSimulation];
+      let unitsThisTurn = unitsThisSimulation;
 
       for (const unit of unitsThisSimulation) {
         if (!unitsThisTurn.find((u) => u.id === unit.id)) {
@@ -69,13 +66,13 @@ export function part2({ lines }) {
         }
 
         // Find open squares adjacent to targets
-        const openSquares = targets.reduce((squares, target) => {
-          const targetOpenSquares = deltas
-            .filter(([dx, dy]) => mapThisSimulation[target.y + dy][target.x + dx] === '.')
-            .map(([dx, dy]) => ({ x: target.x + dx, y: target.y + dy }));
-
-          return [...squares, ...targetOpenSquares];
-        }, []);
+        const openSquares = targets
+          .map((target) =>
+            deltas
+              .filter(([dx, dy]) => mapThisSimulation[target.y + dy][target.x + dx] === '.')
+              .map(([dx, dy]) => ({ x: target.x + dx, y: target.y + dy }))
+          )
+          .flat();
 
         if (openSquares.length === 0) {
           // No available squares to move to, end of turn
@@ -125,16 +122,25 @@ export function part2({ lines }) {
     return { round, remainingHitPoints, outcome: round * remainingHitPoints };
   }
 
-  let result;
-  let bonusAttackPower = 1;
+  let bonusAttackFloor = 4;
+  let bonusAttackCeiling = 50;
+  let bonusAttackPower = 25;
+  let outcome;
 
   while (true) {
-    result = simulate(lines, bonusAttackPower++);
+    const result = simulate(lines, bonusAttackPower);
 
     if (result) {
-      break;
+      bonusAttackCeiling = bonusAttackPower;
+      bonusAttackPower = (bonusAttackPower + bonusAttackFloor) >> 1;
+      outcome = result.outcome;
+    } else {
+      bonusAttackFloor = bonusAttackPower;
+      bonusAttackPower = (bonusAttackPower + bonusAttackCeiling) >> 1;
+    }
+
+    if (bonusAttackCeiling - bonusAttackFloor <= 1) {
+      return outcome;
     }
   }
-
-  return result.outcome;
 }
