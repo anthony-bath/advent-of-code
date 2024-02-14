@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { printGrid } from '../../utilities/grid.js';
 
 export const UNIT_TYPE = {
   ELF: 'E',
@@ -117,24 +118,87 @@ export function attack(attacker, target) {
 }
 
 export function getNextLocation(from, to, map) {
-  const queue = [{ ...from }];
-  const visited = { [`${from.x}|${from.y}`]: 1 };
+  const queue = [{ ...from, path: [] }];
+  const visited = new Set([`${from.x}|${from.y}`]);
   const toKeys = to.map(({ x, y }) => `${x}|${y}`);
+  const paths = [];
 
   while (queue.length) {
     const current = queue.shift();
     const currentKey = `${current.x}|${current.y}`;
 
     if (toKeys.includes(currentKey)) {
-      return current.origin;
+      // return current.origin;
+      if (paths.length === 0 || current.path.length === paths[0].length) {
+        paths.push([...current.path]);
+      } else {
+        // console.log(paths.map((p) => p[p.length - 1]));
+        // process.exit();
+        const bestPath = paths.sort((a, b) => readingOrder(a.slice(-1)[0], b.slice(-1)[0])).shift();
+
+        // The shortest path with the sorted by reading order destination had a first step
+        // going up which is the best first step for reading order so no need to check
+        // other first steps.
+        if (bestPath[0].y < from.y) {
+          return bestPath.shift();
+        }
+
+        return getBestFirstStepToDestination(from, bestPath.slice(-1)[0], bestPath.length, map);
+      }
     }
 
     for (const [dx, dy] of deltas) {
       const next = { x: current.x + dx, y: current.y + dy };
 
-      if (!visited[`${next.x}|${next.y}`] && map[next.y][next.x] === '.') {
-        visited[`${next.x}|${next.y}`] = 1;
-        queue.push({ ...next, origin: current.origin ? current.origin : next });
+      if (!visited.has(`${next.x}|${next.y}`) && map[next.y][next.x] === '.') {
+        visited.add(`${next.x}|${next.y}`);
+        queue.push({ ...next, path: [...current.path, next] });
+      }
+    }
+  }
+
+  return null;
+}
+
+let count = 0;
+
+function getBestFirstStepToDestination(from, to, distance, map) {
+  for (const [dx, dy] of deltas) {
+    if (map[from.y + dy][from.x + dx] !== '.') continue;
+
+    const queue = [
+      { x: from.x + dx, y: from.y + dy, distance: 1, path: [{ x: from.x + dx, y: from.y + dy }] },
+    ];
+    const visited = new Set([`${from.x}|${from.y}`, `${from.x + dx}|${from.y + dy}`]);
+
+    while (queue.length) {
+      const current = queue.shift();
+
+      if (current.x === to.x && current.y === to.y) {
+        if (count < 10) {
+          // console.log(current.path);
+          console.log({ x: from.x + dx, y: from.y + dy });
+          count++;
+        }
+        return { x: from.x + dx, y: from.y + dy };
+      }
+
+      for (const [dx, dy] of deltas) {
+        const next = {
+          x: current.x + dx,
+          y: current.y + dy,
+          distance: current.distance + 1,
+          path: [...current.path, { x: current.x + dx, y: current.y + dy }],
+        };
+
+        if (
+          !visited.has(`${next.x}|${next.y}`) &&
+          map[next.y][next.x] === '.' &&
+          next.distance <= distance
+        ) {
+          visited.add(`${next.x}|${next.y}`);
+          queue.push(next);
+        }
       }
     }
   }
