@@ -153,7 +153,6 @@ export function getNextLocation(from, to, map) {
   }
 
   if (destinations.length) {
-    // const bestPath = paths.sort((a, b) => readingOrder(a.slice(-1)[0], b.slice(-1)[0])).shift();
     const best = destinations.sort(readingOrder)[0];
 
     // The shortest path with the sorted by reading order destination had a first step
