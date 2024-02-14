@@ -1,4 +1,3 @@
-import { printGrid } from '../../utilities/grid.js';
 import {
   getInputElements,
   TARGET_TYPE,
