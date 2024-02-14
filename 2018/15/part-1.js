@@ -95,15 +95,9 @@ export function part1({ lines }) {
     units = unitsThisTurn;
 
     if (combatFinished) {
-      // console.log(round);
-      // process.exit();
       break;
     } else {
       round++;
-      if (round === 70) {
-        console.log(printGrid(map));
-        process.exit();
-      }
     }
   }
 

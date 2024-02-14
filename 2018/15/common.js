@@ -1,5 +1,4 @@
 import crypto from 'crypto';
-import { printGrid } from '../../utilities/grid.js';
 
 export const UNIT_TYPE = {
   ELF: 'E',
@@ -118,32 +117,24 @@ export function attack(attacker, target) {
 }
 
 export function getNextLocation(from, to, map) {
-  const queue = [{ ...from, path: [] }];
+  const queue = [{ ...from, distance: 0 }];
   const visited = new Set([`${from.x}|${from.y}`]);
-  const toKeys = to.map(({ x, y }) => `${x}|${y}`);
-  const paths = [];
+  const toKeys = new Set(to.map(({ x, y }) => `${x}|${y}`));
+  let destinations = [];
+  let minDistance = Infinity;
 
   while (queue.length) {
     const current = queue.shift();
     const currentKey = `${current.x}|${current.y}`;
 
-    if (toKeys.includes(currentKey)) {
-      // return current.origin;
-      if (paths.length === 0 || current.path.length === paths[0].length) {
-        paths.push([...current.path]);
-      } else {
-        // console.log(paths.map((p) => p[p.length - 1]));
-        // process.exit();
-        const bestPath = paths.sort((a, b) => readingOrder(a.slice(-1)[0], b.slice(-1)[0])).shift();
-
-        // The shortest path with the sorted by reading order destination had a first step
-        // going up which is the best first step for reading order so no need to check
-        // other first steps.
-        if (bestPath[0].y < from.y) {
-          return bestPath.shift();
-        }
-
-        return getBestFirstStepToDestination(from, bestPath.slice(-1)[0], bestPath.length, map);
+    if (toKeys.has(currentKey)) {
+      if (current.distance < minDistance) {
+        minDistance = current.distance;
+        destinations = [current];
+        continue;
+      } else if (current.distance === minDistance) {
+        destinations.push(current);
+        continue;
       }
     }
 
@@ -152,34 +143,43 @@ export function getNextLocation(from, to, map) {
 
       if (!visited.has(`${next.x}|${next.y}`) && map[next.y][next.x] === '.') {
         visited.add(`${next.x}|${next.y}`);
-        queue.push({ ...next, path: [...current.path, next] });
+        queue.push({
+          ...next,
+          distance: current.distance + 1,
+          origin: current.origin || next,
+        });
       }
     }
+  }
+
+  if (destinations.length) {
+    // const bestPath = paths.sort((a, b) => readingOrder(a.slice(-1)[0], b.slice(-1)[0])).shift();
+    const best = destinations.sort(readingOrder)[0];
+
+    // The shortest path with the sorted by reading order destination had a first step
+    // going up which is the best first step for reading order so no need to check
+    // other first steps.
+    if (best.y < from.y) {
+      return best.origin;
+    }
+
+    return getBestFirstStepToDestination(from, best, minDistance, map);
   }
 
   return null;
 }
 
-let count = 0;
-
 function getBestFirstStepToDestination(from, to, distance, map) {
   for (const [dx, dy] of deltas) {
     if (map[from.y + dy][from.x + dx] !== '.') continue;
 
-    const queue = [
-      { x: from.x + dx, y: from.y + dy, distance: 1, path: [{ x: from.x + dx, y: from.y + dy }] },
-    ];
+    const queue = [{ x: from.x + dx, y: from.y + dy, distance: 1 }];
     const visited = new Set([`${from.x}|${from.y}`, `${from.x + dx}|${from.y + dy}`]);
 
     while (queue.length) {
       const current = queue.shift();
 
       if (current.x === to.x && current.y === to.y) {
-        if (count < 10) {
-          // console.log(current.path);
-          console.log({ x: from.x + dx, y: from.y + dy });
-          count++;
-        }
         return { x: from.x + dx, y: from.y + dy };
       }
 
@@ -188,7 +188,6 @@ function getBestFirstStepToDestination(from, to, distance, map) {
           x: current.x + dx,
           y: current.y + dy,
           distance: current.distance + 1,
-          path: [...current.path, { x: current.x + dx, y: current.y + dy }],
         };
 
         if (

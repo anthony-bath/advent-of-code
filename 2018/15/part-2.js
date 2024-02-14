@@ -59,6 +59,7 @@ export function part2({ lines }) {
           if (result === ATTACK_OUTCOME.DEATH) {
             if (attackTarget.type === UNIT_TYPE.ELF) {
               deadElves++;
+              return null;
             }
 
             unitsThisTurn = unitsThisTurn.filter((u) => u.id !== attackTarget.id);
@@ -106,6 +107,7 @@ export function part2({ lines }) {
           if (result === ATTACK_OUTCOME.DEATH) {
             if (attackTarget.type === UNIT_TYPE.ELF) {
               deadElves++;
+              return null;
             }
 
             unitsThisTurn = unitsThisTurn.filter((u) => u.id !== attackTarget.id);
@@ -137,7 +139,7 @@ export function part2({ lines }) {
   while (true) {
     result = simulate(units, map, bonusAttackPower++);
 
-    if (result.deadElves === 0) {
+    if (result && result.deadElves === 0) {
       break;
     }
   }
