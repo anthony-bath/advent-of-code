@@ -11,32 +11,26 @@ import {
 } from './common.js';
 
 export function part2({ lines }) {
-  let { map, units } = getInputElements(lines);
-
-  function simulate(units, map, bonusAttackPower) {
-    let unitsThisSimulation = [...units];
-    const mapThisSimulation = map.map((row) => [...row]);
+  function simulate(lines, bonusAttackPower) {
+    let { map: mapThisSimulation, units: unitsThisSimulation } = getInputElements(lines);
 
     unitsThisSimulation.forEach((unit) => {
-      unit.reset();
-
       if (unit.type === UNIT_TYPE.ELF) {
         unit.increaseAttackPower(bonusAttackPower);
       }
     });
 
-    let deadElves = 0;
     let round = 0;
 
     while (true) {
       // Sort Units in Reading Order
-      units.sort(readingOrder);
+      unitsThisSimulation.sort(readingOrder);
 
       // Perform Unit Turns
       let combatFinished = false;
       let unitsThisTurn = [...unitsThisSimulation];
 
-      for (const unit of units) {
+      for (const unit of unitsThisSimulation) {
         if (!unitsThisTurn.find((u) => u.id === unit.id)) {
           // Unit was eliminated in this turn so does not get a turn this round
           continue;
@@ -58,7 +52,6 @@ export function part2({ lines }) {
 
           if (result === ATTACK_OUTCOME.DEATH) {
             if (attackTarget.type === UNIT_TYPE.ELF) {
-              deadElves++;
               return null;
             }
 
@@ -106,7 +99,6 @@ export function part2({ lines }) {
 
           if (result === ATTACK_OUTCOME.DEATH) {
             if (attackTarget.type === UNIT_TYPE.ELF) {
-              deadElves++;
               return null;
             }
 
@@ -130,16 +122,16 @@ export function part2({ lines }) {
       0
     );
 
-    return { round, remainingHitPoints, deadElves, outcome: round * remainingHitPoints };
+    return { round, remainingHitPoints, outcome: round * remainingHitPoints };
   }
 
   let result;
   let bonusAttackPower = 1;
 
   while (true) {
-    result = simulate(units, map, bonusAttackPower++);
+    result = simulate(lines, bonusAttackPower++);
 
-    if (result && result.deadElves === 0) {
+    if (result) {
       break;
     }
   }

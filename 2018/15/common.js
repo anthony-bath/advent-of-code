@@ -128,13 +128,11 @@ export function getNextLocation(from, to, map) {
     const currentKey = `${current.x}|${current.y}`;
 
     if (toKeys.has(currentKey)) {
-      if (current.distance < minDistance) {
+      if (current.distance <= minDistance) {
         minDistance = current.distance;
-        destinations = [current];
-        continue;
-      } else if (current.distance === minDistance) {
         destinations.push(current);
-        continue;
+      } else {
+        break;
       }
     }
 
