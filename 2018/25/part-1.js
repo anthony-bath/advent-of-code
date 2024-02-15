@@ -1,6 +1,8 @@
+const { abs } = Math;
+
 export function part1({ lines }) {
-  const points = lines.map((line) => new Point4D(line.match(/-?\d+/g).map((n) => Number(n))));
-  const used = {};
+  const points = lines.map((line) => new Point4D(line.match(/-?\d+/g).map(Number)));
+  const used = new Set();
   const constellations = [];
 
   for (let i = 0; i < points.length; i++) {

@@ -81,10 +81,8 @@ export function part1({ lines }) {
 
         if (canMove(from, to, others)) {
           const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
-          const nextAmphipods = [
-            ...others.map((a) => ({ ...a })),
-            { x: targetX, y: 3, type, done: true },
-          ];
+          const nextAmphipods = others.map((a) => ({ x: a.x, y: a.y, type: a.type, done: a.done }));
+          nextAmphipods.push({ x: targetX, y: 3, type, done: true });
 
           stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
         }
@@ -99,10 +97,8 @@ export function part1({ lines }) {
 
         if (canMove(from, to, others)) {
           const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
-          const nextAmphipods = [
-            ...others.map((a) => ({ ...a })),
-            { x: targetX, y: 2, type, done: true },
-          ];
+          const nextAmphipods = others.map((a) => ({ x: a.x, y: a.y, type: a.type, done: a.done }));
+          nextAmphipods.push({ x: targetX, y: 2, type, done: true });
 
           stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
         }
@@ -117,10 +113,13 @@ export function part1({ lines }) {
 
             if (canMove(from, to, others)) {
               const cost = pow(10, type) * manhattan(from, to);
-              const nextAmphipods = [
-                ...others.map((a) => ({ ...a })),
-                { ...to, type, done: false },
-              ];
+              const nextAmphipods = others.map((a) => ({
+                x: a.x,
+                y: a.y,
+                type: a.type,
+                done: a.done,
+              }));
+              nextAmphipods.push({ x: to.x, y: to.y, type, done: false });
 
               stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
             }

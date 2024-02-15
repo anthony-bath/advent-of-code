@@ -6,7 +6,7 @@ export function part2({ lines }) {
     if (line.startsWith('depth')) {
       return Number(line.match(/\d+/));
     } else {
-      return line.match(/\d+/g).map((n) => Number(n));
+      return line.match(/\d+/g).map(Number);
     }
   });
 
@@ -84,7 +84,6 @@ export function part2({ lines }) {
     [0, -1],
   ];
 
-  let result = null;
   const target = { x: tx, y: ty };
   const maxDistance = manhattan({ x: 0, y: 0 }, target);
   const state = { minutes: 0, x: 0, y: 0, item: ITEM.TORCH, distance: maxDistance };
@@ -95,8 +94,7 @@ export function part2({ lines }) {
     const current = queue.next();
 
     if (current.x === tx && current.y === ty && current.item === ITEM.TORCH) {
-      result = current.minutes;
-      break;
+      return current.minutes;
     }
 
     const key = `${current.item}|${current.x}|${current.y}`;
@@ -137,8 +135,6 @@ export function part2({ lines }) {
       }
     }
   }
-
-  return result;
 }
 
 // 1451 - Too High

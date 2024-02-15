@@ -17,9 +17,9 @@ export function part2({ lines }) {
   });
 
   /* Additional Amphipods
-  #D#C#B#A#
-  #D#B#A#C#
-*/
+    #D#C#B#A#
+    #D#B#A#C#
+  */
 
   amphipods.push({ x: 3, y: 3, type: 3 });
   amphipods.push({ x: 3, y: 4, type: 3 });
@@ -115,10 +115,8 @@ export function part2({ lines }) {
 
         if (canMove(from, to, others)) {
           const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
-          const nextAmphipods = [
-            ...others.map((a) => ({ ...a })),
-            { x: targetX, y: 5, type, done: true },
-          ];
+          const nextAmphipods = others.map((a) => ({ x: a.x, y: a.y, type: a.type, done: a.done }));
+          nextAmphipods.push({ x: targetX, y: 5, type, done: true });
 
           stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
         }
@@ -134,10 +132,8 @@ export function part2({ lines }) {
 
         if (canMove(from, to, others)) {
           const cost = pow(10, type) * (y - 1 + manhattan({ x: from.x, y: 1 }, to));
-          const nextAmphipods = [
-            ...others.map((a) => ({ ...a })),
-            { x: targetX, y: nextAvailableY, type, done: true },
-          ];
+          const nextAmphipods = others.map((a) => ({ x: a.x, y: a.y, type: a.type, done: a.done }));
+          nextAmphipods.push({ x: targetX, y: nextAvailableY, type, done: true });
 
           stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
         }
@@ -152,10 +148,13 @@ export function part2({ lines }) {
 
             if (canMove(from, to, others)) {
               const cost = pow(10, type) * manhattan(from, to);
-              const nextAmphipods = [
-                ...others.map((a) => ({ ...a })),
-                { ...to, type, done: false },
-              ];
+              const nextAmphipods = others.map((a) => ({
+                x: a.x,
+                y: a.y,
+                type: a.type,
+                done: a.done,
+              }));
+              nextAmphipods.push({ x: to.x, y: to.y, type, done: false });
 
               stack.push({ spent: current.spent + cost, amphipods: nextAmphipods });
             }

@@ -2,8 +2,11 @@ import { getGroups, simulate, TEAM_SIZE, GROUP_TYPE } from './common.js';
 
 export function part2({ lines }) {
   const groups = getGroups(lines);
-  let boost = 1;
-  let result = null;
+
+  let boostFloor = 1;
+  let boostCeiling = 100;
+  let boost = 50;
+  let remainingUnits;
 
   while (true) {
     const ImmuneSystem = new Map();
@@ -14,16 +17,23 @@ export function part2({ lines }) {
       Infection.set(i + TEAM_SIZE + 1, groups[i + TEAM_SIZE]);
     }
 
-    result = simulate(ImmuneSystem, Infection, boost++);
+    const result = simulate(ImmuneSystem, Infection, boost);
 
     if (result.winner === GROUP_TYPE.IMMUNE_SYSTEM) {
-      break;
+      boostCeiling = boost;
+      boost = (boost + boostFloor) >> 1;
+      remainingUnits = result.remainingUnits;
     } else {
-      for (const group of groups) {
-        group.reset();
-      }
+      boostFloor = boost;
+      boost = (boost + boostCeiling) >> 1;
+    }
+
+    if (boostCeiling - boostFloor <= 1) {
+      return remainingUnits;
+    }
+
+    for (const group of groups) {
+      group.reset();
     }
   }
-
-  return result.remainingUnits;
 }
