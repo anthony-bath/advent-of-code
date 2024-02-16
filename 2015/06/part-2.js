@@ -1,17 +1,19 @@
+const { max } = Math;
+
 export function part2({ lines }) {
   const grid = Array(1000)
     .fill()
     .map(() => Array(1000).fill(0));
 
   lines.forEach((line) => {
-    const [x1, y1, x2, y2] = line.match(/\d+/g).map((n) => Number(n));
+    const [x1, y1, x2, y2] = line.match(/\d+/g).map(Number);
 
     for (let x = x1; x <= x2; x++) {
       for (let y = y1; y <= y2; y++) {
         if (line.startsWith('turn on')) {
           grid[y][x]++;
         } else if (line.startsWith('turn off')) {
-          grid[y][x] = Math.max(0, grid[y][x] - 1);
+          grid[y][x] = max(0, grid[y][x] - 1);
         } else {
           grid[y][x] += 2;
         }

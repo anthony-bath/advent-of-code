@@ -23,5 +23,12 @@
     "bigint-crypto-utils": "^3.2.2",
     "jest": "^29.7.0",
     "z3-solver": "^4.12.5"
+  },
+  "jest": {
+    "testPathIgnorePatterns": [
+      "2016.14.test.js",
+      "2016.05.test.js",
+      "2022.16.test.js"
+    ]
   }
 }

@@ -1,3 +1,5 @@
+const { max } = Math;
+
 export function part2({ lines }) {
   const expr =
     /Valve (?<name>[A-Z]{2}) has flow rate=(?<flowRate>\d+); tunnels? leads? to valves? (?<connections>[A-Z,\s]+)/;
@@ -140,7 +142,7 @@ export function part2({ lines }) {
       continue;
     }
 
-    best = Math.max(best, us + dfs(inititalState, elephantOpenValves));
+    best = max(best, us + dfs(inititalState, elephantOpenValves));
   }
 
   return best;
