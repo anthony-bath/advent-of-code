@@ -28,7 +28,7 @@ function extendsToClay({ x, y }, dir, grid) {
   const search = { x, y };
 
   while (true) {
-    const next = { ...search, x: search.x + dir };
+    const next = { x: search.x + dir, y: search.y };
 
     if (isEmpty(next, grid)) return false;
     if (isClay(next, grid)) return true;
@@ -40,7 +40,7 @@ function extendsToClay({ x, y }, dir, grid) {
 function fill({ x, y }, dir, type, grid) {
   const search = { x, y };
   while (true) {
-    const next = { ...search, x: search.x + dir };
+    const next = { x: search.x + dir, y: search.y };
 
     if (isClay(next, grid)) return;
 
