@@ -1,7 +1,7 @@
 import { Worker } from 'node:worker_threads';
 
 export async function part2({ data }) {
-  const size = 6.95 * 1e6;
+  const size = 6.92 * 1e6;
 
   const workers = [0, 1, 2, 3].map(
     (i) =>
