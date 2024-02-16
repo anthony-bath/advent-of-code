@@ -1,18 +1,24 @@
-import { createHash } from 'node:crypto';
+import { Worker } from 'node:worker_threads';
 
-export function part1({ data }) {
-  const passwordChars = [];
-  let num = 0;
+export async function part1({ data }) {
+  const size = 2.6 * 1e6;
 
-  while (passwordChars.length < 8) {
-    const hash = createHash('md5').update(`${data}${num}`).digest('hex');
+  const workers = [0, 1, 2, 3].map(
+    (i) =>
+      new Promise((resolve) => {
+        const worker = new Worker('./2016/05/worker.js', {
+          workerData: { data, start: i * size, end: (i + 1) * size },
+        });
 
-    if (hash.startsWith('00000')) {
-      passwordChars.push(hash[5]);
-    }
+        worker.on('message', resolve);
+      })
+  );
 
-    num++;
-  }
+  const hashes = (await Promise.all(workers)).flat();
 
-  return passwordChars.join('');
+  return hashes
+    .sort((a, b) => a.num - b.num)
+    .slice(0, 8)
+    .map(({ hash }) => hash[5])
+    .join('');
 }
