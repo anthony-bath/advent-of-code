@@ -11,13 +11,15 @@ export function part2() {
     return x;
   }
 
+  const seen = new Set();
   let x = 0;
-  const seen = [];
+  let lastSeen;
 
-  while (!seen.includes(x)) {
-    seen.push(x);
+  while (!seen.has(x)) {
+    seen.add(x);
+    lastSeen = x;
     x = getNextHaltingValue(x);
   }
 
-  return seen[seen.length - 1];
+  return lastSeen;
 }

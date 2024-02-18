@@ -5,7 +5,7 @@ export function part1({ lines }) {
     if (line.startsWith('depth')) {
       return Number(line.match(/\d+/));
     } else {
-      return line.match(/\d+/g).map((n) => Number(n));
+      return line.match(/\d+/g).map(Number);
     }
   });
 
