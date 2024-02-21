@@ -3,14 +3,17 @@ import { getInputElements, deltas } from './common.js';
 export function part1({ data }) {
   const { map, xMin, xMax, yMin, yMax } = getInputElements(data);
 
-  const queue = [{ x: 0, y: 0, doors: 0 }];
+  const stack = [{ x: 0, y: 0, doors: 0 }];
   const visited = new Set();
   let maxDoors = -Infinity;
 
-  while (queue.length) {
-    const curr = queue.shift();
+  while (stack.length) {
+    const curr = stack.pop();
     visited.add(`${curr.x}|${curr.y}`);
-    maxDoors = Math.max(maxDoors, curr.doors);
+
+    if (curr.doors > maxDoors) {
+      maxDoors = curr.doors;
+    }
 
     for (const [dx, dy] of deltas) {
       let nextX = curr.x + dx;
@@ -24,7 +27,7 @@ export function part1({ data }) {
         nextY = nextY + dy;
 
         if (!visited.has(`${nextX}|${nextY}`)) {
-          queue.push({
+          stack.push({
             x: nextX,
             y: nextY,
             doors: curr.doors + 1,

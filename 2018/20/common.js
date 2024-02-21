@@ -1,20 +1,4 @@
-class Stack {
-  constructor() {
-    this.values = [];
-  }
-
-  push(value) {
-    this.values.push(value);
-  }
-
-  peek() {
-    return this.values[this.values.length - 1];
-  }
-
-  pop() {
-    return this.values.pop();
-  }
-}
+const { max, min } = Math;
 
 function mark(map, { x, y }, type) {
   map.set(`${x}|${y}`, type);
@@ -25,15 +9,15 @@ export function getInputElements(data) {
   let [xMin, xMax, yMin, yMax] = [Infinity, -Infinity, Infinity, -Infinity];
 
   const map = new Map([['0|0', 'X']]);
-  const stack = new Stack();
+  const stack = [];
   let current = { x: 0, y: 0 };
 
   for (const char of input) {
     mark(map, current, '.');
-    xMin = Math.min(xMin, current.x);
-    xMax = Math.max(xMax, current.x);
-    yMin = Math.min(yMin, current.y);
-    yMax = Math.max(yMax, current.y);
+    xMin = min(xMin, current.x);
+    xMax = max(xMax, current.x);
+    yMin = min(yMin, current.y);
+    yMax = max(yMax, current.y);
 
     switch (char) {
       case 'N':
@@ -61,7 +45,7 @@ export function getInputElements(data) {
         break;
 
       case '(':
-        stack.push({ ...current });
+        stack.push({ x: current.x, y: current.y });
         break;
 
       case ')':
@@ -69,7 +53,8 @@ export function getInputElements(data) {
         break;
 
       case '|':
-        current = { ...stack.peek() };
+        const { x, y } = stack[stack.length - 1];
+        current = { x, y };
     }
   }
 
