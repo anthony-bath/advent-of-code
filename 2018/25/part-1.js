@@ -2,8 +2,8 @@ const { abs } = Math;
 
 export function part1({ lines }) {
   const points = lines.map((line) => new Point4D(line.match(/-?\d+/g).map(Number)));
-  const used = new Set();
-  const constellations = [];
+  const used = {};
+  let constellations = 0;
 
   for (let i = 0; i < points.length; i++) {
     if (i in used) continue;
@@ -27,26 +27,18 @@ export function part1({ lines }) {
       if (!changes) break;
     }
 
-    constellations.push(groupedPoints);
+    constellations++;
   }
 
-  return constellations.length;
+  return constellations;
 }
 
 class Point4D {
-  constructor([x, y, z, w]) {
-    this.x = x;
-    this.y = y;
-    this.z = z;
-    this.w = w;
-
-    this.points = [x, y, z, w];
+  constructor(points) {
+    this.points = points;
   }
 
   distance(other) {
-    return this.points.reduce(
-      (distance, point, i) => distance + Math.abs(point - other.points[i]),
-      0
-    );
+    return this.points.reduce((distance, point, i) => distance + abs(point - other.points[i]), 0);
   }
 }
