@@ -1,3 +1,5 @@
+const { floor, ceil } = Math;
+
 export function getInputElements(lines) {
   return lines.map((line) => JSON.parse(line.trim())).map((data) => new Fish(data, 1));
 }
@@ -77,11 +79,7 @@ export default class Fish {
   split(splitFish) {
     const side = splitFish.left >= 10 ? 'left' : 'right';
     const val = splitFish[side];
-    const newFish = new Fish(
-      [Math.floor(val / 2), Math.ceil(val / 2)],
-      splitFish.depth + 1,
-      splitFish
-    );
+    const newFish = new Fish([floor(val / 2), ceil(val / 2)], splitFish.depth + 1, splitFish);
 
     splitFish[side] = newFish;
   }
