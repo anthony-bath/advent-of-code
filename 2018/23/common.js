@@ -1,5 +1,7 @@
 import { Point3D, manhattan3D } from '../../utilities/math.js';
 
+const { abs, floor, max, min } = Math;
+
 export class Robot {
   constructor(location, radius) {
     this.location = location;
@@ -13,13 +15,13 @@ export class Robot {
 
 export class Box {
   constructor(p1, p2) {
-    this.w = Math.abs(p1.x - p2.x);
-    this.d = Math.abs(p1.y - p2.y);
-    this.h = Math.abs(p1.z - p2.z);
+    this.w = abs(p1.x - p2.x);
+    this.d = abs(p1.y - p2.y);
+    this.h = abs(p1.z - p2.z);
 
-    const xd = Math.floor(this.w / 2);
-    const yd = Math.floor(this.d / 2);
-    const zd = Math.floor(this.h / 2);
+    const xd = floor(this.w / 2);
+    const yd = floor(this.d / 2);
+    const zd = floor(this.h / 2);
 
     this.points = [
       // Bottom
@@ -80,9 +82,9 @@ export class Box {
 
     // Determine the closest point on the cube to the sphere center point
     const closestPoint = new Point3D(
-      Math.max(p1.x, Math.min(location.x, p2.x)),
-      Math.max(p1.y, Math.min(location.y, p2.y)),
-      Math.max(p1.z, Math.min(location.z, p2.z))
+      max(p1.x, min(location.x, p2.x)),
+      max(p1.y, min(location.y, p2.y)),
+      max(p1.z, min(location.z, p2.z))
     );
 
     // Check if the distance is less than or equal to the sphere radius

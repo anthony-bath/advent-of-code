@@ -1,6 +1,8 @@
 import { Point3D } from '../../utilities/math.js';
 import { Box, Robot } from './common.js';
 
+const { min, max } = Math;
+
 export function part2({ lines }) {
   let [minX, maxX, minY, maxY, minZ, maxZ] = [
     Infinity,
@@ -12,16 +14,16 @@ export function part2({ lines }) {
   ];
 
   const robots = lines.map((line) => {
-    const [x, y, z, r] = line.match(/-?\d+/g).map((n) => Number(n));
+    const [x, y, z, r] = line.match(/-?\d+/g).map(Number);
 
-    minX = Math.min(minX, x);
-    maxX = Math.max(maxX, x);
+    minX = min(minX, x);
+    maxX = max(maxX, x);
 
-    minY = Math.min(minY, y);
-    maxY = Math.max(maxY, y);
+    minY = min(minY, y);
+    maxY = max(maxY, y);
 
-    minZ = Math.min(minZ, z);
-    maxZ = Math.max(maxZ, z);
+    minZ = min(minZ, z);
+    maxZ = max(maxZ, z);
 
     return new Robot(new Point3D(x, y, z), r);
   });
@@ -86,7 +88,7 @@ export function part2({ lines }) {
           maxCount = inRangeCount;
           result = x + y + z;
         } else if (inRangeCount === maxCount) {
-          result = Math.min(result, x + y + z);
+          result = min(result, x + y + z);
         }
       }
     }
