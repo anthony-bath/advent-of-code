@@ -13,7 +13,9 @@
   "scripts": {
     "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js",
     "create": "node ./utilities/day-creator.js",
-    "day": "node ./utilities/day-runner.js"
+    "day": "node ./utilities/day-runner.js",
+    "day:swift": "./scripts/swift-day-runner.sh",
+    "day:swift:benchmark": "./scripts/swift-day-runner.sh -b"
   },
   "bugs": {
     "url": "https://github.com/anthony-bath/advent-of-code/issues"
