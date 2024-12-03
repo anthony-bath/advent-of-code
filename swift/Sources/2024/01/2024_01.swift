@@ -2,17 +2,12 @@ import Algorithms
 
 extension Year2024 {
   struct Day01: AdventDay {
-    var data: String
-    var lines: [String]
-
     private var list1: [Int]
     private var list2: [Int]
 
-    init(data: String, lines: [String]) {
-      self.data = data
-      self.lines = lines
-
+    init(data _: String, lines: [String]) {
       let locationIds = lines.map { $0.split(whereSeparator: \.isWhitespace).map { Int($0)! } }
+
       list1 = locationIds.map { $0[0] }.sorted()
       list2 = locationIds.map { $0[1] }.sorted()
     }
