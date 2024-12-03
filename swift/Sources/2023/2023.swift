@@ -21,6 +21,10 @@ struct Year2023: AdventYear {
       Year2023.Day18(challengeYear: 2023),
       Year2023.Day19(challengeYear: 2023),
       Year2023.Day20(challengeYear: 2023),
+      Year2023.Day21(challengeYear: 2023),
+      Year2023.Day22(challengeYear: 2023),
+      Year2023.Day23(challengeYear: 2023),
+      Year2023.Day24(challengeYear: 2023),
     ]
   }
 }
