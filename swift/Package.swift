@@ -35,5 +35,11 @@ let package = Package(
                 .product(name: "Collections", package: "swift-collections"),
             ]
         ),
+        .testTarget(
+            name: "2024Tests",
+            dependencies: [
+                "AdventOfCode",
+            ]
+        ),
     ]
 )
