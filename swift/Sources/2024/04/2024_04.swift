@@ -20,13 +20,13 @@ extension Year2024 {
     }
 
     func part1() -> Any {
-      var queue = [Item]()
+      var queue = [QueueItem]()
 
       for y in 0 ..< grid.count {
         for x in 0 ..< grid[y].count {
           if grid[y][x] == "X" {
             let point = Point(x: x, y: y)
-            queue.append(Item(location: point, visited: [point], steps: 1, path: [point]))
+            queue.append(QueueItem(location: point, visited: [point], path: [point]))
           }
         }
       }
@@ -37,7 +37,7 @@ extension Year2024 {
       while !queue.isEmpty {
         let item = queue.removeFirst()
 
-        if item.steps == 4 {
+        if item.path.count == 4 {
           count += 1
           paths.append(item.path)
           continue
@@ -51,23 +51,26 @@ extension Year2024 {
             continue
           }
 
-          if item.visited.contains(Point(x: nx, y: ny)) {
+          if grid[ny][nx] != XMAS[item.path.count] {
             continue
           }
 
-          if grid[ny][nx] != XMAS[item.steps] {
+          let nextPoint = Point(x: nx, y: ny)
+
+          if item.visited.contains(nextPoint) {
             continue
           }
 
-          // TODO: Can check if straight line here I think if we are adding the 3rd and 4th point
-          // x would be the same, or y would be the same, or dx and dy would be the same
-          let nextPath = Array(item.path) + [Point(x: nx, y: ny)]
+          let nextPath = Array(item.path) + [nextPoint]
+          let indices = Array(1 ..< nextPath.count)
 
-          if isStraightLine(nextPath) {
-            queue.append(Item(
-              location: Point(x: nx, y: ny),
-              visited: Set(item.visited).union([Point(x: nx, y: ny)]),
-              steps: item.steps + 1,
+          let dx = indices.map { nextPath[$0].x - nextPath[$0 - 1].x }
+          let dy = indices.map { nextPath[$0].y - nextPath[$0 - 1].y }
+
+          if dx.allSatisfy({ $0 == dx[0] }) && dy.allSatisfy({ $0 == dy[0] }) {
+            queue.append(QueueItem(
+              location: nextPoint,
+              visited: Set(item.visited).union([nextPoint]),
               path: nextPath
             ))
           }
@@ -78,29 +81,33 @@ extension Year2024 {
     }
 
     func part2() -> Any {
-      0
-    }
+      var queue = [Point]()
 
-    func isStraightLine(_ path: [Point]) -> Bool {
-      let x = path.map { $0.x }
-      let y = path.map { $0.y }
-
-      // Check horizontal or vertical
-      if x.allSatisfy({ $0 == x[0] }) || y.allSatisfy({ $0 == y[0] }) {
-        return true
-      }
-
-      // Check diagonal: need consistent x and y direction throughout
-      let dx = x[1] - x[0]
-      let dy = y[1] - y[0]
-
-      for i in 1 ..< path.count {
-        if (x[i] - x[i - 1]) != dx || (y[i] - y[i - 1]) != dy {
-          return false
+      for y in 1 ..< grid.count - 1 {
+        for x in 1 ..< grid[y].count - 1 {
+          if grid[y][x] == "A" {
+            queue.append(Point(x: x, y: y))
+          }
         }
       }
 
-      return true
+      let validConfiurations = Set(["MMSS", "SSMM", "MSMS", "SMSM"])
+      var count = 0
+
+      while !queue.isEmpty {
+        let point = queue.removeFirst()
+
+        let tl = grid[point.y - 1][point.x - 1]
+        let tr = grid[point.y - 1][point.x + 1]
+        let bl = grid[point.y + 1][point.x - 1]
+        let br = grid[point.y + 1][point.x + 1]
+
+        if validConfiurations.contains("\(tl)\(tr)\(bl)\(br)") {
+          count += 1
+        }
+      }
+
+      return count
     }
 
     struct Point: Hashable {
@@ -108,10 +115,9 @@ extension Year2024 {
       let y: Int
     }
 
-    struct Item: Hashable {
+    struct QueueItem: Hashable {
       let location: Point
       let visited: Set<Point>
-      let steps: Int
       let path: [Point]
     }
   }
