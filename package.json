@@ -14,6 +14,7 @@
     "test": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js",
     "test:swift": "./scripts/swift-test-runner.sh",
     "create": "node ./utilities/day-creator.js",
+    "create:swift": "node ./scripts/swift-day-creator.js",
     "day": "node ./utilities/day-runner.js",
     "day:swift": "./scripts/swift-day-runner.sh",
     "day:swift:benchmark": "./scripts/swift-day-runner.sh -b"
