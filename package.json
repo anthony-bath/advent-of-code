@@ -16,6 +16,7 @@
     "create": "node ./utilities/day-creator.js",
     "create:swift": "node ./scripts/swift-day-creator.js",
     "day": "node ./utilities/day-runner.js",
+    "day:js": "node ./js/utilities/day-runner.js",
     "day:swift": "./scripts/swift-day-runner.sh",
     "day:swift:benchmark": "./scripts/swift-day-runner.sh -b"
   },

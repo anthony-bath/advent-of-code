@@ -11,12 +11,12 @@ if (!year || !day) {
 }
 
 const dayPadded = day.padStart(2, '0');
-
-const { part1 } = await import(`../js/${year}/${dayPadded}/part-1.js`);
+const dir = `${process.cwd()}/js/${year}/${dayPadded}`;
+const { part1 } = await import(`${dir}/part-1.js`);
 let part2;
 
 try {
-  part2 = (await import(`../js/${year}/${dayPadded}/part-2.js`))?.part2;
+  part2 = (await import(`${dir}/part-2.js`))?.part2;
 } catch (e) {
   // No part 2
 }
