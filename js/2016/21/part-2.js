@@ -1,4 +1,4 @@
-import { permute } from '../../utilities/array.js';
+import { permute } from '../../../utilities/array.js';
 import { scramble } from './common.js';
 
 export function part2({ lines }) {

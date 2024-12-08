@@ -6,7 +6,7 @@ export async function part1({ data }) {
   const workers = [0, 1, 2, 3].map(
     (i) =>
       new Promise((resolve) => {
-        const worker = new Worker('./2016/05/worker.js', {
+        const worker = new Worker('./js/2016/05/worker.js', {
           workerData: { data, start: i * size, end: (i + 1) * size },
         });
 
