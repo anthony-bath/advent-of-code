@@ -3,13 +3,12 @@ import Algorithms
 extension Year2024 {
   struct Day06: AdventDay {
     var grid: [[String]]
+    var start: Point
 
     init(data _: String, lines: [String]) {
       grid = lines.map { $0.map { String($0) } }
-    }
 
-    func part1() -> Any {
-      var start: Point?
+      var start: Point? = nil
 
       for y in 0 ..< grid.count {
         for x in 0 ..< grid[y].count {
@@ -20,8 +19,14 @@ extension Year2024 {
         }
       }
 
-      guard let start = start else { fatalError("No start point found") }
+      if let start = start {
+        self.start = start
+      } else {
+        fatalError("No start point found")
+      }
+    }
 
+    func part1() -> Any {
       var queue = [Position(point: start, direction: .North)]
       var visited = Set<Point>([start])
       let W = grid[0].count
