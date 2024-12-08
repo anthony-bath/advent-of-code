@@ -49,6 +49,10 @@ extension Year${year} {
 
 const inputText = path.join(process.cwd(), 'inputs', year, `${dayPadded}.txt`);
 
+if (!fs.existsSync(inputText)) {
+  fs.writeFileSync(inputText, '');
+}
+
 const testsYearDir = path.join(process.cwd(), 'swift', 'Tests', `${year}Tests`);
 
 if (!fs.existsSync(testsYearDir)) {
