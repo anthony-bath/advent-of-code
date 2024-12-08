@@ -4,6 +4,8 @@ extension Year2024 {
   struct Day06: AdventDay {
     var grid: [[String]]
     var start: Point
+    let W: Int
+    let H: Int
 
     init(data _: String, lines: [String]) {
       grid = lines.map { $0.map { String($0) } }
@@ -20,6 +22,9 @@ extension Year2024 {
         }
       }
 
+      W = grid[0].count
+      H = grid.count
+
       if let start = start {
         self.start = start
       } else {
@@ -28,17 +33,14 @@ extension Year2024 {
     }
 
     func part1() -> Any {
-      var queue = [Position(point: start, direction: .North)]
+      var current = Position(point: start, direction: .North)
       var visited = Set<Point>([start])
-      let W = grid[0].count
-      let H = grid.count
 
-      while !queue.isEmpty {
-        let current = queue.removeFirst()
+      while true {
         var next = current.moveForward()
 
         if next.point.y < 0 || next.point.y >= H || next.point.x < 0 || next.point.x >= W {
-          continue
+          break
         }
 
         if grid[next.point.y][next.point.x] == "#" {
@@ -46,24 +48,23 @@ extension Year2024 {
         }
 
         visited.insert(next.point)
-        queue.append(next)
+        current = next
       }
 
       return visited.count
     }
 
     func part2() -> Any {
-      var queue = [Position(point: start, direction: .North)]
+      var current = Position(point: start, direction: .North)
       var visited = Set<Point>([start])
       let W = grid[0].count
       let H = grid.count
 
-      while !queue.isEmpty {
-        let current = queue.removeFirst()
+      while true {
         var next = current.moveForward()
 
         if next.point.y < 0 || next.point.y >= H || next.point.x < 0 || next.point.x >= W {
-          continue
+          break
         }
 
         if grid[next.point.y][next.point.x] == "#" {
@@ -71,7 +72,7 @@ extension Year2024 {
         }
 
         visited.insert(next.point)
-        queue.append(next)
+        current = next
       }
 
       var possibles = 0
@@ -81,17 +82,19 @@ extension Year2024 {
           continue
         }
 
-        var current = Position2(x: start.x, y: start.y, direction: .North)
-        var currentVisited = Set<Position2>([current])
+        var current = Position(point: start, direction: .North)
+        var currentVisited = Set<Position>([current])
 
         while true {
           var next = current.moveForward()
 
-          if next.y < 0 || next.y >= H || next.x < 0 || next.x >= W {
+          if next.point.y < 0 || next.point.y >= H || next.point.x < 0 || next.point.x >= W {
             continue outer
           }
 
-          if grid[next.y][next.x] == "#" || (next.x == point.x && next.y == point.y) {
+          if grid[next.point.y][next.point.x] == "#" ||
+            (next.point.x == point.x && next.point.y == point.y)
+          {
             next = current.turnRight()
           }
 
@@ -116,34 +119,6 @@ extension Year2024 {
     struct Point: Hashable {
       var x: Int
       var y: Int
-    }
-
-    struct Position2: Hashable {
-      var x: Int
-      var y: Int
-      var direction: Direction
-
-      func turnRight() -> Position2 {
-        let newDirection = Direction(rawValue: (direction.rawValue + 90) % 360)!
-        return Position2(x: x, y: y, direction: newDirection)
-      }
-
-      func moveForward() -> Position2 {
-        let nextPoint: Point
-
-        switch direction {
-        case .North:
-          nextPoint = Point(x: x, y: y - 1)
-        case .South:
-          nextPoint = Point(x: x, y: y + 1)
-        case .East:
-          nextPoint = Point(x: x + 1, y: y)
-        case .West:
-          nextPoint = Point(x: x - 1, y: y)
-        }
-
-        return Position2(x: nextPoint.x, y: nextPoint.y, direction: direction)
-      }
     }
 
     struct Position: Hashable {
