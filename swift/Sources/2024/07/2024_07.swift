@@ -9,28 +9,44 @@ extension Year2024 {
     let multiply: (Int, Int) -> Int = (*)
     let or: (Int, Int) -> Int = { Int("\($0)\($1)")! }
 
+    func dfs(ops: [(Int, Int) -> Int], target: Int, value: Int, numbers: [Int],
+             depth: Int) -> Bool
+    {
+      if depth == numbers.count - 1 {
+        return value == target
+      }
+
+      if value > target {
+        return false
+      }
+
+      for op in ops {
+        if dfs(
+          ops: ops,
+          target: target,
+          value: op(value, numbers[depth + 1]),
+          numbers: numbers,
+          depth: depth + 1
+        ) {
+          return true
+        }
+      }
+
+      return false
+    }
+
     func part1() -> Any {
       let expr = #/\d+/#
-      var cache: [Int: [[(Int, Int) -> Int]]] = [:]
+      let ops = [add, multiply]
       var total = 0
 
       for line in lines {
         let matches = line.matches(of: expr)
         let left = Int(matches[0].output)!
         let right = matches[1...].map { Int($0.output)! }
-        let operations = combinations(
-          of: right.count - 1,
-          from: [add, multiply],
-          using: &cache
-        )
 
-        for combo in operations {
-          let value = calculate(right, combo)
-
-          if value == left {
-            total += left
-            break
-          }
+        if dfs(ops: ops, target: left, value: right[0], numbers: right, depth: 0) {
+          total += left
         }
       }
 
@@ -39,7 +55,7 @@ extension Year2024 {
 
     func part2() -> Any {
       let expr = #/\d+/#
-      var cache: [Int: [[(Int, Int) -> Int]]] = [:]
+      let ops = [add, multiply, or]
       var total = 0
 
       for line in lines {
@@ -47,58 +63,12 @@ extension Year2024 {
         let left = Int(matches[0].output)!
         let right = matches[1...].map { Int($0.output)! }
 
-        let operations = combinations(
-          of: right.count - 1,
-          from: [add, multiply, or],
-          using: &cache
-        )
-
-        for combo in operations {
-          let value = calculate(right, combo)
-
-          if value == left {
-            total += left
-            break
-          }
+        if dfs(ops: ops, target: left, value: right[0], numbers: right, depth: 0) {
+          total += left
         }
       }
 
       return total
-    }
-
-    // TODO: Add to Utilities
-    func combinations<T>(of length: Int, from elements: [T],
-                         using cache: inout [Int: [[T]]]) -> [[T]]
-    {
-      if let cached = cache[length] {
-        return cached
-      }
-
-      if length == 1 {
-        return elements.map { [$0] }
-      }
-
-      let smallerCombinations = combinations(of: length - 1, from: elements, using: &cache)
-      var result: [[T]] = []
-
-      for combination in smallerCombinations {
-        for op in elements {
-          result.append(combination + [op])
-        }
-      }
-
-      cache[length] = result
-      return result
-    }
-
-    func calculate(_ numbers: [Int], _ operators: [(Int, Int) -> Int]) -> Int {
-      var result = numbers[0]
-
-      for (i, op) in operators.enumerated() {
-        result = op(result, numbers[i + 1])
-      }
-
-      return result
     }
   }
 }
