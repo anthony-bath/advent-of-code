@@ -77,9 +77,91 @@ extension Year2024 {
     }
 
     func part2() -> Any {
-      0
+      var antinodes: Set<Point> = []
+
+      for (_, positions) in antennae {
+        for i in 0 ..< positions.count {
+          for j in i + 1 ..< positions.count {
+            let p1 = positions[i]
+            let p2 = positions[j]
+            let xDiff = abs(p1.x - p2.x)
+            let yDiff = abs(p1.y - p2.y)
+
+            if p1.y == p2.y {
+              // Horizontal Line
+              antinodes.formUnion(getAntinodes(
+                x: min(p1.x, p2.x),
+                y: p1.y,
+                dx: xDiff,
+                dy: 0
+              ))
+
+              antinodes.formUnion(getAntinodes(
+                x: max(p1.x, p2.x),
+                y: p1.y,
+                dx: xDiff,
+                dy: 0
+              ))
+            } else if p1.x == p2.x {
+              // Vertical Line
+              antinodes.formUnion(getAntinodes(
+                x: p1.x,
+                y: min(p1.y, p2.y),
+                dx: 0,
+                dy: yDiff
+              ))
+
+              antinodes.formUnion(getAntinodes(
+                x: p1.x,
+                y: max(p1.y, p2.y),
+                dx: 0,
+                dy: yDiff
+              ))
+            } else {
+              let m = Double(p2.y - p1.y) / Double(p2.x - p1.x)
+
+              if m > 0 {
+                if p1.x > p2.x {
+                  antinodes.formUnion(getAntinodes(x: p1.x, y: p1.y, dx: xDiff, dy: yDiff))
+                  antinodes.formUnion(getAntinodes(x: p2.x, y: p2.y, dx: -xDiff, dy: -yDiff))
+                } else {
+                  antinodes.formUnion(getAntinodes(x: p1.x, y: p1.y, dx: -xDiff, dy: -yDiff))
+                  antinodes.formUnion(getAntinodes(x: p2.x, y: p2.y, dx: xDiff, dy: yDiff))
+                }
+              } else {
+                if p1.x > p2.x {
+                  antinodes.formUnion(getAntinodes(x: p1.x, y: p1.y, dx: xDiff, dy: -yDiff))
+                  antinodes.formUnion(getAntinodes(x: p2.x, y: p2.y, dx: -xDiff, dy: yDiff))
+                } else {
+                  antinodes.formUnion(getAntinodes(x: p1.x, y: p1.y, dx: -xDiff, dy: yDiff))
+                  antinodes.formUnion(getAntinodes(x: p2.x, y: p2.y, dx: xDiff, dy: -yDiff))
+                }
+              }
+            }
+          }
+        }
+      }
+
+      return antinodes.count
+    }
+
+    func getAntinodes(x: Int, y: Int, dx: Int, dy: Int) -> Set<Point> {
+      var antinodes: Set<Point> = []
+      var multiplier = 0
+
+      while true {
+        let ax = x + multiplier * dx
+        let ay = y + multiplier * dy
+
+        if ax < 0 || ax >= W || ay < 0 || ay >= H {
+          break
+        }
+
+        antinodes.insert(Point(x: ax, y: ay))
+        multiplier += 1
+      }
+
+      return antinodes
     }
   }
 }
-
-// 373 - Too High
