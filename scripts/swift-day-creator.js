@@ -47,6 +47,30 @@ extension Year${year} {
   );
 }
 
+const yearFile = path.join(yearDir, `${year}.swift`);
+if (fs.existsSync(yearFile)) {
+  let content = fs.readFileSync(yearFile, 'utf8');
+
+  // Find the array in the days property
+  const arrayMatch = content.match(/\[\n(.*?)\s*\]/s);
+  if (arrayMatch) {
+    const existingArray = arrayMatch[0];
+    const newDay = `      Year${year}.Day${dayPadded}(challengeYear: ${year}),`;
+
+    // If the array is empty, don't add a comma before the new day
+    if (existingArray.trim() === '[]') {
+      const updatedArray = existingArray.replace(/\s*\]/, `\n${newDay}\n    ]`);
+      content = content.replace(arrayMatch[0], updatedArray);
+    } else {
+      // Remove any trailing comma and whitespace before the closing bracket
+      const updatedArray = existingArray.replace(/,?\s*\]/, `,\n${newDay}\n    ]`);
+      content = content.replace(arrayMatch[0], updatedArray);
+    }
+
+    fs.writeFileSync(yearFile, content);
+  }
+}
+
 const inputText = path.join(process.cwd(), 'inputs', year, `${dayPadded}.txt`);
 
 if (!fs.existsSync(inputText)) {
