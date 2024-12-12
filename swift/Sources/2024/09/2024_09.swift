@@ -25,7 +25,7 @@ extension Year2024 {
       var left = 0
       var right = expanded.count - 1
 
-      while expanded.suffix(empty).contains(where: { $0 != -1 }) {
+      while left < right {
         while expanded[left] != -1 {
           left += 1
         }
@@ -34,8 +34,10 @@ extension Year2024 {
           right -= 1
         }
 
-        expanded[left] = expanded[right]
-        expanded[right] = -1
+        if left < right {
+          expanded[left] = expanded[right]
+          expanded[right] = -1
+        }
       }
 
       return expanded[0 ..< expanded.count - empty].indices.reduce(
