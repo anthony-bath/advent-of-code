@@ -33,4 +33,8 @@ enum Math {
     }
     return result
   }
+
+  static func sumMtoN(_ m: Int, _ n: Int) -> Int {
+    (n * (n + 1)) / 2 - (m * (m - 1)) / 2
+  }
 }
