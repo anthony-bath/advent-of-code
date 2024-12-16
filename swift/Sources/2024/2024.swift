@@ -13,6 +13,7 @@ struct Year2024: AdventYear {
       Year2024.Day09(challengeYear: 2024),
       Year2024.Day10(challengeYear: 2024),
       Year2024.Day11(challengeYear: 2024),
+      Year2024.Day12(challengeYear: 2024),
     ]
   }
 }
