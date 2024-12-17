@@ -6,13 +6,13 @@ extension Year2024 {
     let W: Int
     let H: Int
 
+    var regions: [Set<Geometry.Point>] = []
+
     init(data _: String, lines: [String]) {
       grid = lines.map { $0.map { String($0) } }
       W = grid[0].count
       H = grid.count
-    }
 
-    func part1() -> Any {
       var regions: [Set<Geometry.Point>] = []
       var visited: Set<Geometry.Point> = []
 
@@ -52,6 +52,10 @@ extension Year2024 {
         }
       }
 
+      self.regions = regions
+    }
+
+    func part1() -> Any {
       var cost = 0
 
       for region in regions {
