@@ -53,7 +53,38 @@ extension Year2024 {
     }
 
     func part2() -> Any {
-      0
+      let expr = #/X[\+|=](?<X>\d+), Y[\+|=](?<Y>\d+)/#
+      var machines: [Machine2] = []
+
+      for i in stride(from: 0, to: lines.count, by: 4) {
+        let buttonAData = lines[i].firstMatch(of: expr)!.output
+        let buttonBData = lines[i + 1].firstMatch(of: expr)!.output
+        let prizeData = lines[i + 2].firstMatch(of: expr)!.output
+
+        let buttonA = ButtonA(x: Int(buttonAData.X)!, y: Int(buttonAData.Y)!)
+        let buttonB = ButtonB(x: Int(buttonBData.X)!, y: Int(buttonBData.Y)!)
+        let prizeX: Double = 10_000_000_000_000 + Double(prizeData.X)!
+        let prizeY: Double = 10_000_000_000_000 + Double(prizeData.Y)!
+
+        machines.append(Machine2(buttonA: buttonA, buttonB: buttonB, prize: (x: prizeX, y: prizeY)))
+      }
+
+      var totalCost = 0
+
+      for machine in machines {
+        if let (a, b) = Math.solve2x2Equations(
+          eq1_coef: (Double(machine.buttonA.x), Double(machine.buttonB.x)),
+          eq1_result: machine.prize.x,
+          eq2_coef: (Double(machine.buttonA.y), Double(machine.buttonB.y)),
+          eq2_result: machine.prize.y
+        ) {
+          if Math.isWholeNumber(a) && Math.isWholeNumber(b) {
+            totalCost += Int(a) * machine.buttonA.cost + Int(b) * machine.buttonB.cost
+          }
+        }
+      }
+
+      return totalCost
     }
 
     struct ButtonA {
@@ -72,6 +103,12 @@ extension Year2024 {
       var buttonA: ButtonA
       var buttonB: ButtonB
       var prize: Geometry.Point
+    }
+
+    struct Machine2 {
+      var buttonA: ButtonA
+      var buttonB: ButtonB
+      var prize: (x: Double, y: Double)
     }
   }
 }
