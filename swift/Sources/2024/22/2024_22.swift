@@ -1,4 +1,5 @@
 import Algorithms
+import Dispatch
 
 extension Year2024 {
   struct Day22: AdventDay {
@@ -25,8 +26,7 @@ extension Year2024 {
     }
 
     func part2() -> Any {
-      var sequences = Set<Sequence>()
-      var buyers = [Buyer]()
+      var totalBySequence = [Sequence: Int]()
 
       for number in numbers {
         var current = number
@@ -43,10 +43,9 @@ extension Year2024 {
           if sequenceData.count == 4 {
             let sequence = Sequence(from: sequenceData)
 
-            sequences.insert(sequence)
-
-            if priceBySequence[sequence] == nil && nextPrice > 0 {
+            if priceBySequence[sequence] == nil {
               priceBySequence[sequence] = nextPrice
+              totalBySequence[sequence, default: 0] += nextPrice
             }
 
             sequenceData.removeFirst()
@@ -55,21 +54,9 @@ extension Year2024 {
           current = next
           currentPrice = nextPrice
         }
-
-        buyers.append(Buyer(priceBySequence: priceBySequence))
       }
 
-      var max = 0
-
-      for sequence in sequences {
-        let total = buyers.reduce(0) { $0 + $1.priceBySequence[sequence, default: 0] }
-
-        if total > max {
-          max = total
-        }
-      }
-
-      return max
+      return totalBySequence.values.max()!
     }
 
     struct Sequence: Hashable {
@@ -81,10 +68,6 @@ extension Year2024 {
         three = sequence[2]
         four = sequence[3]
       }
-    }
-
-    struct Buyer {
-      let priceBySequence: [Sequence: Int]
     }
 
     func mix(number: Int, into: Int) -> Int {
