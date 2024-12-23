@@ -24,5 +24,37 @@ enum Geometry {
         Point(x: x + 1, y: y + 1),
       ]
     }
+
+    var topLeftNeighbor: Point {
+      Point(x: x - 1, y: y - 1)
+    }
+
+    var topRightNeighbor: Point {
+      Point(x: x + 1, y: y - 1)
+    }
+
+    var bottomLeftNeighbor: Point {
+      Point(x: x - 1, y: y + 1)
+    }
+
+    var bottomRightNeighbor: Point {
+      Point(x: x + 1, y: y + 1)
+    }
+
+    var topNeighbor: Point {
+      Point(x: x, y: y - 1)
+    }
+
+    var bottomNeighbor: Point {
+      Point(x: x, y: y + 1)
+    }
+
+    var leftNeighbor: Point {
+      Point(x: x - 1, y: y)
+    }
+
+    var rightNeighbor: Point {
+      Point(x: x + 1, y: y)
+    }
   }
 }

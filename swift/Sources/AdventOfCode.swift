@@ -57,8 +57,4 @@ struct AdventOfCode: AsyncParsableCommand {
       }
     }
   }
-
-  // static func main() {
-  //   print("Hello, \(Math.gcd([5, 3]))")
-  // }
 }
