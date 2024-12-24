@@ -94,7 +94,7 @@ if (!fs.existsSync(testsFile)) {
 final class Year${year}Day${dayPadded}Tests: XCTestCase {
   let day = Year${year}.Day${dayPadded}(challengeYear: ${year})
 
-  func testPart1() async throws {
+  func testPart1() {
     XCTAssertEqual(day.part1() as? Int, 0)
   }
 
