@@ -1,6 +1,0 @@
-Player 1:
-2
-
-Player 2:
-1
-3
