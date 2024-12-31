@@ -1,6 +1,6 @@
 import { Moon } from './common.js';
-import { pairs } from '../../../utilities/array.js';
-import { lcm } from '../../../utilities/math.js';
+import { pairs } from '../../utilities/array.js';
+import { lcm } from '../../utilities/math.js';
 
 export function part2({ lines }) {
   const moons = [];

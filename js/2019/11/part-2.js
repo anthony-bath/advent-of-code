@@ -1,4 +1,4 @@
-import { printGrid } from '../../../utilities/grid.js';
+import { printGrid } from '../../utilities/grid.js';
 import { execute } from '../IntCode_v2.js';
 
 export function part2({ data }) {

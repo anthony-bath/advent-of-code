@@ -1,4 +1,4 @@
-import { printTextGrid } from '../../../utilities/grid.js';
+import { printTextGrid } from '../../utilities/grid.js';
 import { loadCycles, DARK_PIXEL, LIT_PIXEL, LINE_LENGTH } from './common.js';
 
 export function part2({ lines }) {

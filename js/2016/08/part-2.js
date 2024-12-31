@@ -1,4 +1,4 @@
-import { printGrid } from '../../../utilities/grid.js';
+import { printGrid } from '../../utilities/grid.js';
 
 export function part2({ data }) {
   const WIDTH = 50;

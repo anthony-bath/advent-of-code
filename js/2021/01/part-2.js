@@ -1,4 +1,4 @@
-import { sum } from '../../../utilities/array.js';
+import { sum } from '../../utilities/array.js';
 
 export function part2({ lines }) {
   const report = lines.map(Number);

@@ -1,7 +1,3 @@
-import { readOld } from '../../../utilities/io.js';
-
-const [YEAR, DAY] = [2022, 10];
-
 export function loadCycles(lines) {
   const cycles = [];
 

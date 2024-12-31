@@ -1,7 +1,3 @@
-import { readOld } from '../../../utilities/io.js';
-
-const [YEAR, DAY] = [2018, 13];
-
 export const DIRECTION = {
   NORTH: 1,
   SOUTH: 2,

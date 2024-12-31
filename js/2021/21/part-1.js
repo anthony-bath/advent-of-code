@@ -1,4 +1,4 @@
-import { sumMtoN } from '../../../utilities/math.js';
+import { sumMtoN } from '../../utilities/math.js';
 import { getInputElements } from './common.js';
 
 export function part1({ lines }) {

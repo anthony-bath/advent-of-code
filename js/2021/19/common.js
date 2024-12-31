@@ -1,5 +1,3 @@
-import { readOld } from '../../../utilities/io.js';
-
 export function loadScannersWithOverlapsCalculated(lines) {
   const scanners = [];
   let currentScanner;

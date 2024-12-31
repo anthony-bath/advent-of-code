@@ -1,5 +1,5 @@
-import { manhattan } from '../../../utilities/math.js';
-import { PriorityQueue } from '../../../utilities/queue.js';
+import { manhattan } from '../../utilities/math.js';
+import { PriorityQueue } from '../../utilities/queue.js';
 
 export function part2({ lines }) {
   const [depth, [tx, ty]] = lines.map((line) => {

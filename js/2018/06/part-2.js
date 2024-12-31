@@ -1,5 +1,5 @@
-import { Point, manhattan } from '../../../utilities/math.js';
-import { sum } from '../../../utilities/array.js';
+import { Point, manhattan } from '../../utilities/math.js';
+import { sum } from '../../utilities/array.js';
 
 export function part2({ lines }) {
   let [minX, maxX, minY, maxY] = [Infinity, -Infinity, Infinity, -Infinity];

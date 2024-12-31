@@ -1,5 +1,5 @@
 import { Moon, sum } from './common.js';
-import { pairs } from '../../../utilities/array.js';
+import { pairs } from '../../utilities/array.js';
 
 export function part1({ lines }) {
   const moons = [];

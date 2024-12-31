@@ -1,7 +1,3 @@
-import { readOld } from '../../../utilities/io.js';
-
-const [YEAR, DAY] = [2022, 11];
-
 class Monkey {
   constructor(
     items,

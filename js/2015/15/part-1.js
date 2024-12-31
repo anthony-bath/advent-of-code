@@ -1,4 +1,4 @@
-import { sum } from '../../../utilities/array.js';
+import { sum } from '../../utilities/array.js';
 import { CookieTrait } from './common.js';
 
 export function part1({ lines }) {

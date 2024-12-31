@@ -1,5 +1,5 @@
 import { execute } from '../IntCode_v1.js';
-import { getCombinations } from '../../../utilities/array.js';
+import { getCombinations } from '../../utilities/array.js';
 
 export function part1({ data }) {
   const program = data.split(',').map(Number);

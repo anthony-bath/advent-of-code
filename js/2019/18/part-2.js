@@ -1,4 +1,4 @@
-import { PriorityQueue } from '../../../utilities/queue.js';
+import { PriorityQueue } from '../../utilities/queue.js';
 
 const { pow } = Math;
 

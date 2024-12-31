@@ -1,4 +1,4 @@
-import { Point3D } from '../../../utilities/math.js';
+import { Point3D } from '../../utilities/math.js';
 import { Box, Robot } from './common.js';
 
 const { min, max } = Math;

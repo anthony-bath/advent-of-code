@@ -1,4 +1,4 @@
-import { sumN } from '../../../utilities/math.js';
+import { sumN } from '../../utilities/math.js';
 
 const { abs, max, min } = Math;
 

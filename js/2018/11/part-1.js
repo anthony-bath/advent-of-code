@@ -1,4 +1,4 @@
-import { sum } from '../../../utilities/array.js';
+import { sum } from '../../utilities/array.js';
 
 export function part1({ data }) {
   const gridSerialNumber = Number(data);

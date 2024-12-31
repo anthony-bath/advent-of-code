@@ -1,4 +1,4 @@
-import { manhattan } from '../../../utilities/math.js';
+import { manhattan } from '../../utilities/math.js';
 
 const { min, pow } = Math;
 

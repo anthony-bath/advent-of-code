@@ -1,4 +1,4 @@
-import { Point3D, manhattan3D } from '../../../utilities/math.js';
+import { Point3D, manhattan3D } from '../../utilities/math.js';
 import { Robot } from './common.js';
 
 export function part1({ lines }) {

@@ -1,4 +1,4 @@
-import { Point3D, manhattan3D } from '../../../utilities/math.js';
+import { Point3D, manhattan3D } from '../../utilities/math.js';
 
 const { abs, floor, max, min } = Math;
 

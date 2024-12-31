@@ -1,4 +1,4 @@
-import { Point, manhattan } from '../../../utilities/math.js';
+import { Point, manhattan } from '../../utilities/math.js';
 
 export function part1({ lines }) {
   let [minX, maxX, minY, maxY] = [Infinity, -Infinity, Infinity, -Infinity];

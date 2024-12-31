@@ -1,4 +1,4 @@
-import { sum } from '../../../utilities/array.js';
+import { sum } from '../../utilities/array.js';
 
 export function part1({ lines }) {
   const [depth, [tx, ty]] = lines.map((line) => {

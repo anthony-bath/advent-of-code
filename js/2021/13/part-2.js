@@ -1,4 +1,4 @@
-import { printTextGrid } from '../../../utilities/grid.js';
+import { printTextGrid } from '../../utilities/grid.js';
 import { getInputElements } from './common.js';
 
 export function part2({ lines }) {

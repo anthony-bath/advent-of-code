@@ -1,4 +1,4 @@
-import { manhattan3D } from '../../../utilities/math.js';
+import { manhattan3D } from '../../utilities/math.js';
 import { Transformation, loadScannersWithOverlapsCalculated, rotations } from './common.js';
 
 export function part2({ lines }) {

@@ -1,4 +1,4 @@
-import { printTextGrid } from '../../../utilities/grid.js';
+import { printTextGrid } from '../../utilities/grid.js';
 
 export function part1({ lines }) {
   const particles = [];

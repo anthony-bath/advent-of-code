@@ -1,4 +1,4 @@
-import { PriorityQueue } from '../../../utilities/queue.js';
+import { PriorityQueue } from '../../utilities/queue.js';
 import { evaluate, getInputElements } from './common.js';
 
 export function part1({ lines }) {
