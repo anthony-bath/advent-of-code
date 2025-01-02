@@ -22,7 +22,7 @@ if (!fs.existsSync(dayDir)) {
   fs.mkdirSync(dayDir);
 }
 
-const solutionFile = path.join(dayDir, `${year}_${dayPadded}.swift`);
+const solutionFile = path.join(dayDir, `${year}.${dayPadded}.swift`);
 
 if (!fs.existsSync(solutionFile)) {
   fs.writeFileSync(
