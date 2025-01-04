@@ -3,6 +3,14 @@ enum Geometry {
     var x: Int
     var y: Int
 
+    func add(_ delta: (dx: Int, dy: Int)) -> Point {
+      Point(x: x + delta.dx, y: y + delta.dy)
+    }
+
+    func diff(_ other: Point) -> (dx: Int, dy: Int) {
+      (x - other.x, y - other.y)
+    }
+
     var cardinalNeighbors: [Point] {
       [
         Point(x: x - 1, y: y),
@@ -56,5 +64,12 @@ enum Geometry {
     var rightNeighbor: Point {
       Point(x: x + 1, y: y)
     }
+  }
+
+  enum Direction: Int, CaseIterable {
+    case up = 0
+    case right = 1
+    case down = 2
+    case left = 3
   }
 }

@@ -25,7 +25,7 @@ extension Year2024 {
 
       guard var robot = robot else { fatalError("Input does not contain a robot (@)") }
 
-      func move(_ direction: Direction) {
+      func move(_ direction: Geometry.Direction) {
         let nextPoint: Geometry.Point
         let dx: Int
         let dy: Int
@@ -140,7 +140,8 @@ extension Year2024 {
 
       guard var robot = robot else { fatalError("Input does not contain a robot (@)") }
 
-      func move(_ direction: Direction) { let nextPoint: Geometry.Point
+      func move(_ direction: Geometry.Direction) {
+        let nextPoint: Geometry.Point
         var pushed: [Geometry.Point]? = nil
         var dx = 0
         var dy = 0
@@ -221,7 +222,9 @@ extension Year2024 {
         }
       }
 
-      func pushVertical(_ point: Geometry.Point, _ direction: Direction) -> [Geometry.Point] {
+      func pushVertical(_ point: Geometry.Point,
+                        _ direction: Geometry.Direction) -> [Geometry.Point]
+      {
         let left: Geometry.Point
         let right: Geometry.Point
 
@@ -292,7 +295,9 @@ extension Year2024 {
         return []
       }
 
-      func pushHorizontal(_ point: Geometry.Point, _ direction: Direction) -> [Geometry.Point] {
+      func pushHorizontal(_ point: Geometry.Point,
+                          _ direction: Geometry.Direction) -> [Geometry.Point]
+      {
         var points: [Geometry.Point] = []
         var current = point
         let dx = direction == .right ? 2 : -2
@@ -368,9 +373,5 @@ extension Year2024 {
 
       return sum
     }
-  }
-
-  enum Direction {
-    case up, down, left, right
   }
 }

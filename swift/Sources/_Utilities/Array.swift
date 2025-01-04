@@ -17,3 +17,13 @@ enum ArrayUtilities {
     return result
   }
 }
+
+extension Array where Element == [String] {
+  func at(_ point: Geometry.Point) -> String? {
+    guard point.x >= 0, point.x < count, point.y >= 0, point.y < self[0].count else {
+      return nil
+    }
+
+    return self[point.y][point.x]
+  }
+}
