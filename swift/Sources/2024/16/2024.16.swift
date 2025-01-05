@@ -41,7 +41,13 @@ extension Year2024 {
         fatalError("Input does not contain a start or end")
       }
 
-      var current = Item(position: Position(location: start, direction: .right), steps: 0, turns: 0)
+      var current = Item(
+        position: Position(location: start, direction: .right),
+        steps: 0,
+        turns: 0,
+        path: [Position(location: start, direction: .right)]
+      )
+
       var visited = Set<Position>([current.position])
       var queue = [current]
 
@@ -71,14 +77,80 @@ extension Year2024 {
           let nextItem = Item(
             position: nextPosition,
             steps: current.steps + 1,
-            turns: current.turns + (direction == current.position.direction ? 0 : 1)
+            turns: current.turns + (direction == current.position.direction ? 0 : 1),
+            path: current.path + [nextPosition]
           )
 
           queue.insert(nextItem, at: getInsertIndex(for: nextItem, in: queue))
         }
       }
 
-      return Int.max
+      fatalError("No path found")
+    }
+
+    func part2() -> Any {
+      guard let start = start, let end = end else {
+        fatalError("Input does not contain a start or end")
+      }
+
+      let available = part1() as! Int
+      var costByPosition = [Position: Int]()
+
+      costByPosition[Position(location: start, direction: .right)] = 0
+
+      let position = Position(location: start, direction: .right)
+
+      var queue = [Item(
+        position: position,
+        steps: 0,
+        turns: 0,
+        path: [position]
+      )]
+
+      var bestPoints = Set<Geometry.Point>()
+
+      while !queue.isEmpty {
+        let current = queue.removeFirst()
+
+        if current.cost > available {
+          continue
+        }
+
+        if current.position.location == end {
+          bestPoints.formUnion(current.path.map { $0.location })
+          continue
+        }
+
+        for direction in turnsByDirection[current.position.direction]! {
+          let nextPosition = Position(
+            location: current.position.location.add(deltaByDirection[direction]!),
+            direction: direction
+          )
+
+          if grid.at(nextPosition.location) != "." {
+            continue
+          }
+
+          let cost = direction == current.position.direction ? 1 : 1001
+
+          if costByPosition[nextPosition] ?? .max < current.cost + cost {
+            continue
+          }
+
+          costByPosition[nextPosition] = current.cost + cost
+
+          queue.append(
+            Item(
+              position: nextPosition,
+              steps: current.steps + 1,
+              turns: current.turns + (direction == current.position.direction ? 0 : 1),
+              path: current.path + [nextPosition]
+            )
+          )
+        }
+      }
+
+      return bestPoints.count
     }
 
     func getInsertIndex(for item: Item, in queue: [Item]) -> Int {
@@ -97,10 +169,6 @@ extension Year2024 {
       return low
     }
 
-    func part2() -> Any {
-      0
-    }
-
     struct Position: Hashable {
       let location: Geometry.Point
       let direction: Geometry.Direction
@@ -110,6 +178,7 @@ extension Year2024 {
       let position: Position
       let steps: Int
       let turns: Int
+      let path: [Position]
 
       var cost: Int {
         1000 * turns + steps
@@ -117,5 +186,3 @@ extension Year2024 {
     }
   }
 }
-
-// 72416 - Too Low

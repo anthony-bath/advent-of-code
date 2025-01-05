@@ -11,6 +11,10 @@ enum Geometry {
       (x - other.x, y - other.y)
     }
 
+    func manhattanDistance(from other: Point) -> Int {
+      abs(x - other.x) + abs(y - other.y)
+    }
+
     var cardinalNeighbors: [Point] {
       [
         Point(x: x - 1, y: y),
