@@ -21,6 +21,6 @@ cd swift
 if [ "$BENCHMARK" = true ]; then
   swift run --quiet -c release AdventOfCode ${ARGS[0]} ${ARGS[1]} --benchmark
 else
-  swift run AdventOfCode ${ARGS[0]} ${ARGS[1]}
+  swift run --quiet AdventOfCode ${ARGS[0]} ${ARGS[1]}
 fi
 cd ..
