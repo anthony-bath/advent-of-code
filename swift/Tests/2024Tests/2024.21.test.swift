@@ -9,6 +9,6 @@ final class Year2024Day21Tests: XCTestCase {
   }
 
   func testPart2() {
-    XCTAssertEqual(day.part2() as? Int, 0)
+    XCTAssertEqual(day.part2() as? Int, 165_644_591_859_332)
   }
 }
