@@ -88,18 +88,18 @@ const testsFile = path.join(testsYearDir, `${year}.${dayPadded}.test.swift`);
 if (!fs.existsSync(testsFile)) {
   fs.writeFileSync(
     testsFile,
-    `import XCTest
+    `import Testing
 @testable import AdventOfCode
 
-final class Year${year}Day${dayPadded}Tests: XCTestCase {
+struct Year${year}Day${dayPadded}Tests {
   let day = Year${year}.Day${dayPadded}(challengeYear: ${year})
 
-  func testPart1() {
-    XCTAssertEqual(day.part1() as? Int, 0)
+  @Test("Day ${day}, Part 1") func part1() {
+    #expect(day.part1() as? Int == 0)
   }
 
-  func testPart2() {
-    XCTAssertEqual(day.part2() as? Int, 0)
+  @Test("Day ${day}, Part 2") func part2() {
+    #expect(day.part2() as? Int == 0)
   }
 }
 `
