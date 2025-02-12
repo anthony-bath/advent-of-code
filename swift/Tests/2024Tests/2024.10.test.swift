@@ -1,14 +1,14 @@
-import XCTest
+import Testing
 @testable import AdventOfCode
 
-final class Year2024Day10Tests: XCTestCase {
+struct Year2024Day10Tests {
   let day = Year2024.Day10(challengeYear: 2024)
 
-  func testPart1() {
-    XCTAssertEqual(day.part1() as? Int, 582)
+  @Test("Day 10, Part 1") func part1() {
+    #expect(day.part1() as? Int == 582)
   }
 
-  func testPart2() {
-    XCTAssertEqual(day.part2() as? Int, 1302)
+  @Test("Day 10, Part 2") func part2() {
+    #expect(day.part2() as? Int == 1302)
   }
 }

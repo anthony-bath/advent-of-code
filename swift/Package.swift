@@ -3,6 +3,12 @@
 
 import PackageDescription
 
+let readmes = [2024].flatMap { year in
+    Array(1 ... 25).map { day in
+        "\(year)/\(day)/README.md"
+    }
+}
+
 let package = Package(
     name: "AdventOfCode",
     platforms: [.macOS(.v13)],
@@ -33,7 +39,8 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Collections", package: "swift-collections"),
-            ]
+            ],
+            exclude: readmes
         ),
         .testTarget(
             name: "2024Tests",
