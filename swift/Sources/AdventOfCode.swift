@@ -3,6 +3,7 @@ import ArgumentParser
 let allChallenges: [any AdventYear] = [
   Year2023(),
   Year2024(),
+  Year2025(),
 ]
 
 @main

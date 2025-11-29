@@ -21,22 +21,24 @@
       "preLaunchTask": "swift: Build Release AdventOfCode (2023/swift)"
     },
     {
-      "type": "lldb",
+      "type": "swift",
       "request": "launch",
       "args": [],
       "cwd": "${workspaceFolder:advent-of-code}/swift",
       "name": "Debug AdventOfCode (swift)",
-      "program": "${workspaceFolder:advent-of-code}/swift/.build/debug/AdventOfCode",
-      "preLaunchTask": "swift: Build Debug AdventOfCode (swift)"
+      "preLaunchTask": "swift: Build Debug AdventOfCode (swift)",
+      "target": "AdventOfCode",
+      "configuration": "debug"
     },
     {
-      "type": "lldb",
+      "type": "swift",
       "request": "launch",
       "args": [],
       "cwd": "${workspaceFolder:advent-of-code}/swift",
       "name": "Release AdventOfCode (swift)",
-      "program": "${workspaceFolder:advent-of-code}/swift/.build/release/AdventOfCode",
-      "preLaunchTask": "swift: Build Release AdventOfCode (swift)"
+      "preLaunchTask": "swift: Build Release AdventOfCode (swift)",
+      "target": "AdventOfCode",
+      "configuration": "release"
     }
   ]
 }

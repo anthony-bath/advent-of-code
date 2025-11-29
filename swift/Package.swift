@@ -1,11 +1,15 @@
 // swift-tools-version: 6.0
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
+import Foundation
 import PackageDescription
 
-let readmes = [2024].flatMap { year in
-    Array(1 ... 25).map { day in
-        "\(year)/\(day)/README.md"
+let readmes = [2023, 2024, 2025].flatMap { year in
+    Array(1 ... 25).compactMap { day in
+        let dayPadded = day < 10 ? "0\(day)" : "\(day)"
+        let path = "\(year)/\(dayPadded)/README.md"
+
+        return FileManager.default.fileExists(atPath: "Sources/\(path)") ? path : nil
     }
 }
 
@@ -44,9 +48,11 @@ let package = Package(
         ),
         .testTarget(
             name: "2024Tests",
-            dependencies: [
-                "AdventOfCode",
-            ]
+            dependencies: ["AdventOfCode"]
+        ),
+        .testTarget(
+            name: "2025Tests",
+            dependencies: ["AdventOfCode"]
         ),
     ]
 )
