@@ -14,7 +14,6 @@ extension Year2025 {
 
       for entry in entries {
         let points = entry.components(separatedBy: "-")
-
         let start = Int(points[0])!
         let end = Int(points[1])!
 
@@ -37,45 +36,35 @@ extension Year2025 {
 
       for entry in entries {
         let points = entry.components(separatedBy: "-")
-
         let start = Int(points[0])!
         let end = Int(points[1])!
 
-        for i in stride(from: start, to: end + 1, by: 1) {
-          guard i > 10 else { continue }
-
-          let str = String(i)
-          let max = 1 + str.count / 2
-
-          for j in stride(from: 1, to: max, by: 1) {
-            guard str.count % j == 0 else { continue }
-
-            var frontIndex = str.startIndex
-            var backIndex = str.index(frontIndex, offsetBy: j)
-            let front = str[frontIndex ..< backIndex]
-            var allMatch = true
-
-            while backIndex != str.endIndex {
-              frontIndex = backIndex
-              backIndex = str.index(frontIndex, offsetBy: j, limitedBy: str.endIndex) ?? str
-                .endIndex
-              let next = str[frontIndex ..< backIndex]
-
-              if next != front {
-                allMatch = false
-                break
-              }
-            }
-
-            if allMatch {
-              sum += i
-              break
-            }
+        for i in start ..< (end + 1) {
+          if isRepeatingPattern(i) {
+            sum += i
           }
         }
       }
 
       return sum
+    }
+
+    private func isRepeatingPattern(_ id: Int) -> Bool {
+      let str = String(id)
+      let len = str.count
+
+      for patternLen in 1 ..< (len / 2 + 1) {
+        guard len % patternLen == 0 else { continue }
+
+        let pattern = String(str.prefix(patternLen))
+        let repeated = String(repeating: pattern, count: len / patternLen)
+
+        if str == repeated {
+          return true
+        }
+      }
+
+      return false
     }
   }
 }
