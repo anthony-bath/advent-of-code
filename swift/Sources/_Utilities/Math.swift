@@ -58,4 +58,8 @@ enum Math {
   static func isWholeNumber(_ value: Double) -> Bool {
     value.truncatingRemainder(dividingBy: 1) == 0
   }
+
+  static func powInt(_ x: Int, _ y: Int) -> Int {
+    Int(pow(Double(x), Double(y)))
+  }
 }
