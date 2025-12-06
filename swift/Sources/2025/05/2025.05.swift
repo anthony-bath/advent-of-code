@@ -49,6 +49,7 @@ extension Year2025 {
         fresh += (end - max(current + 1, start) + 1)
         current = end
       }
+
       return fresh
     }
   }
