@@ -64,36 +64,15 @@ extension Year2025 {
     }
 
     func part2() -> Any {
-      var circuits: [Set<Geometry.Point3D>] = []
+      let uf = UnionFind(lights)
 
       for pair in pairs {
-        let p1Ci = circuits.firstIndex { $0.contains(pair.p1) }
-        let p2Ci = circuits.firstIndex { $0.contains(pair.p2) }
+        if uf.union(pair.p1, pair.p2) {
+          let root = uf.find(pair.p1)
 
-        if p1Ci != nil && p2Ci != nil && p1Ci == p2Ci {
-          continue
-        } else if let p1Ci, let p2Ci {
-          circuits[p1Ci] = circuits[p1Ci].union(circuits[p2Ci])
-
-          if circuits[p1Ci].count == 1000 {
+          if uf.size[root]! == lights.count {
             return pair.p1.x * pair.p2.x
           }
-
-          circuits.remove(at: p2Ci)
-        } else if let p1Ci, p2Ci == nil {
-          circuits[p1Ci].insert(pair.p2)
-
-          if circuits[p1Ci].count == 1000 {
-            return pair.p1.x * pair.p2.x
-          }
-        } else if let p2Ci, p1Ci == nil {
-          circuits[p2Ci].insert(pair.p1)
-
-          if circuits[p2Ci].count == 1000 {
-            return pair.p1.x * pair.p2.x
-          }
-        } else {
-          circuits.append([pair.p1, pair.p2])
         }
       }
 
