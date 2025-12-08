@@ -1,3 +1,5 @@
+import Foundation
+
 enum Geometry {
   struct Point: Hashable {
     var x: Int
@@ -67,6 +69,36 @@ enum Geometry {
 
     var rightNeighbor: Point {
       Point(x: x + 1, y: y)
+    }
+  }
+
+  struct Point3D: Hashable {
+    var x: Int
+    var y: Int
+    var z: Int
+
+    init(_ x: Int, _ y: Int, _ z: Int) {
+      self.x = x
+      self.y = y
+      self.z = z
+    }
+
+    init(_ coords: [Int]) {
+      x = coords[0]
+      y = coords[1]
+      z = coords[2]
+    }
+
+    func distance(from: Point3D) -> Double {
+      let xPortion = pow(Double(x - from.x), 2)
+      let yPortion = pow(Double(y - from.y), 2)
+      let zPortion = pow(Double(z - from.z), 2)
+
+      return sqrt(xPortion + yPortion + zPortion)
+    }
+
+    func toString() -> String {
+      "\(x), \(y), \(z)"
     }
   }
 
