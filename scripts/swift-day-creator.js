@@ -71,10 +71,22 @@ if (fs.existsSync(yearFile)) {
   }
 }
 
-const inputText = path.join(process.cwd(), 'inputs', year, `${dayPadded}.txt`);
+const inputText = path.join(process.cwd(), 'problems', 'inputs', year, `${dayPadded}.txt`);
 
 if (!fs.existsSync(inputText)) {
   fs.writeFileSync(inputText, '');
+}
+
+const descriptionMarkdown = path.join(
+  process.cwd(),
+  'problems',
+  'decriptions',
+  year,
+  `${dayPadded}.md`
+);
+
+if (!fs.existsSync(descriptionMarkdown)) {
+  fs.writeFileSync(descriptionMarkdown, '');
 }
 
 const testsYearDir = path.join(process.cwd(), 'swift', 'Tests', `${year}Tests`);

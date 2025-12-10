@@ -65,8 +65,7 @@ extension AdventDay {
 
   static func loadData(challengeDay: Int, challengeYear: Int) -> String {
     let dayString = String(format: "%02d", challengeDay)
-    // let dataFilename = "../\(dayString)/input.txt"
-    let dataFilename = "../inputs/\(challengeYear)/\(dayString).txt"
+    let dataFilename = "../problems/inputs/\(challengeYear)/\(dayString).txt"
     let dataURL = URL(fileURLWithPath: dataFilename)
 
     guard let data = try? String(contentsOf: dataURL, encoding: .utf8)

@@ -46,10 +46,22 @@ if (day !== '25') {
   }
 }
 
-const inputTxt = path.join(process.cwd(), 'inputs', year, `${dayPadded}.txt`);
+const inputText = path.join(process.cwd(), 'problems', 'inputs', year, `${dayPadded}.txt`);
 
-if (!fs.existsSync(inputTxt)) {
-  fs.writeFileSync(inputTxt, '');
+if (!fs.existsSync(inputText)) {
+  fs.writeFileSync(inputText, '');
+}
+
+const descriptionMarkdown = path.join(
+  process.cwd(),
+  'problems',
+  'decriptions',
+  year,
+  `${dayPadded}.md`
+);
+
+if (!fs.existsSync(descriptionMarkdown)) {
+  fs.writeFileSync(descriptionMarkdown, '');
 }
 
 const testsDir = path.join(yearDir, 'tests');
