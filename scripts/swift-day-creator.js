@@ -80,7 +80,7 @@ if (!fs.existsSync(inputText)) {
 const descriptionMarkdown = path.join(
   process.cwd(),
   'problems',
-  'decriptions',
+  'descriptions',
   year,
   `${dayPadded}.md`
 );
