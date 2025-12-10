@@ -1,5 +1,6 @@
 # Advent Of Code
 
+- https://adventofcode.com/2025
 - https://adventofcode.com/2024
 - https://adventofcode.com/2023
 - https://adventofcode.com/2022
@@ -10,6 +11,49 @@
 - https://adventofcode.com/2017
 - https://adventofcode.com/2016
 - https://adventofcode.com/2015
+
+## Setup
+
+For solutions to run, your inputs must exist in a `/problems/inputs/yyyy/dd.txt` file.
+
+## Swift
+
+Daily solutions can be ran via:
+
+```bash
+npm run day:swift yyyy dd
+```
+
+where
+
+- `yyyy` is the 4 digit year
+- `dd` is the 1 or 2 digit day
+
+e.g.:
+
+```bash
+npm run day:swift 2023 3
+npm run day:swift 2024 24
+```
+
+### Benchmarking
+
+To benchmark a Swift solution, run:
+
+```bash
+npm run day:swift:benchmark yyyy dd
+```
+
+where
+
+- `yyyy` is the 4 digit year
+- `dd` is the 1 or 2 digit day
+
+e.g.:
+
+```bash
+npm run day:swift:benchmark 2023 3
+```
 
 ## JavaScript
 
@@ -48,47 +92,4 @@ e.g.:
 ```bash
 npm run create 2023 3
 npm run create 2024 24
-```
-
-Input for each day is included in `input.txt` files in the respective days directory, but is specific to my Advent of Code login.
-
-## Swift
-
-Daily solutions can be ran via:
-
-```bash
-npm run day:swift yyyy dd
-```
-
-where
-
-- `yyyy` is the 4 digit year
-- `dd` is the 1 or 2 digit day
-
-e.g.:
-
-```bash
-npm run day:swift 2023 3
-npm run day:swift 2024 24
-```
-
-Input for each day is included in `<dd>.txt` files in `./inputs/<yyyy>` directories, but is specific to my Advent of Code login.
-
-### Benchmarking
-
-To benchmark a Swift solution, run:
-
-```bash
-npm run day:swift:benchmark yyyy dd
-```
-
-where
-
-- `yyyy` is the 4 digit year
-- `dd` is the 1 or 2 digit day
-
-e.g.:
-
-```bash
-npm run day:swift:benchmark 2023 3
 ```
