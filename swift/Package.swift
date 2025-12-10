@@ -4,15 +4,6 @@
 import Foundation
 import PackageDescription
 
-let readmes = [2023, 2024, 2025].flatMap { year in
-    Array(1 ... 25).compactMap { day in
-        let dayPadded = day < 10 ? "0\(day)" : "\(day)"
-        let path = "\(year)/\(dayPadded)/README.md"
-
-        return FileManager.default.fileExists(atPath: "Sources/\(path)") ? path : nil
-    }
-}
-
 let package = Package(
     name: "AdventOfCode",
     platforms: [.macOS(.v13)],
@@ -43,8 +34,7 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Algorithms", package: "swift-algorithms"),
                 .product(name: "Collections", package: "swift-collections"),
-            ],
-            exclude: readmes
+            ]
         ),
         .testTarget(
             name: "2024Tests",
