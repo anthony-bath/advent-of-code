@@ -13,6 +13,7 @@
   "scripts": {
     "test:js": "node --experimental-vm-modules --no-warnings node_modules/jest/bin/jest.js",
     "test:swift": "./scripts/swift-test-runner.sh",
+    "commit:data": "./scripts/commit-submodule.sh",
     "create:js": "node ./scripts/js-day-creator.js",
     "create:swift": "node ./scripts/swift-day-creator.js",
     "day:js": "node ./scripts/js-day-runner.js",

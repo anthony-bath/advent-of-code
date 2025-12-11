@@ -27,3 +27,9 @@ extension Array where Element == [String] {
     return self[point.y][point.x]
   }
 }
+
+extension Array where Element == Int {
+  var p: Int {
+    reduce(1,*)
+  }
+}
