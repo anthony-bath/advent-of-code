@@ -12,6 +12,7 @@ struct Year2025: AdventYear {
       Year2025.Day09(challengeYear: 2025),
       Year2025.Day10(challengeYear: 2025),
       Year2025.Day11(challengeYear: 2025),
+      Year2025.Day12(challengeYear: 2025),
     ]
   }
 }

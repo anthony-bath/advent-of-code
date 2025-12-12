@@ -25,6 +25,7 @@ git add .
 
 # Create commit with the specified message
 git commit -m "feat: ${YEAR} day ${DAY}"
+git push
 
 # Navigate back to parent directory
 cd ..
